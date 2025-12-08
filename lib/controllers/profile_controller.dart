@@ -1,0 +1,170 @@
+import 'package:ezy_member_v2/constants/app_strings.dart';
+import 'package:ezy_member_v2/helpers/formatter_helper.dart';
+import 'package:ezy_member_v2/helpers/message_helper.dart';
+import 'package:ezy_member_v2/models/profile_model.dart';
+import 'package:ezy_member_v2/services/remote/api_service.dart';
+import 'package:ezy_member_v2/views/profile_detail_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class ProfileController extends GetxController {
+  final ApiService _api = ApiService();
+
+  var isUpdate = false.obs;
+  var memberProfile = Rx<MemberProfileModel?>(null);
+  var workingProfile = Rx<WorkingProfileModel?>(null);
+
+  late ProfileDetailControllers memberControllers;
+  late ProfileDetailControllers workingControllers;
+
+  Future<void> loadProfile(String memberCode, ProfileType type) async {
+    _showLoading(AppStrings.msgProfileRetrieving);
+
+    final bool isMember = type == ProfileType.member;
+    final String endpoint = isMember ? "get-personal-profile/$memberCode" : "get-working-profile/$memberCode";
+    final String key = isMember ? MemberProfileModel.keyMember : WorkingProfileModel.keyWorking;
+    final response = await _api.get(endPoint: endpoint, module: "ProfileController - loadProfile");
+
+    _hideLoading();
+
+    if (response == null || response.data[key] == null) {
+      return;
+    }
+
+    if (isMember) {
+      memberProfile.value = MemberProfileModel.fromJson(response.data[key]);
+      memberControllers = ProfileDetailControllers(memberProfile.value!);
+    } else {
+      workingProfile.value = WorkingProfileModel.fromJson(response.data[key]);
+      workingControllers = ProfileDetailControllers(workingProfile.value!);
+    }
+  }
+
+  Future<void> updateProfile(Map<String, dynamic> json, ProfileType type) async {
+    isUpdate.value = false;
+
+    _showLoading(AppStrings.msgProfileUpdating);
+
+    final bool isMember = type == ProfileType.member;
+    final String endpoint = isMember ? "update-personal-profile" : "update-working-profile";
+    final response = await _api.post(endPoint: endpoint, data: json, module: "ProfileController - updateProfile");
+
+    _hideLoading();
+
+    if (response == null) {
+      _showError(AppStrings.msgSystemFailed);
+      return;
+    }
+
+    switch (response.data[ApiService.keyStatusCode]) {
+      case 200:
+        isUpdate.value = true;
+        _showSuccess(AppStrings.msgProfileSuccess);
+        break;
+      case 401:
+        _showError(AppStrings.msgPhoneExists);
+        break;
+      case 402:
+        _showError(AppStrings.msgEmailExists);
+        break;
+      default:
+        _showError(AppStrings.msgSystemFailed);
+        break;
+    }
+  }
+
+  void _showLoading(String message) {
+    MessageHelper.showDialog(type: DialogType.loading, message: message, title: AppStrings.processing);
+  }
+
+  void _hideLoading() {
+    if (Get.isDialogOpen == true) Navigator.of(Get.overlayContext!).pop();
+  }
+
+  void _showError(String message) {
+    MessageHelper.show(message, backgroundColor: Colors.red, icon: Icons.error_rounded);
+  }
+
+  void _showSuccess(String message) {
+    MessageHelper.show(message, backgroundColor: Colors.green, icon: Icons.check_circle_outline_rounded);
+  }
+
+  @override
+  void onClose() {
+    memberControllers.dispose();
+    workingControllers.dispose();
+
+    super.onClose();
+  }
+}
+
+class ProfileDetailControllers {
+  final Map<String, TextEditingController> _controllers = {};
+
+  ProfileDetailControllers(ProfileModel profile) {
+    _controllers[fieldContactNumber] = TextEditingController(text: profile.contactNumber);
+    _controllers[fieldAddress1] = TextEditingController(text: profile.address1);
+    _controllers[fieldAddress2] = TextEditingController(text: profile.address2);
+    _controllers[fieldAddress3] = TextEditingController(text: profile.address3);
+    _controllers[fieldAddress4] = TextEditingController(text: profile.address4);
+    _controllers[fieldPostcode] = TextEditingController(text: profile.postcode);
+    _controllers[fieldCity] = TextEditingController(text: profile.city);
+    _controllers[fieldState] = TextEditingController(text: profile.state);
+    _controllers[fieldCountry] = TextEditingController(text: profile.country);
+    _controllers[fieldTIN] = TextEditingController(text: profile.tin);
+    _controllers[fieldSSTRegistrationNo] = TextEditingController(text: profile.sstRegistrationNo);
+    _controllers[fieldTTXRegistrationNo] = TextEditingController(text: profile.ttxRegistrationNo);
+
+    if (profile is MemberProfileModel) {
+      _controllers[fieldName] = TextEditingController(text: profile.name);
+      _controllers[fieldEmail] = TextEditingController(text: profile.email);
+      _controllers[fieldGender] = TextEditingController(text: profile.gender);
+      _controllers[fieldDOB] = TextEditingController(text: profile.dob == 0 ? "" : FormatterHelper.timestampToString(profile.dob));
+      _controllers[fieldAccountCode] = TextEditingController(text: profile.accountCode);
+    }
+
+    if (profile is WorkingProfileModel) {
+      _controllers[fieldName] = TextEditingController(text: profile.companyName);
+      _controllers[fieldEmail] = TextEditingController(text: profile.companyEmail);
+      _controllers[fieldROC] = TextEditingController(text: profile.roc);
+      _controllers[fieldMSICCode] = TextEditingController(text: profile.msicCode);
+      _controllers[fieldRegistrationSchemeID] = TextEditingController(text: profile.registrationSchemeID);
+      _controllers[fieldRegistrationSchemeNo] = TextEditingController(text: profile.registrationSchemeNo);
+    }
+  }
+
+  TextEditingController operator [](String key) => _controllers[key]!;
+
+  bool validateRequiredFields() {
+    final requiredFields = [
+      fieldContactNumber,
+      fieldAddress1,
+      fieldPostcode,
+      fieldCity,
+      fieldState,
+      fieldCountry,
+      fieldTIN,
+      fieldTTXRegistrationNo,
+      fieldName,
+      fieldEmail,
+      fieldROC,
+      fieldMSICCode,
+      fieldRegistrationSchemeID,
+      fieldRegistrationSchemeNo,
+    ];
+
+    for (final key in requiredFields) {
+      final text = _controllers[key]?.text.trim() ?? "";
+
+      if (text.isEmpty) return false;
+    }
+
+    return true;
+  }
+
+  void dispose() {
+    for (final controller in _controllers.values) {
+      controller.dispose();
+    }
+  }
+}

@@ -1,0 +1,31 @@
+import 'package:ezy_member_v2/main.dart';
+import 'package:ezy_member_v2/views/authentication_screen.dart';
+import 'package:ezy_member_v2/views/branch_detail_screen.dart';
+import 'package:ezy_member_v2/views/home_screen.dart';
+import 'package:ezy_member_v2/views/profile_detail_screen.dart';
+import 'package:ezy_member_v2/views/terms_condition_screen.dart';
+import 'package:ezy_member_v2/views/voucher_list_screen.dart';
+import 'package:ezy_member_v2/views/welcome_screen.dart';
+import 'package:get/get.dart';
+
+class AppRoutes {
+  static const wrapper = "/";
+  static const authentication = "/authentication";
+  static const branchDetail = "/branch_detail";
+  static const home = "/home";
+  static const profileDetail = "/profile_detail";
+  static const termsCondition = "/terms_condition";
+  static const voucherList = "/voucher_list";
+  static const welcome = "/welcome";
+
+  static final pages = <GetPage>[
+    GetPage(name: wrapper, page: () => WrapperScreen()),
+    GetPage(name: authentication, page: () => AuthenticationScreen()),
+    GetPage(name: branchDetail, page: () => BranchDetailScreen()),
+    GetPage(name: home, page: () => HomeScreen()),
+    GetPage(name: profileDetail, page: () => ProfileDetailScreen()),
+    GetPage(name: termsCondition, page: () => TermsConditionScreen()),
+    GetPage(name: voucherList, page: () => VoucherListScreen()),
+    GetPage(name: welcome, page: () => WelcomeScreen()),
+  ];
+}
