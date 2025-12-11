@@ -25,8 +25,8 @@ class ProfileDetailScreen extends StatefulWidget {
 }
 
 class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTickerProviderStateMixin {
-  final _memberHiveController = Get.find<MemberHiveController>();
-  final _profileController = Get.find<ProfileController>();
+  final _profileController = Get.put(ProfileController(), tag: "profileDetail");
+  final _hive = Get.find<MemberHiveController>();
 
   late ProfileDetailControllers _memberControllers;
   late ProfileDetailControllers _workingControllers;
@@ -42,7 +42,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   void initState() {
     super.initState();
 
-    _memberHiveController.loadMemberHive();
+    _hive.loadMemberHive();
 
     _memberControllers = ProfileDetailControllers(_memberProfile);
     _workingControllers = ProfileDetailControllers(_workingProfile);
@@ -69,9 +69,9 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   }
 
   void _fetchProfile(bool isMember) async {
-    if (_memberHiveController.memberProfile.value == null) return;
+    if (_hive.memberProfile.value == null) return;
 
-    await _profileController.loadProfile(_memberHiveController.memberProfile.value!.memberCode, isMember ? ProfileType.member : ProfileType.working);
+    await _profileController.loadProfile(_hive.memberProfile.value!.memberCode, isMember ? ProfileType.member : ProfileType.working);
 
     if (isMember && _profileController.memberProfile.value != null) {
       _memberProfile = _profileController.memberProfile.value!;
@@ -138,7 +138,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       accountCode: _memberControllers[fieldAccountCode].text.trim(),
     );
 
-    _profileController.updateProfile(data, ProfileType.member);
+    _profileController.updateProfile(data, ProfileType.member, _hive.memberProfile.value!.token);
   }
 
   void _updateWorkingProfile() async {
@@ -172,7 +172,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       registrationSchemeNo: _workingControllers[fieldRegistrationSchemeNo].text.trim(),
     );
 
-    _profileController.updateProfile(data, ProfileType.working);
+    _profileController.updateProfile(data, ProfileType.working, _hive.memberProfile.value!.token);
   }
 
   @override
@@ -309,7 +309,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             ),
             const SizedBox(),
             Padding(
-              padding: EdgeInsetsGeometry.only(
+              padding: EdgeInsets.only(
                 bottom: ResponsiveHelper.getSpacing(context, SizeType.m),
                 left: ResponsiveHelper.getSpacing(context, SizeType.m),
                 right: ResponsiveHelper.getSpacing(context, SizeType.m),
@@ -439,7 +439,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             ),
             const SizedBox(),
             Padding(
-              padding: EdgeInsetsGeometry.only(
+              padding: EdgeInsets.only(
                 bottom: ResponsiveHelper.getSpacing(context, SizeType.m),
                 left: ResponsiveHelper.getSpacing(context, SizeType.m),
                 right: ResponsiveHelper.getSpacing(context, SizeType.m),

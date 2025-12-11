@@ -1,6 +1,7 @@
 class AppStrings {
   // App Name
   static const String appName = "EzyMember";
+
   // App Server Url
   static const String serverUrl = "http://127.0.0.1:8000";
   static const String serverDirectory = "api";
@@ -16,7 +17,7 @@ class AppStrings {
   static const String tmpIconReferralProgram = "assets/images/tmp_ic_referral_program.png";
   static const String tmpImgAppLogo = "assets/images/tmp_app_logo.png";
   static const String tmpImgBackground = "assets/images/tmp_background.jpg";
-  static const String tmpImgDefaultAvatar = "assets/images/tmp_default_avatar.png";
+  static const String tmpImgDefaultAvatar = "assets/images/tmp_default_avatar.jpg";
   static const String tmpImgSignIn = "assets/images/tmp_sign_in.png";
   static const String tmpImgSignUp = "assets/images/tmp_sign_up.png";
   static const String tmpImgSplashLogo = "assets/images/tmp_splash_logo.jpg";
@@ -26,19 +27,23 @@ class AppStrings {
 
   static const String aboutUs = "About Us";
   static const String accountCode = "Account Code";
+  static const String active = "Active";
   static const String address = "Address";
   static const String addressLine = "Address Line";
   static const String advertisements = "Advertisements";
+  static const String all = "All";
   static const String basicInformation = "Basic Information";
   static const String cancel = "Cancel";
   static const String categories = "Categories";
   static const String city = "City";
+  static const String codeExpired = "Code Expired";
   static const String collect = "Collect";
   static const String collectVouchers = "Collect Vouchers";
   static const String companyInformation = "Company Information";
   static const String confirm = "Confirm";
   static const String continueGuest = "Continue as Guest";
   static const String country = "Country";
+  static const String credits = "Credits";
   static const String discountAmount = "Discount Amount";
   static const String earnPoints = "Earn Points";
   static const String dob = "Date of Birth";
@@ -57,21 +62,24 @@ class AppStrings {
   static const String minSpend = "Min. Spend";
   static const String more = "More";
   static const String msicCode = "MSIC Code";
+  static const String myCards = "My Cards";
   static const String myCredits = "My Credits";
-  static const String myMembers = "My Members";
   static const String myPoints = "My Points";
   static const String myVouchers = "My Vouchers";
   static const String name = "Name";
   static const String off = "Off";
   static const String password = "Password";
+  static const String pay = "Pay";
   static const String phone = "Phone";
   static const String pickGender = "Pick a Gender";
   static const String pickRegistrationType = "Pick a Registration Type";
+  static const String points = "Points";
   static const String postcode = "Postcode";
   static const String processing = "Processing";
   static const String profile = "Profile";
   static const String promotions = "Promotions";
   static const String quickAccess = "Quick Access";
+  static const String redeem = "Redeem";
   static const String redeemByCredits = "Redeem By Credits";
   static const String redirecting = "Redirecting";
   static const String referralProgram = "Referral Program";
@@ -91,6 +99,7 @@ class AppStrings {
   static const String tin = "TIN";
   static const String tnc = "T&C";
   static const String tncLong = "Terms & Conditions";
+  static const String today = "Today";
   static const String ttxRegistration = "TTX Registration";
   static const String use = "Use";
   static const String username = "Username";
@@ -98,11 +107,16 @@ class AppStrings {
   static const String validTill = "Valid Till";
   static const String vouchers = "Vouchers";
   static const String welcome = "Welcome";
+  static const String whatNew = "What's New";
   static const String working = "Working";
+  static const String yesterday = "Yesterday";
 
   static const String msgAccountExists = "Already have an account? ";
   static const String msgAccountNotExist = "Don't have an account? ";
   static const String msgAccountStatusInactive = "Your account is inactive. Please contact support for assistance.";
+  static const String msgAllVouchersCollected = "All vouchers for this batch have been claimed. Better luck next time!";
+  static const String msgCollectVoucherBefore = "Looks like you’ve collected this voucher before.";
+  static const String msgCollectVoucherSuccess = "Your voucher has been collected. Enjoy your reward!";
   static const String msgConnectionOff = "You are currently offline.";
   static const String msgContinueGuest = "I’m just exploring, try the app freely and sign up later.";
   static const String msgContinueSignIn = "I have an account, sign in and continue my journey.";
@@ -115,9 +129,13 @@ class AppStrings {
   static const String msgEmptyUsername = "Username cannot be empty.";
   static const String msgGoogleMapRedirecting = "Please wait while we redirect you to Google Maps.";
   static const String msgGoogleMapTap = "Tap to open in Google Maps";
+  static const String msgInvalidToken = "Oops! Something went wrong. Please restart the app and try again.";
   static const String msgNoAvailableAds = "No advertisements are available at the moment.";
-  static const String msgNoAvailablePromo = "No promotions are available at the moment.";
+  static const String msgNoAvailableHistory = "No histories are available at the moment.";
+  static const String msgNoAvailableMember = "No member cards are available at the moment.";
   static const String msgNoAvailableNearby = "No shops nearby are available at the moment.";
+  static const String msgNoAvailablePromo = "No promotions are available at the moment.";
+  static const String msgNoAvailableTimeline = "No timelines are available at the moment.";
   static const String msgNoAvailableVoucher = "No vouchers are available at the moment.";
   static const String msgPhoneExists = "This phone number is already registered. Please use another phone number.";
   static const String msgPhoneFormatInvalid = "Please enter a valid phone number.";
@@ -141,5 +159,6 @@ class AppStrings {
   List<String> genders = ["Male", "Female", "Prefer not to say"];
   List<String> idTypes = ["BRN", "NRIC", "PASSPORT", "ARMY"];
 
+  String getExpiresText(int minutes, int seconds) => "Expires in $minutes min ${seconds.toString().padLeft(2, "0")} sec";
   String getHintText(String label) => "Enter your $label";
 }

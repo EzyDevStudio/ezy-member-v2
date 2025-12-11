@@ -1,43 +1,22 @@
 import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/constants/app_themes.dart';
-import 'package:ezy_member_v2/controllers/advertisement_controller.dart';
-import 'package:ezy_member_v2/controllers/authentication_controller.dart';
-import 'package:ezy_member_v2/controllers/branch_controller.dart';
-import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
-import 'package:ezy_member_v2/controllers/profile_controller.dart';
-import 'package:ezy_member_v2/controllers/promotion_controller.dart';
-import 'package:ezy_member_v2/controllers/voucher_controller.dart';
 import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/local/member_profile_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 // Settle AssetImage, NetworkImage, Image.asset, Image.network
-// Settle image such as avatar
 
-// Required Controller: voucher_controller.dart
-
-// Done Screen: authentication_screen.dart, terms_condition_screen.dart, welcome_screen.dart
-
-// Check response 500 for access key: all
-
-// Check string "": all
-
+// run "adb devices" to get devices
+// run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await MemberProfileStorageService().init();
 
-  Get.put(AdvertisementController());
-  Get.put(AuthenticationController());
-  Get.put(BranchController());
-  Get.put(MemberController());
   Get.put(MemberHiveController());
-  Get.put(ProfileController());
-  Get.put(PromotionController());
-  Get.put(VoucherController());
 
   ConnectionService.instance.start();
 
@@ -52,7 +31,7 @@ class WrapperScreen extends StatefulWidget {
 }
 
 class _WrapperScreenState extends State<WrapperScreen> with SingleTickerProviderStateMixin {
-  final _memberController = Get.find<MemberHiveController>();
+  final _hive = Get.find<MemberHiveController>();
 
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
@@ -70,12 +49,12 @@ class _WrapperScreenState extends State<WrapperScreen> with SingleTickerProvider
   }
 
   Future<void> _checkSignIn() async {
-    await _memberController.loadMemberHive();
+    await _hive.loadMemberHive();
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
-    if (_memberController.isSignIn) {
+    if (_hive.isSignIn) {
       Get.offAllNamed(AppRoutes.home);
     } else {
       Get.offAllNamed(AppRoutes.welcome);

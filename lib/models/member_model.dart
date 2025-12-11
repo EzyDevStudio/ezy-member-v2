@@ -1,3 +1,4 @@
+import 'package:ezy_member_v2/models/branch_model.dart';
 import 'package:ezy_member_v2/models/member_card_model.dart';
 import 'package:ezy_member_v2/models/voucher_model.dart';
 
@@ -17,7 +18,8 @@ class MemberModel {
   final int point;
   final int normalVoucherCount;
   final int specialVoucherCount;
-  MemberCardModel? memberCard;
+  MemberCardModel memberCard;
+  BranchModel branch;
 
   MemberModel({
     this.companyID = "",
@@ -28,7 +30,9 @@ class MemberModel {
     this.normalVoucherCount = 0,
     this.specialVoucherCount = 0,
     MemberCardModel? memberCard,
-  }) : memberCard = memberCard ?? MemberCardModel.empty();
+    BranchModel? branch,
+  }) : memberCard = memberCard ?? MemberCardModel.empty(),
+       branch = branch ?? BranchModel.empty();
 
   MemberModel.empty() : this();
 
@@ -36,14 +40,19 @@ class MemberModel {
     companyID: data[fieldCompanyID] ?? "",
     isMember: data[fieldIsMember] ?? false,
     isExpired: data[fieldIsExpired] ?? false,
-    credit: data[fieldCredit] != null ? (data[fieldCredit] is int ? (data[fieldCredit] as int).toDouble() : data[fieldCredit] as double) : 0.0,
+    credit: (data[fieldCredit] ?? 0).toDouble(),
     point: data[fieldPoint] ?? 0,
     normalVoucherCount: data[VoucherModel.keyNormalVoucher] ?? 0,
     specialVoucherCount: data[VoucherModel.keySpecialVoucher] ?? 0,
+    memberCard: data[MemberCardModel.keyMemberCard] != null
+        ? MemberCardModel.fromJson(Map<String, dynamic>.from(data[MemberCardModel.keyMemberCard]))
+        : MemberCardModel.empty(),
+    branch: data[BranchModel.keyBranch] != null ? BranchModel.fromJson(Map<String, dynamic>.from(data[BranchModel.keyBranch])) : BranchModel.empty(),
   );
 
   @override
   String toString() =>
       "MemberDetailModel(companyID: $companyID, isMember: $isMember, isExpired: $isExpired, credit: $credit, point: $point, normalVoucherCount: $normalVoucherCount, specialVoucherCount: $specialVoucherCount)"
-      "\nmemberCard: ${memberCard.toString()})\n";
+      "\nmemberCard: ${memberCard.toString()}"
+      "\nbranch: ${branch.toString()})\n";
 }

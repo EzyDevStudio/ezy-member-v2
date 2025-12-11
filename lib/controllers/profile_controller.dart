@@ -40,7 +40,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<void> updateProfile(Map<String, dynamic> json, ProfileType type) async {
+  Future<void> updateProfile(Map<String, dynamic> json, ProfileType type, String memberToken) async {
     isUpdate.value = false;
 
     _showLoading(AppStrings.msgProfileUpdating);
@@ -66,6 +66,9 @@ class ProfileController extends GetxController {
         break;
       case 402:
         _showError(AppStrings.msgEmailExists);
+        break;
+      case 520:
+        _showError(AppStrings.msgInvalidToken);
         break;
       default:
         _showError(AppStrings.msgSystemFailed);

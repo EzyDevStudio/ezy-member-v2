@@ -7,13 +7,20 @@ class CustomChoiceChip<T> extends StatelessWidget {
   final Map<T, String> values;
   final T selectedValue;
   final ValueChanged<T> onSelected;
+  final WrapAlignment? alignment;
 
-  const CustomChoiceChip({super.key, required this.values, required this.selectedValue, required this.onSelected});
+  const CustomChoiceChip({
+    super.key,
+    required this.values,
+    required this.selectedValue,
+    required this.onSelected,
+    this.alignment = WrapAlignment.center,
+  });
 
   @override
   Widget build(BuildContext context) => Wrap(
     spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
-    alignment: WrapAlignment.center,
+    alignment: alignment!,
     children: values.keys.map((value) {
       final bool isSelected = selectedValue == value;
 

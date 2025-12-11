@@ -25,7 +25,7 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> with SingleTickerProviderStateMixin {
-  final AuthenticationController _authController = Get.find<AuthenticationController>();
+  final AuthenticationController _authController = Get.put(AuthenticationController(), tag: "authentication");
   final Map<AuthType, String> _authTypes = {AuthType.email: AppStrings.email, AuthType.phone: AppStrings.phone};
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();

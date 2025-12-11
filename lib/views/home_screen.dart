@@ -8,14 +8,17 @@ import 'package:ezy_member_v2/controllers/branch_controller.dart';
 import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/promotion_controller.dart';
+import 'package:ezy_member_v2/controllers/timeline_controller.dart';
 import 'package:ezy_member_v2/controllers/voucher_controller.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/services/local/connection_service.dart';
+import 'package:ezy_member_v2/widgets/custom_avatar.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
 import 'package:ezy_member_v2/widgets/custom_modal.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
+import 'package:ezy_member_v2/widgets/custom_timeline.dart';
 import 'package:ezy_member_v2/widgets/custom_voucher.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,12 +32,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _adsController = Get.find<AdvertisementController>();
-  final _branchController = Get.find<BranchController>();
-  final _memberController = Get.find<MemberController>();
-  final _promoController = Get.find<PromotionController>();
-  final _voucherController = Get.find<VoucherController>();
+  final _adsController = Get.put(AdvertisementController(), tag: "home");
+  final _branchController = Get.put(BranchController(), tag: "home");
+  final _memberController = Get.put(MemberController(), tag: "home");
+  final _promoController = Get.put(PromotionController(), tag: "home");
+  final _voucherController = Get.put(VoucherController(), tag: "home");
   final _hive = Get.find<MemberHiveController>();
+
+  final _timelineController = Get.put(TimelineController(), tag: "home");
 
   late StreamSubscription<bool> _subscription;
 
@@ -61,11 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await _hive.loadMemberHive();
 
-        if (_hive.isSignIn && _branchController.branches.isNotEmpty) {
-          String memberCode = _hive.memberProfile.value!.memberCode;
-          _memberController.loadMembersCheckStart(memberCode);
-          _memberController.loadMembers(memberCode);
-        }
+        if (_hive.isSignIn && _branchController.branches.isNotEmpty) _memberController.loadMembersCheckStart(_hive.memberProfile.value!.memberCode);
+
+        _timelineController.loadTimelines(companyID: "SIGMA1234");
       });
     });
   }
@@ -77,9 +80,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     await _hive.loadMemberHive();
 
-    // if (_hive.isSignIn) {
-    //   _voucherController.loadCollectableVouchers(memberCode: _hive.memberProfile.value!.memberCode, publicKey: "123456", privateKey: "123456");
-    // }
+    if (_hive.isSignIn) {
+      _voucherController.loadCollectableVouchers(_hive.memberProfile.value!.memberCode);
+      _memberController.loadMembers(_hive.memberProfile.value!.memberCode);
+    }
   }
 
   void _signOut() async {
@@ -111,12 +115,13 @@ class _HomeScreenState extends State<HomeScreen> {
         onRefresh: _onRefresh,
         child: CustomScrollView(
           slivers: <Widget>[
-            _buildAppBar(),
-            _buildUserInfo(),
+            _buildAppBar2(),
+            // _buildUserInfo(),
             if (_hive.isSignIn) ...[_buildQuickAccess(), _buildSection(AppStrings.vouchers, _buildVouchers(), isPrimaryContainer: true)],
             _buildSection(AppStrings.shopsNearby, _buildNearby(), onTap: () {}),
-            _buildSection(AppStrings.promotions, _buildPromotions(), isPrimaryContainer: true),
-            _buildSection(AppStrings.advertisements, _buildAdvertisements()),
+            // _buildSection(AppStrings.promotions, _buildPromotions(), isPrimaryContainer: true),
+            // _buildSection(AppStrings.advertisements, _buildAdvertisements()),
+            _buildTimeline(),
           ],
         ),
       ),
@@ -127,30 +132,153 @@ class _HomeScreenState extends State<HomeScreen> {
     floating: true,
     pinned: true,
     actions: <IconButton>[
-      IconButton(
-        onPressed: () {},
-        icon: Badge.count(count: 2, child: Icon(Icons.notifications_rounded)),
-      ),
       IconButton(onPressed: () => {}, icon: Icon(Icons.settings_rounded)),
       if (_hive.isSignIn) IconButton(onPressed: _signOut, icon: Icon(Icons.logout_rounded)),
     ],
     title: Text(AppStrings.home),
   );
 
-  Widget _buildUserInfo() => SliverToBoxAdapter(
-    child: Container(
-      decoration: BoxDecoration(
-        color: Colors.black.withAlpha((0.25 * 255).round()),
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(Colors.black.withAlpha((0.25 * 255).round()), BlendMode.darken),
-          image: AssetImage(AppStrings.tmpImgBackground),
+  Widget _buildAppBar1() => SliverAppBar(
+    floating: true,
+    pinned: true,
+    snap: false,
+    actions: <Widget>[
+      IconButton(onPressed: () {}, icon: Icon(Icons.settings_rounded)),
+      if (_hive.isSignIn) IconButton(onPressed: _signOut, icon: Icon(Icons.logout_rounded)),
+    ],
+    bottom: PreferredSize(
+      preferredSize: Size.fromHeight(ResponsiveHelper.getSpacing(context, SizeType.m) * 3 + kProfileImgSizeM + kProfileBarcodeHeight),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, SizeType.xl), vertical: ResponsiveHelper.getSpacing(context, SizeType.m)),
+        child: Column(
+          spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+          children: <Widget>[
+            Row(
+              spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () => Get.toNamed(_hive.isSignIn ? AppRoutes.profileDetail : AppRoutes.authentication),
+                  child: CustomAvatar(defaultSize: kProfileImgSizeM, desktopSize: kProfileImgSizeM, networkImage: ""),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      CustomText(
+                        _hive.isSignIn ? _hive.memberProfile.value!.name : AppStrings.guest,
+                        color: Colors.white,
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      if (_hive.isSignIn)
+                        CustomText(_hive.memberProfile.value!.memberCode, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (_hive.isSignIn) _buildBarcode(_hive.memberProfile.value!.memberCode),
+          ],
         ),
       ),
-      padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.getSpacing(context, SizeType.m),
-        vertical: ResponsiveHelper.getSpacing(context, SizeType.xl),
+    ),
+    flexibleSpace: FlexibleSpaceBar(
+      background: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(Colors.black.withAlpha((0.25 * 255).round()), BlendMode.darken),
+            image: AssetImage(AppStrings.tmpImgBackground),
+          ),
+        ),
       ),
+    ),
+    title: Text(AppStrings.home),
+  );
+
+  Widget _buildAppBar2() => SliverAppBar(
+    floating: true,
+    pinned: true,
+    snap: false,
+    expandedHeight: kToolbarHeight + ResponsiveHelper.getSpacing(context, SizeType.m) * 3 + kProfileImgSizeM + kProfileBarcodeHeight,
+    actions: <Widget>[
+      PopupMenuButton<String>(
+        icon: const Icon(Icons.language_rounded, color: Colors.white),
+        onSelected: (value) {
+          // TODO: switch language here
+          print("Selected language: $value");
+        },
+        itemBuilder: (context) => [
+          const PopupMenuItem(
+            value: 'en',
+            child: Text("English"),
+          ),
+          const PopupMenuItem(
+            value: 'zh',
+            child: Text("中文"),
+          ),
+          const PopupMenuItem(
+            value: 'ms',
+            child: Text("Bahasa Melayu"),
+          ),
+        ],
+      ),
+
+      IconButton(onPressed: () {}, icon: Icon(Icons.settings_rounded)),
+      if (_hive.isSignIn) IconButton(onPressed: _signOut, icon: Icon(Icons.logout_rounded)),
+    ],
+    flexibleSpace: FlexibleSpaceBar(
+      background: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(Colors.black.withAlpha((0.25 * 255).round()), BlendMode.darken),
+            image: AssetImage(AppStrings.tmpImgBackground),
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, SizeType.xl), vertical: ResponsiveHelper.getSpacing(context, SizeType.m)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+            children: <Widget>[
+              Row(
+                spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () => Get.toNamed(_hive.isSignIn ? AppRoutes.profileDetail : AppRoutes.authentication),
+                    child: CustomAvatar(defaultSize: kProfileImgSizeM, desktopSize: kProfileImgSizeM, networkImage: ""),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        CustomText(
+                          _hive.isSignIn ? _hive.memberProfile.value!.name : AppStrings.guest,
+                          color: Colors.white,
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        if (_hive.isSignIn)
+                          CustomText(_hive.memberProfile.value!.memberCode, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              if (_hive.isSignIn) _buildBarcode(_hive.memberProfile.value!.memberCode),
+            ],
+          ),
+        ),
+      ),
+    ),
+    title: Text(AppStrings.home),
+  );
+
+  Widget _buildUserInfo() => SliverToBoxAdapter(
+    child: CustomBackgroundCard(
       child: Column(
         spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
         children: <Widget>[
@@ -159,15 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               GestureDetector(
                 onTap: () => Get.toNamed(_hive.isSignIn ? AppRoutes.profileDetail : AppRoutes.authentication),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white, width: kBorderWidthAvatar),
-                    shape: BoxShape.circle,
-                    image: DecorationImage(fit: BoxFit.cover, image: AssetImage(AppStrings.tmpImgSplashLogo)),
-                  ),
-                  height: kProfileImgSizeM,
-                  width: kProfileImgSizeM,
-                ),
+                child: CustomAvatar(defaultSize: kProfileImgSizeM, desktopSize: kProfileImgSizeM, networkImage: ""),
               ),
               Expanded(
                 child: Column(
@@ -253,7 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
             assetName: AppStrings.tmpIconMyVoucher,
             label: AppStrings.myVouchers,
             onTap: () async {
-              await Get.toNamed(AppRoutes.voucherList, arguments: {"checkStart": false, "memberCode": _hive.memberProfile.value!.memberCode});
+              await Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0, "member_code": _hive.memberProfile.value!.memberCode});
 
               _onRefresh();
             },
@@ -262,10 +382,22 @@ class _HomeScreenState extends State<HomeScreen> {
             isCountVisible: true,
             count: memberCount,
             assetName: AppStrings.tmpIconMyMember,
-            label: AppStrings.myMembers,
-            onTap: () {},
+            label: AppStrings.myCards,
+            onTap: () async {
+              await Get.toNamed(AppRoutes.memberList, arguments: {"member_code": _hive.memberProfile.value!.memberCode});
+
+              _onRefresh();
+            },
           ),
-          CustomImageTextButton(assetName: AppStrings.tmpIconHistory, label: AppStrings.history, onTap: () {}),
+          CustomImageTextButton(
+            assetName: AppStrings.tmpIconHistory,
+            label: AppStrings.history,
+            onTap: () async {
+              await Get.toNamed(AppRoutes.history, arguments: {"member_code": _hive.memberProfile.value!.memberCode});
+
+              _onRefresh();
+            },
+          ),
           CustomImageTextButton(assetName: AppStrings.tmpIconReferralProgram, label: AppStrings.referralProgram, onTap: () {}),
           CustomImageTextButton(assetName: AppStrings.tmpIconInvoice, label: AppStrings.eInvoice, onTap: () {}),
         ]),
@@ -282,26 +414,40 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       }
 
-      if (_voucherController.vouchers.isEmpty) {
+      if (_voucherController.collectableVouchers.isEmpty) {
         return SizedBox(
           height: ResponsiveHelper.getVoucherHeight(context),
           child: Center(child: CustomText(AppStrings.msgNoAvailableVoucher, fontSize: 16.0, maxLines: 2)),
         );
       }
 
+      final vouchers = _voucherController.collectableVouchers;
+
       return SizedBox(
         height: ResponsiveHelper.getVoucherHeight(context) + ResponsiveHelper.getSpacing(context, SizeType.s),
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
-          itemCount: _voucherController.vouchers.length,
+          itemCount: vouchers.length,
           separatorBuilder: (_, _) => SizedBox(width: ResponsiveHelper.getSpacing(context, SizeType.m)),
           itemBuilder: (context, index) => Padding(
             padding: EdgeInsets.only(
               bottom: ResponsiveHelper.getSpacing(context, SizeType.l),
               left: index == 0 ? ResponsiveHelper.getSpacing(context, SizeType.m) : 0.0,
-              right: index == _voucherController.vouchers.length - 1 ? ResponsiveHelper.getSpacing(context, SizeType.m) : 0.0,
+              right: index == vouchers.length - 1 ? ResponsiveHelper.getSpacing(context, SizeType.m) : 0.0,
             ),
-            child: CustomVoucher(voucher: _voucherController.vouchers[index]),
+            child: CustomCollectableVoucher(
+              onTapCollect: () async {
+                await _voucherController.collectVoucher(
+                  vouchers[index].batchCode,
+                  vouchers[index].companyID,
+                  _hive.memberProfile.value!.memberCode,
+                  _hive.memberProfile.value!.token,
+                );
+
+                _voucherController.loadCollectableVouchers(_hive.memberProfile.value!.memberCode);
+              },
+              voucher: vouchers[index],
+            ),
           ),
         ),
       );
@@ -419,4 +565,46 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }),
   ];
+
+  Widget _buildTimeline() => Obx(() {
+    if (_timelineController.isLoading.value) {
+      return SliverFillRemaining(
+        child: SizedBox(
+          child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
+        ),
+      );
+    }
+
+    if (_timelineController.timelines.isEmpty) {
+      return SliverFillRemaining(
+        child: SizedBox(child: Center(child: CustomText(AppStrings.msgNoAvailableTimeline, fontSize: 16.0, maxLines: 2))),
+      );
+    }
+
+    return SliverToBoxAdapter(
+      child: Container(
+        margin: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, SizeType.l)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.getSpacing(context, SizeType.m),
+                vertical: ResponsiveHelper.getSpacing(context, SizeType.l),
+              ),
+              child: CustomText(AppStrings.whatNew, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
+            ),
+            ListView.separated(
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              itemCount: _timelineController.timelines.length,
+              physics: NeverScrollableScrollPhysics(),
+              separatorBuilder: (_, _) => Divider(color: Colors.grey.withAlpha((0.7 * 255).round()), height: 30.0, thickness: 5.0),
+              itemBuilder: (context, index) => CustomTimeline(branch: _branchController.branches[0], timeline: _timelineController.timelines[index]),
+            ),
+          ],
+        ),
+      ),
+    );
+  });
 }

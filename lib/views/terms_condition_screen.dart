@@ -38,7 +38,7 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
   Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text(AppStrings.tncLong));
 
   Widget _buildContent() => SliverPadding(
-    padding: EdgeInsetsGeometry.only(
+    padding: EdgeInsets.only(
       bottom: ResponsiveHelper.getSpacing(context, SizeType.m),
       left: ResponsiveHelper.getSpacing(context, SizeType.m),
       right: ResponsiveHelper.getSpacing(context, SizeType.m),

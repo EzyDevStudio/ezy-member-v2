@@ -16,6 +16,9 @@ const String fieldAddress4 = "address4";
 const String fieldPostcode = "postcode";
 const String fieldCity = "city";
 const String fieldState = "state";
+const String fieldLatitude = "latitude";
+const String fieldLongitude = "longitude";
+const String fieldDistanceKm = "distance_km";
 const String fieldCompanyID = "company_id";
 
 class BranchModel {
@@ -35,6 +38,9 @@ class BranchModel {
   final String postcode;
   final String city;
   final String state;
+  final double? latitude;
+  final double? longitude;
+  final double? distanceKm;
   final AboutUsModel aboutUs;
   final CompanyModel company;
   final SubCompanyModel subCompany;
@@ -54,6 +60,9 @@ class BranchModel {
     this.postcode = "",
     this.city = "",
     this.state = "",
+    this.latitude,
+    this.longitude,
+    this.distanceKm,
     AboutUsModel? aboutUs,
     CompanyModel? company,
     SubCompanyModel? subCompany,
@@ -78,6 +87,9 @@ class BranchModel {
     postcode: data[fieldPostcode] ?? "",
     city: data[fieldCity] ?? "",
     state: data[fieldState] ?? "",
+    latitude: data[fieldLatitude] != null ? double.tryParse(data[fieldLatitude].toString()) : null,
+    longitude: data[fieldLongitude] != null ? double.tryParse(data[fieldLongitude].toString()) : null,
+    distanceKm: data[fieldDistanceKm] != null ? double.tryParse(data[fieldDistanceKm].toString()) : null,
     aboutUs: data[AboutUsModel.keyAboutUs] != null
         ? AboutUsModel.fromJson(Map<String, dynamic>.from(data[AboutUsModel.keyAboutUs]))
         : AboutUsModel.empty(),
@@ -93,7 +105,7 @@ class BranchModel {
 
   @override
   String toString() =>
-      "BranchModel(id: $id, branchCode: $branchCode, branchName: $branchName, branchDescription: $branchDescription, contactNumber: $contactNumber, contactNumber2: $contactNumber2, companyKey: $companyKey, address1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state"
+      "BranchModel(id: $id, branchCode: $branchCode, branchName: $branchName, branchDescription: $branchDescription, contactNumber: $contactNumber, contactNumber2: $contactNumber2, companyKey: $companyKey, address1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, latitude: $latitude, longitude: $longitude, distanceKm: $distanceKm"
       "\naboutUs: ${aboutUs.toString()}"
       "\ncompany: ${company.toString()}"
       "\nsubCompany: ${subCompany.toString()})\n";

@@ -7,6 +7,7 @@ const String fieldRedeemMember = "redeem_member";
 const String fieldRedeemDate = "redeem_date";
 const String fieldRedeemCounter = "redeem_counter";
 const String fieldDocNo = "doc_no";
+const String fieldCreatedAt = "created_at";
 const String fieldBatchDescription = "batch_description";
 const String fieldDiscountValue = "discount_value";
 const String fieldMinimumSpend = "minimum_spend";
@@ -17,6 +18,8 @@ const String fieldTermsCondition = "terms_condition";
 const String fieldCompanyID = "company_id";
 const String fieldCompanyName = "company_name";
 const String fieldCompanyLogo = "company_logo";
+const String fieldBranchName = "branch_name";
+const String fieldCounterDesc = "counter_desc";
 
 class VoucherModel {
   static const String keyNormalVoucher = "normal_voucher";
@@ -31,6 +34,7 @@ class VoucherModel {
   final int redeemDate;
   final String redeemCounter;
   final String docNo;
+  final int createdAt;
   final String batchDescription;
   final int discountValue;
   final double minimumSpend;
@@ -41,6 +45,8 @@ class VoucherModel {
   final String companyID;
   final String companyName;
   final String companyLogo;
+  final String branchName;
+  final String counterDesc;
 
   VoucherModel({
     this.id = 0,
@@ -52,6 +58,7 @@ class VoucherModel {
     this.redeemDate = 0,
     this.redeemCounter = "",
     this.docNo = "",
+    this.createdAt = 0,
     this.batchDescription = "",
     this.discountValue = 0,
     this.minimumSpend = 0.0,
@@ -62,6 +69,8 @@ class VoucherModel {
     this.companyID = "",
     this.companyName = "",
     this.companyLogo = "",
+    this.branchName = "",
+    this.counterDesc = "",
   });
 
   VoucherModel.empty() : this();
@@ -76,11 +85,10 @@ class VoucherModel {
     redeemDate: data[fieldRedeemDate] != null ? DateTime.tryParse(data[fieldRedeemDate])?.millisecondsSinceEpoch ?? 0 : 0,
     redeemCounter: data[fieldRedeemCounter] ?? "",
     docNo: data[fieldDocNo] ?? "",
+    createdAt: data[fieldCreatedAt] != null ? DateTime.tryParse(data[fieldCreatedAt])?.millisecondsSinceEpoch ?? 0 : 0,
     batchDescription: data[fieldBatchDescription] ?? "",
     discountValue: data[fieldDiscountValue] ?? 0,
-    minimumSpend: data[fieldMinimumSpend] != null
-        ? (data[fieldMinimumSpend] is int ? (data[fieldMinimumSpend] as int).toDouble() : data[fieldMinimumSpend] as double)
-        : 0.0,
+    minimumSpend: (data[fieldMinimumSpend] ?? 0).toDouble(),
     startDate: data[fieldStartDate] != null ? DateTime.tryParse(data[fieldStartDate])?.millisecondsSinceEpoch ?? 0 : 0,
     expiredDate: data[fieldExpiredDate] != null ? DateTime.tryParse(data[fieldExpiredDate])?.millisecondsSinceEpoch ?? 0 : 0,
     quantity: data[fieldQuantity] ?? 0,
@@ -88,9 +96,11 @@ class VoucherModel {
     companyID: data[fieldCompanyID] ?? "",
     companyName: data[fieldCompanyName] ?? "",
     companyLogo: data[fieldCompanyLogo] ?? "",
+    branchName: data[fieldBranchName] ?? "",
+    counterDesc: data[fieldCounterDesc] ?? "",
   );
 
   @override
   String toString() =>
-      "VoucherModel(id: $id, batchCode: $batchCode, voucherCode: $voucherCode, holder: $holder, status: $status, redeemMember: $redeemMember, redeemDate: $redeemDate, redeemCounter: $redeemCounter, docNo: $docNo, batchDescription: $batchDescription, discountValue: $discountValue, minimumSpend: $minimumSpend, startDate: $startDate, expiredDate: $expiredDate, quantity: $quantity, termsCondition: $termsCondition, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo)\n";
+      "VoucherModel(id: $id, batchCode: $batchCode, voucherCode: $voucherCode, holder: $holder, status: $status, redeemMember: $redeemMember, redeemDate: $redeemDate, redeemCounter: $redeemCounter, docNo: $docNo, createdAt: $createdAt, batchDescription: $batchDescription, discountValue: $discountValue, minimumSpend: $minimumSpend, startDate: $startDate, expiredDate: $expiredDate, quantity: $quantity, termsCondition: $termsCondition, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo, branchName: $branchName, counterDesc: $counterDesc)\n";
 }

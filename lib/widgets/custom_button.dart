@@ -30,8 +30,8 @@ class CustomFilledButton extends StatelessWidget {
 class CustomImageTextButton extends StatelessWidget {
   final bool? isCountVisible, isLabelVisible;
   final int? count;
-  final String assetName;
-  final String label;
+  final String assetName, label;
+  final String? content;
   final VoidCallback? onTap;
 
   const CustomImageTextButton({
@@ -41,6 +41,7 @@ class CustomImageTextButton extends StatelessWidget {
     this.count = 0,
     required this.assetName,
     required this.label,
+    this.content,
     this.onTap,
   });
 
@@ -52,7 +53,6 @@ class CustomImageTextButton extends StatelessWidget {
       padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.s)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        spacing: ResponsiveHelper.getSpacing(context, SizeType.s),
         children: <Widget>[
           Expanded(
             child: Center(
@@ -68,7 +68,9 @@ class CustomImageTextButton extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(height: ResponsiveHelper.getSpacing(context, SizeType.s)),
           if (isLabelVisible!) CustomText(label, fontSize: 14.0),
+          if (isLabelVisible! && content != null) CustomText(content!, fontSize: 14.0),
         ],
       ),
     ),

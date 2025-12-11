@@ -13,5 +13,8 @@ class MemberProfileHive extends HiveObject {
   @HiveField(2)
   final String name;
 
-  MemberProfileHive({required this.id, required this.memberCode, required this.name});
+  @HiveField(3)
+  final String token;
+
+  MemberProfileHive({required this.id, required this.memberCode, required this.name, required this.token});
 }

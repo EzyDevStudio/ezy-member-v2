@@ -29,14 +29,14 @@ class ApiService {
     }
   }
 
-  Future<Response?> post<T>({required String endPoint, required String module, Map<String, dynamic>? data, String? accessKey}) async {
+  Future<Response?> post<T>({required String endPoint, required String module, Map<String, dynamic>? data, String? memberToken}) async {
     final url = "$_baseUrl/$endPoint";
 
     try {
       final response = await _dio.post(
         url,
         data: data,
-        options: Options(headers: {"Authorization": "Bearer $accessKey", "Content-Type": "application/json"}),
+        options: Options(headers: {"Authorization": "Bearer $memberToken", "Content-Type": "application/json"}),
       );
 
       return response;

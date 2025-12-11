@@ -1,6 +1,64 @@
+import 'package:ezy_member_v2/constants/app_strings.dart';
+import 'package:ezy_member_v2/constants/enum.dart';
+import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/models/history_model.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
+
+class CustomHistoryListTile extends StatelessWidget {
+  final HistoryModel history;
+
+  const CustomHistoryListTile({super.key, required this.history});
+
+  @override
+  Widget build(BuildContext context) {
+    Color textColor = Colors.black87;
+    String title = "";
+    String location = "";
+    String value = "";
+
+    if (history.type == HistoryType.credit) {
+      title = history.credit!.creditDescription;
+      location = [history.credit?.branchName, history.credit?.counterDesc].where((s) => s != null && s.isNotEmpty).join(" - ");
+      value = history.credit!.credit.toStringAsFixed(1);
+      textColor = history.credit!.credit < 0 ? Colors.red : Colors.green;
+    } else if (history.type == HistoryType.point) {
+      title = history.point!.pointDescription;
+      location = [history.point?.branchName, history.point?.counterDesc].where((s) => s != null && s.isNotEmpty).join(" - ");
+      value = history.point!.point.toStringAsFixed(1);
+      textColor = history.point!.point < 0 ? Colors.red : Colors.green;
+    } else if (history.type == HistoryType.voucher) {
+      title = history.voucher!.batchDescription;
+      location = [history.voucher?.branchName, history.voucher?.counterDesc].where((s) => s != null && s.isNotEmpty).join(" - ");
+      value = history.voucher!.redeemDate == 0 ? AppStrings.collect : AppStrings.redeem;
+      textColor = history.voucher!.redeemDate == 0 ? Colors.green : Colors.red;
+    }
+
+    return ListTile(
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.getSpacing(context, SizeType.m),
+        vertical: ResponsiveHelper.getSpacing(context, SizeType.s),
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.getSpacing(context, SizeType.xs)),
+            child: CustomText(title, fontSize: 16.0),
+          ),
+          if (location.isNotEmpty) CustomText(location, color: Colors.black54, fontSize: 12.0),
+        ],
+      ),
+      title: CustomText(
+        FormatterHelper.timestampToString(history.transactionDate, format: FormatterHelper.formatDateTime),
+        color: Colors.black54,
+        fontSize: 12.0,
+      ),
+      trailing: CustomText(value, color: textColor, fontSize: 14.0),
+    );
+  }
+}
 
 class CustomInfoListTile extends StatelessWidget {
   final IconData? icon;

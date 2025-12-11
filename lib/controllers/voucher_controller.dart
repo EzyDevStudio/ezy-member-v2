@@ -1,29 +1,35 @@
-import 'package:ezy_member_v2/models/company_model.dart';
+import 'package:ezy_member_v2/constants/app_strings.dart';
+import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/models/voucher_model.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class VoucherController extends GetxController {
   final ApiService _api = ApiService();
 
   var isLoading = false.obs;
+  var isSuccess = false.obs;
   var vouchers = <VoucherModel>[].obs;
+  var collectableVouchers = <VoucherModel>[].obs;
 
-  Future<void> loadVouchers(String memberCode, int checkStart) async {
+  Future<List<VoucherModel>> _fetchVouchers(String memberCode, {bool collectable = false, int checkStart = 0, String? companyID}) async {
     isLoading.value = true;
     final List<VoucherModel> tmpVouchers = [];
 
-    final Map<String, dynamic> data = {"member_code": memberCode, "check_start": checkStart};
+    final Map<String, dynamic> data = {"member_code": memberCode, "company_id": companyID};
+
+    if (!collectable) data["check_start"] = checkStart;
 
     final response = await _api.get(
-      endPoint: "get-all-voucher",
+      endPoint: collectable ? "get-all-collectable-voucher" : "get-all-voucher",
+      module: "VoucherController - _fetchVouchers",
       data: data,
-      module: "VoucherController - loadVouchers",
     );
 
-    if (response == null || (response.data[VoucherModel.keyNormalVoucher] == null && response.data[VoucherModel.keySpecialVoucher] == null)) {
+    if (response == null) {
       isLoading.value = false;
-      return;
+      return [];
     }
 
     if (response.data[ApiService.keyStatusCode] == 200) {
@@ -35,37 +41,47 @@ class VoucherController extends GetxController {
     }
 
     isLoading.value = false;
-    vouchers.value = tmpVouchers;
+    return tmpVouchers;
   }
 
-  Future<void> loadCollectableVouchers({required String memberCode, required String publicKey, required String privateKey}) async {
-    isLoading.value = true;
+  Future<void> loadVouchers(String memberCode, {int checkStart = 0, String? companyID}) async {
+    vouchers.value = await _fetchVouchers(memberCode, checkStart: checkStart, companyID: companyID);
+  }
 
-    final Map<String, dynamic> data = {"member_code": memberCode};
+  Future<void> loadCollectableVouchers(String memberCode) async {
+    collectableVouchers.value = await _fetchVouchers(memberCode, collectable: true);
+  }
 
-    final List<VoucherModel> tmpVouchers = [];
+  Future<void> collectVoucher(String batchCode, String companyID, String memberCode, String memberToken) async {
+    isSuccess.value = false;
 
-    final response = await _api.get(
-      endPoint: "get-all-collectable-voucher",
-      module: "VoucherController - loadCollectableVouchers",
-      data: data,
-    );
+    final Map<String, dynamic> data = {"batch_code": batchCode, "company_id": companyID, "member_code": memberCode, "member_token": memberToken};
+    final response = await _api.post(endPoint: "collect-voucher", module: "VoucherController - collectVoucher", data: data, memberToken: memberToken);
 
-    if (response == null || response.data[CompanyModel.keyCompany] == null) {
-      isLoading.value = false;
+    if (response == null) {
+      _showError(AppStrings.msgSystemFailed);
       return;
     }
 
-    final List<dynamic> list = response.data[CompanyModel.keyCompany];
-
-    for (var data in list) {
-      for (var voucher in data[VoucherModel.keyNormalVoucher]) {
-        final tmpVoucher = VoucherModel.fromJson(Map<String, dynamic>.from(voucher));
-        tmpVouchers.add(tmpVoucher);
-      }
+    if (response.data[ApiService.keyStatusCode] == 200) {
+      isSuccess.value = true;
+      _showSuccess(AppStrings.msgCollectVoucherSuccess);
+    } else if (response.data[ApiService.keyStatusCode] == 402) {
+      _showError(AppStrings.msgAllVouchersCollected);
+    } else if (response.data[ApiService.keyStatusCode] == 403) {
+      _showError(AppStrings.msgCollectVoucherBefore);
+    } else if (response.data[ApiService.keyStatusCode] == 520) {
+      _showError(AppStrings.msgInvalidToken);
+    } else {
+      _showError(AppStrings.msgInvalidToken);
     }
+  }
 
-    isLoading.value = false;
-    vouchers.value = tmpVouchers;
+  void _showError(String message) {
+    MessageHelper.show(message, backgroundColor: Colors.red, icon: Icons.error_rounded);
+  }
+
+  void _showSuccess(String message) {
+    MessageHelper.show(message, backgroundColor: Colors.green, icon: Icons.check_circle_outline_rounded);
   }
 }
