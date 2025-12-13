@@ -30,11 +30,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   connectivity_plus: ^7.0.0
   coupon_uikit: ^0.2.1
   cupertino_icons: ^1.0.8
   dio: ^5.9.0
+  flutter_localization: ^0.3.3
   geocoding: ^4.0.0
   geolocator: ^14.0.2
   get: ^4.7.3
@@ -76,6 +79,7 @@ flutter:
     - assets/images/tmp_splash_logo.jpg
     - assets/images/tmp_welcome.png
     - assets/json/country_codes.json
+    - assets/json/postcodes.json
   fonts:
     - family: AlibabaPuHuiTi
       fonts:

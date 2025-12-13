@@ -6,8 +6,7 @@ class AppStrings {
   static const String serverUrl = "http://127.0.0.1:8000";
   static const String serverDirectory = "api";
 
-  // Assets
-  // Temporary variables only
+  // Assets (Temporary variables only)
   static const String tmpIconHistory = "assets/images/tmp_ic_history.png";
   static const String tmpIconInvoice = "assets/images/tmp_ic_invoice.png";
   static const String tmpIconMyCredits = "assets/images/tmp_ic_my_credits.png";
@@ -24,141 +23,21 @@ class AppStrings {
   static const String tmpImgWelcome = "assets/images/tmp_welcome.png";
 
   static const String jsonCountryCode = "assets/json/country_codes.json";
-
-  static const String aboutUs = "About Us";
-  static const String accountCode = "Account Code";
-  static const String active = "Active";
-  static const String address = "Address";
-  static const String addressLine = "Address Line";
-  static const String advertisements = "Advertisements";
-  static const String all = "All";
-  static const String basicInformation = "Basic Information";
-  static const String cancel = "Cancel";
-  static const String categories = "Categories";
-  static const String city = "City";
-  static const String codeExpired = "Code Expired";
-  static const String collect = "Collect";
-  static const String collectVouchers = "Collect Vouchers";
-  static const String companyInformation = "Company Information";
-  static const String confirm = "Confirm";
-  static const String continueGuest = "Continue as Guest";
-  static const String country = "Country";
-  static const String credits = "Credits";
-  static const String discountAmount = "Discount Amount";
-  static const String earnPoints = "Earn Points";
-  static const String dob = "Date of Birth";
-  static const String eInvoice = "E-Invoice";
-  static const String email = "Email";
-  static const String expired = "Expired";
-  static const String forgotPassword = "Forgot Password?";
-  static const String gender = "Gender";
-  static const String guest = "Guest";
-  static const String history = "History";
-  static const String home = "Home";
-  static const String joinNow = "Join Now";
-  static const String less = "Less";
-  static const String member = "Member";
-  static const String memberBenefits = "Member Benefits";
-  static const String minSpend = "Min. Spend";
-  static const String more = "More";
-  static const String msicCode = "MSIC Code";
-  static const String myCards = "My Cards";
-  static const String myCredits = "My Credits";
-  static const String myPoints = "My Points";
-  static const String myVouchers = "My Vouchers";
-  static const String name = "Name";
-  static const String off = "Off";
-  static const String password = "Password";
-  static const String pay = "Pay";
-  static const String phone = "Phone";
-  static const String pickGender = "Pick a Gender";
-  static const String pickRegistrationType = "Pick a Registration Type";
-  static const String points = "Points";
-  static const String postcode = "Postcode";
-  static const String processing = "Processing";
-  static const String profile = "Profile";
-  static const String promotions = "Promotions";
-  static const String quickAccess = "Quick Access";
-  static const String redeem = "Redeem";
-  static const String redeemByCredits = "Redeem By Credits";
-  static const String redirecting = "Redirecting";
-  static const String referralProgram = "Referral Program";
-  static const String registrationInformation = "Registration Information";
-  static const String registrationSchemeID = "Registration Scheme ID";
-  static const String requiredEInvoice = "Require E-Invoice";
-  static const String roc = "ROC";
-  static const String saveChanges = "Save Changes";
-  static const String search = "Search";
-  static const String shopsNearby = "Shops Nearby";
-  static const String signIn = "Sign In";
-  static const String signInAccount = "Sign in with your account";
-  static const String signOut = "Sign Out";
-  static const String signUp = "Sign Up";
-  static const String sstRegistration = "SST Registration";
-  static const String state = "State";
-  static const String tin = "TIN";
-  static const String tnc = "T&C";
-  static const String tncLong = "Terms & Conditions";
-  static const String today = "Today";
-  static const String ttxRegistration = "TTX Registration";
-  static const String use = "Use";
-  static const String username = "Username";
-  static const String validPeriod = "Valid Period";
-  static const String validTill = "Valid Till";
-  static const String vouchers = "Vouchers";
-  static const String welcome = "Welcome";
-  static const String whatNew = "What's New";
-  static const String working = "Working";
-  static const String yesterday = "Yesterday";
-
-  static const String msgAccountExists = "Already have an account? ";
-  static const String msgAccountNotExist = "Don't have an account? ";
-  static const String msgAccountStatusInactive = "Your account is inactive. Please contact support for assistance.";
-  static const String msgAllVouchersCollected = "All vouchers for this batch have been claimed. Better luck next time!";
-  static const String msgCollectVoucherBefore = "Looks like you’ve collected this voucher before.";
-  static const String msgCollectVoucherSuccess = "Your voucher has been collected. Enjoy your reward!";
-  static const String msgConnectionOff = "You are currently offline.";
-  static const String msgContinueGuest = "I’m just exploring, try the app freely and sign up later.";
-  static const String msgContinueSignIn = "I have an account, sign in and continue my journey.";
-  static const String msgEmailExists = "This email is already registered. Please use another email.";
-  static const String msgEmailFormatInvalid = "Please enter an email in the correct format (e.g., example@mail.com).";
-  static const String msgEmailNotFound = "No account found with this email.";
-  static const String msgEmptyEmail = "Email cannot be empty.";
-  static const String msgEmptyPassword = "Password cannot be empty.";
-  static const String msgEmptyPhone = "Phone number cannot be empty.";
-  static const String msgEmptyUsername = "Username cannot be empty.";
-  static const String msgGoogleMapRedirecting = "Please wait while we redirect you to Google Maps.";
-  static const String msgGoogleMapTap = "Tap to open in Google Maps";
-  static const String msgInvalidToken = "Oops! Something went wrong. Please restart the app and try again.";
-  static const String msgNoAvailableAds = "No advertisements are available at the moment.";
-  static const String msgNoAvailableHistory = "No histories are available at the moment.";
-  static const String msgNoAvailableMember = "No member cards are available at the moment.";
-  static const String msgNoAvailableNearby = "No shops nearby are available at the moment.";
-  static const String msgNoAvailablePromo = "No promotions are available at the moment.";
-  static const String msgNoAvailableTimeline = "No timelines are available at the moment.";
-  static const String msgNoAvailableVoucher = "No vouchers are available at the moment.";
-  static const String msgPhoneExists = "This phone number is already registered. Please use another phone number.";
-  static const String msgPhoneFormatInvalid = "Please enter a valid phone number.";
-  static const String msgPhoneNotFound = "No account found with this phone number.";
-  static const String msgProfileRetrieving = "Please wait while we retrieve your profile.";
-  static const String msgProfileSuccess = "Your profile has been updated successfully.";
-  static const String msgProfileUpdating = "Please wait while we update your profile.";
-  static const String msgRequiredEInvoice = "Fields marked with * are required.";
-  static const String msgSignIn = "Welcome to EzyMember. Please sign in to access your account.";
-  static const String msgSignInFail = "Incorrect password. Please try again.";
-  static const String msgSignInProcessing = "Please wait while we sign you in.";
-  static const String msgSignInSuccess = "Welcome back! You’ve successfully signed in.";
-  static const String msgSignOutConfirmation = "Are you sure you want to sign out? You can sign back in anytime.";
-  static const String msgSignUp = "Welcome to EzyMember. Create an account to get started.";
-  static const String msgSignUpProcessing = "Please wait while we create your account.";
-  static const String msgSignUpSuccess = "Your account has been successfully created. Please sign in to continue.";
-  static const String msgSystemFailed = "System under maintenance. Please try again later.";
-  static const String msgWelcome =
-      "Thank you for choosing $appName.\nThis app allows you to easily subscribe as a member to your selected company. Once subscribed, you can manage your membership, access exclusive benefits, and stay updated with the latest news and services.\nBefore you begin, please complete a quick setup so we can prepare your device. Let's get started.";
+  static const String jsonPostcode = "assets/json/postcodes.json";
 
   List<String> genders = ["Male", "Female", "Prefer not to say"];
   List<String> idTypes = ["BRN", "NRIC", "PASSPORT", "ARMY"];
 
-  String getExpiresText(int minutes, int seconds) => "Expires in $minutes min ${seconds.toString().padLeft(2, "0")} sec";
-  String getHintText(String label) => "Enter your $label";
+  Map<String, String> gender = {
+    "M": "Male",
+    "F": "Female",
+    "O": "Prefer not to say",
+  };
+
+  Map<String, String> idType = {
+    "brn": "BRN",
+    "nric": "NRIC",
+    "passport": "PASSPORT",
+    "army": "ARMY",
+  };
 }

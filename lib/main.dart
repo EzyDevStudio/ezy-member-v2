@@ -1,26 +1,55 @@
 import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/constants/app_themes.dart';
+import 'package:ezy_member_v2/controllers/authentication_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
+import 'package:ezy_member_v2/controllers/settings_controller.dart';
 import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/local/member_profile_storage_service.dart';
+import 'package:ezy_member_v2/services/local/settings_storage_service.dart';
+import 'package:ezy_member_v2/translations/translations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 // Settle AssetImage, NetworkImage, Image.asset, Image.network
+// reminder for expired voucher - notification
+// custom model TypePicker change from List to Map - gender, and id scheme type
+// custom text field to autocomplete - postcode
+// handle loading empty for all Obx in screens
 
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await Hive.initFlutter();
   await MemberProfileStorageService().init();
+  await SettingsStorageService().init();
 
   Get.put(MemberHiveController());
+  Get.put(SettingsController());
 
   ConnectionService.instance.start();
 
-  runApp(GetMaterialApp(title: AppStrings.appName, theme: AppThemes().lightTheme, initialRoute: AppRoutes.wrapper, getPages: AppRoutes.pages));
+  runApp(
+    GetMaterialApp(
+      title: AppStrings.appName,
+      theme: AppThemes().lightTheme,
+      getPages: AppRoutes.pages,
+      initialRoute: AppRoutes.wrapper,
+      locale: Get.locale,
+      fallbackLocale: Locale(AppTranslations.defaultLanguage),
+      translations: AppTranslations(),
+      supportedLocales: AppTranslations.languages.keys.map((langCode) => Locale(langCode, "")).toList(),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+    ),
+  );
 }
 
 class WrapperScreen extends StatefulWidget {
@@ -31,6 +60,7 @@ class WrapperScreen extends StatefulWidget {
 }
 
 class _WrapperScreenState extends State<WrapperScreen> with SingleTickerProviderStateMixin {
+  final _authController = Get.put(AuthenticationController());
   final _hive = Get.find<MemberHiveController>();
 
   late AnimationController _controller;
@@ -55,6 +85,8 @@ class _WrapperScreenState extends State<WrapperScreen> with SingleTickerProvider
     if (!mounted) return;
 
     if (_hive.isSignIn) {
+      await _authController.checkToken(_hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token);
+
       Get.offAllNamed(AppRoutes.home);
     } else {
       Get.offAllNamed(AppRoutes.welcome);

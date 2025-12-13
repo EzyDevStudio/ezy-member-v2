@@ -49,12 +49,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   String _formatTime(int totalSeconds) {
-    if (totalSeconds <= 0) return AppStrings.codeExpired;
+    if (totalSeconds <= 0) return "code_expired".tr;
 
     final int minutes = totalSeconds ~/ 60;
     final int seconds = totalSeconds % 60;
 
-    return AppStrings().getExpiresText(minutes, seconds);
+    return "msg_expired_timer".trParams({"minutes": minutes.toString(), "seconds": seconds.toString().padLeft(2, "0")});
   }
 
   Future<void> _onRefresh() async {
@@ -71,7 +71,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: Theme.of(context).colorScheme.primary,
-    appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.primary, title: Text(AppStrings.pay)),
+    appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.primary, title: Text("pay".tr)),
     body: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[

@@ -1,4 +1,3 @@
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/models/profile_model.dart';
@@ -14,11 +13,11 @@ class ProfileController extends GetxController {
   var memberProfile = Rx<MemberProfileModel?>(null);
   var workingProfile = Rx<WorkingProfileModel?>(null);
 
-  late ProfileDetailControllers memberControllers;
-  late ProfileDetailControllers workingControllers;
+  ProfileDetailControllers? memberControllers;
+  ProfileDetailControllers? workingControllers;
 
   Future<void> loadProfile(String memberCode, ProfileType type) async {
-    _showLoading(AppStrings.msgProfileRetrieving);
+    _showLoading("msg_profile_retrieving".tr);
 
     final bool isMember = type == ProfileType.member;
     final String endpoint = isMember ? "get-personal-profile/$memberCode" : "get-working-profile/$memberCode";
@@ -43,41 +42,41 @@ class ProfileController extends GetxController {
   Future<void> updateProfile(Map<String, dynamic> json, ProfileType type, String memberToken) async {
     isUpdate.value = false;
 
-    _showLoading(AppStrings.msgProfileUpdating);
+    _showLoading("msg_profile_updating".tr);
 
     final bool isMember = type == ProfileType.member;
     final String endpoint = isMember ? "update-personal-profile" : "update-working-profile";
-    final response = await _api.post(endPoint: endpoint, data: json, module: "ProfileController - updateProfile");
+    final response = await _api.post(endPoint: endpoint, data: json, module: "ProfileController - updateProfile", memberToken: memberToken);
 
     _hideLoading();
 
     if (response == null) {
-      _showError(AppStrings.msgSystemFailed);
+      _showError("msg_system_error".tr);
       return;
     }
 
     switch (response.data[ApiService.keyStatusCode]) {
       case 200:
         isUpdate.value = true;
-        _showSuccess(AppStrings.msgProfileSuccess);
+        _showSuccess("msg_profile_success".tr);
         break;
       case 401:
-        _showError(AppStrings.msgPhoneExists);
+        _showError("msg_phone_exists".tr);
         break;
       case 402:
-        _showError(AppStrings.msgEmailExists);
+        _showError("msg_email_exists".tr);
         break;
       case 520:
-        _showError(AppStrings.msgInvalidToken);
+        _showError("msg_token_invalid".tr);
         break;
       default:
-        _showError(AppStrings.msgSystemFailed);
+        _showError("msg_system_error".tr);
         break;
     }
   }
 
   void _showLoading(String message) {
-    MessageHelper.showDialog(type: DialogType.loading, message: message, title: AppStrings.processing);
+    MessageHelper.showDialog(type: DialogType.loading, message: message, title: "processing".tr);
   }
 
   void _hideLoading() {
@@ -94,8 +93,8 @@ class ProfileController extends GetxController {
 
   @override
   void onClose() {
-    memberControllers.dispose();
-    workingControllers.dispose();
+    memberControllers?.dispose();
+    workingControllers?.dispose();
 
     super.onClose();
   }

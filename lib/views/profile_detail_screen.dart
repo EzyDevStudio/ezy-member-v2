@@ -113,7 +113,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     FocusScope.of(context).unfocus();
 
     if (_memberControllers[fieldContactNumber].text.trim().isEmpty) {
-      MessageHelper.show(AppStrings.msgEmptyPhone, backgroundColor: Colors.red, icon: Icons.error_rounded);
+      MessageHelper.show("msg_required".trParams({"label": "phone".tr}), backgroundColor: Colors.red, icon: Icons.error_rounded);
       return;
     }
 
@@ -145,7 +145,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     FocusScope.of(context).unfocus();
 
     if (_isRequired && !_workingControllers.validateRequiredFields()) {
-      MessageHelper.show(AppStrings.msgRequiredEInvoice, backgroundColor: Colors.red, icon: Icons.error_rounded);
+      MessageHelper.show("msg_required_e_invoice".tr, backgroundColor: Colors.red, icon: Icons.error_rounded);
       return;
     }
 
@@ -198,12 +198,12 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       indicatorColor: Theme.of(context).colorScheme.onPrimary,
       labelColor: Theme.of(context).colorScheme.onPrimary,
       unselectedLabelColor: Colors.grey,
-      tabs: const <Tab>[
-        Tab(text: AppStrings.member),
-        Tab(text: AppStrings.working),
+      tabs: <Tab>[
+        Tab(text: "member".tr),
+        Tab(text: "working".tr),
       ],
     ),
-    title: Text(AppStrings.profile),
+    title: Text("profile".tr),
   );
 
   Widget _buildContent() => SliverFillRemaining(
@@ -219,14 +219,14 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
           children: <Widget>[
             CustomProfileCard(image: AppStrings.tmpImgSplashLogo, memberCode: _memberProfile.memberCode, name: _memberProfile.name, onTapEdit: () {}),
             CustomSectionCard(
-              title: AppStrings.basicInformation,
+              title: "basic_information".tr,
               children: <Widget>[
-                CustomProfileTextField(controller: _memberControllers[fieldName], label: AppStrings.name),
-                CustomProfileTextField(enabled: false, controller: _memberControllers[fieldEmail], label: AppStrings.email),
+                CustomProfileTextField(controller: _memberControllers[fieldName], label: "name".tr),
+                CustomProfileTextField(enabled: false, controller: _memberControllers[fieldEmail], label: "email".tr),
                 CustomProfilePhoneTextField(
                   controller: _memberControllers[fieldContactNumber],
                   phone: _phoneMember,
-                  label: AppStrings.phone,
+                  label: "phone".tr,
                   onChanged: (value) => setState(() => _phoneMember = value),
                 ),
                 Row(
@@ -235,11 +235,11 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                     Expanded(
                       child: CustomProfileTextField(
                         controller: _memberControllers[fieldGender],
-                        label: AppStrings.gender,
+                        label: "gender".tr,
                         onTap: () async {
                           final pickedGender = await CustomTypePickerDialog.show<String>(
                             context: context,
-                            title: AppStrings.pickGender,
+                            title: "pick_gender".tr,
                             options: AppStrings().genders,
                             onDisplay: (option) => option,
                           );
@@ -251,30 +251,30 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                     Expanded(
                       child: CustomProfileTextField(
                         controller: _memberControllers[fieldDOB],
-                        label: AppStrings.dob,
+                        label: "dob".tr,
                         onTap: () => _selectDate(context, _memberControllers[fieldDOB]),
                       ),
                     ),
                   ],
                 ),
-                CustomProfileTextField(controller: _memberControllers[fieldAccountCode], label: AppStrings.accountCode),
+                CustomProfileTextField(controller: _memberControllers[fieldAccountCode], label: "account_code".tr),
               ],
             ),
             CustomSectionCard(
-              title: AppStrings.address,
+              title: "address".tr,
               children: <Widget>[
-                CustomProfileTextField(controller: _memberControllers[fieldAddress1], label: "${AppStrings.addressLine} 1"),
-                CustomProfileTextField(controller: _memberControllers[fieldAddress2], label: "${AppStrings.addressLine} 2"),
-                CustomProfileTextField(controller: _memberControllers[fieldAddress3], label: "${AppStrings.addressLine} 3"),
-                CustomProfileTextField(controller: _memberControllers[fieldAddress4], label: "${AppStrings.addressLine} 4"),
+                CustomProfileTextField(controller: _memberControllers[fieldAddress1], label: "${"address_line".tr} 1"),
+                CustomProfileTextField(controller: _memberControllers[fieldAddress2], label: "${"address_line".tr} 2"),
+                CustomProfileTextField(controller: _memberControllers[fieldAddress3], label: "${"address_line".tr} 3"),
+                CustomProfileTextField(controller: _memberControllers[fieldAddress4], label: "${"address_line".tr} 4"),
                 Row(
                   spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
                   children: <Widget>[
                     Expanded(
-                      child: CustomProfileTextField(controller: _memberControllers[fieldPostcode], label: AppStrings.postcode),
+                      child: CustomProfileTextField(controller: _workingControllers[fieldPostcode], isRequired: _isRequired, label: "postcode".tr),
                     ),
                     Expanded(
-                      child: CustomProfileTextField(controller: _memberControllers[fieldCity], label: AppStrings.city),
+                      child: CustomProfileTextField(controller: _memberControllers[fieldCity], label: "city".tr),
                     ),
                   ],
                 ),
@@ -282,12 +282,12 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
                   children: <Widget>[
                     Expanded(
-                      child: CustomProfileTextField(controller: _memberControllers[fieldState], label: AppStrings.state),
+                      child: CustomProfileTextField(controller: _memberControllers[fieldState], label: "state".tr),
                     ),
                     Expanded(
                       child: CustomProfileTextField(
                         controller: _memberControllers[fieldCountry],
-                        label: AppStrings.country,
+                        label: "country".tr,
                         onTap: () async {
                           final selectedPhone = await CustomCountryPickerDialog.show(context);
 
@@ -300,11 +300,11 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               ],
             ),
             CustomSectionCard(
-              title: AppStrings.registrationInformation,
+              title: "registration_information".tr,
               children: <Widget>[
-                CustomProfileTextField(controller: _memberControllers[fieldTIN], label: AppStrings.tin),
-                CustomProfileTextField(controller: _memberControllers[fieldSSTRegistrationNo], label: AppStrings.sstRegistration),
-                CustomProfileTextField(controller: _memberControllers[fieldTTXRegistrationNo], label: AppStrings.ttxRegistration),
+                CustomProfileTextField(controller: _memberControllers[fieldTIN], label: "tin".tr),
+                CustomProfileTextField(controller: _memberControllers[fieldSSTRegistrationNo], label: "sst_registration".tr),
+                CustomProfileTextField(controller: _memberControllers[fieldTTXRegistrationNo], label: "ttx_registration".tr),
               ],
             ),
             const SizedBox(),
@@ -314,7 +314,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 left: ResponsiveHelper.getSpacing(context, SizeType.m),
                 right: ResponsiveHelper.getSpacing(context, SizeType.m),
               ),
-              child: CustomFilledButton(label: AppStrings.saveChanges, onTap: () => _updateMemberProfile()),
+              child: CustomFilledButton(label: "save_changes".tr, onTap: () => _updateMemberProfile()),
             ),
           ],
         ),
@@ -350,9 +350,9 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 value: _isRequired,
                 contentPadding: const EdgeInsets.all(0.0),
                 onChanged: (value) => setState(() => _isRequired = value!),
-                subtitle: _isRequired ? CustomText(AppStrings.msgRequiredEInvoice, fontSize: 14.0) : null,
+                subtitle: _isRequired ? CustomText("msg_required_e_invoice".tr, fontSize: 14.0) : null,
                 title: CustomText(
-                  AppStrings.requiredEInvoice,
+                  "required_e_invoice".tr,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
@@ -360,38 +360,34 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               ),
             ),
             CustomSectionCard(
-              title: AppStrings.companyInformation,
+              title: "company_information".tr,
               children: <Widget>[
-                CustomProfileTextField(controller: _workingControllers[fieldName], isRequired: _isRequired, label: AppStrings.name),
-                CustomProfileTextField(controller: _workingControllers[fieldEmail], isRequired: _isRequired, label: AppStrings.email),
+                CustomProfileTextField(controller: _workingControllers[fieldName], isRequired: _isRequired, label: "name".tr),
+                CustomProfileTextField(controller: _workingControllers[fieldEmail], isRequired: _isRequired, label: "email".tr),
                 CustomProfilePhoneTextField(
                   isRequired: _isRequired,
                   controller: _workingControllers[fieldContactNumber],
                   phone: _phoneWorking,
-                  label: AppStrings.phone,
+                  label: "phone".tr,
                   onChanged: (value) => setState(() => _phoneWorking = value),
                 ),
               ],
             ),
             CustomSectionCard(
-              title: AppStrings.address,
+              title: "address".tr,
               children: <Widget>[
-                CustomProfileTextField(controller: _workingControllers[fieldAddress1], isRequired: _isRequired, label: "${AppStrings.addressLine} 1"),
-                CustomProfileTextField(controller: _workingControllers[fieldAddress2], label: "${AppStrings.addressLine} 2"),
-                CustomProfileTextField(controller: _workingControllers[fieldAddress3], label: "${AppStrings.addressLine} 3"),
-                CustomProfileTextField(controller: _workingControllers[fieldAddress4], label: "${AppStrings.addressLine} 4"),
+                CustomProfileTextField(controller: _workingControllers[fieldAddress1], isRequired: _isRequired, label: "${"address_line".tr} 1"),
+                CustomProfileTextField(controller: _workingControllers[fieldAddress2], label: "${"address_line".tr} 2"),
+                CustomProfileTextField(controller: _workingControllers[fieldAddress3], label: "${"address_line".tr} 3"),
+                CustomProfileTextField(controller: _workingControllers[fieldAddress4], label: "${"address_line".tr} 4"),
                 Row(
                   spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
                   children: <Widget>[
                     Expanded(
-                      child: CustomProfileTextField(
-                        controller: _workingControllers[fieldPostcode],
-                        isRequired: _isRequired,
-                        label: AppStrings.postcode,
-                      ),
+                      child: CustomProfileTextField(controller: _workingControllers[fieldPostcode], isRequired: _isRequired, label: "postcode".tr),
                     ),
                     Expanded(
-                      child: CustomProfileTextField(controller: _workingControllers[fieldCity], isRequired: _isRequired, label: AppStrings.city),
+                      child: CustomProfileTextField(controller: _workingControllers[fieldCity], isRequired: _isRequired, label: "city".tr),
                     ),
                   ],
                 ),
@@ -399,13 +395,13 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
                   children: <Widget>[
                     Expanded(
-                      child: CustomProfileTextField(controller: _workingControllers[fieldState], isRequired: _isRequired, label: AppStrings.state),
+                      child: CustomProfileTextField(controller: _workingControllers[fieldState], isRequired: _isRequired, label: "state".tr),
                     ),
                     Expanded(
                       child: CustomProfileTextField(
                         isRequired: _isRequired,
                         controller: _workingControllers[fieldCountry],
-                        label: AppStrings.country,
+                        label: "country".tr,
                         onTap: () async {
                           final selectedPhone = await CustomCountryPickerDialog.show(context);
 
@@ -418,23 +414,23 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               ],
             ),
             CustomSectionCard(
-              title: AppStrings.registrationInformation,
+              title: "registration_information".tr,
               children: <Widget>[
                 CustomIDTypeTextField(
                   typeController: _workingControllers[fieldRegistrationSchemeID],
                   valueController: _workingControllers[fieldRegistrationSchemeNo],
                   isRequired: _isRequired,
-                  label: AppStrings.registrationSchemeID,
+                  label: "registration_scheme_id".tr,
                 ),
-                CustomProfileTextField(controller: _workingControllers[fieldTIN], isRequired: _isRequired, label: AppStrings.tin),
-                CustomProfileTextField(controller: _workingControllers[fieldSSTRegistrationNo], label: AppStrings.sstRegistration),
+                CustomProfileTextField(controller: _workingControllers[fieldTIN], isRequired: _isRequired, label: "tin".tr),
+                CustomProfileTextField(controller: _workingControllers[fieldSSTRegistrationNo], label: "sst_registration".tr),
                 CustomProfileTextField(
                   controller: _workingControllers[fieldTTXRegistrationNo],
                   isRequired: _isRequired,
-                  label: AppStrings.ttxRegistration,
+                  label: "ttx_registration".tr,
                 ),
-                CustomProfileTextField(controller: _workingControllers[fieldROC], isRequired: _isRequired, label: AppStrings.roc),
-                CustomProfileTextField(controller: _workingControllers[fieldMSICCode], isRequired: _isRequired, label: AppStrings.msicCode),
+                CustomProfileTextField(controller: _workingControllers[fieldROC], isRequired: _isRequired, label: "roc".tr),
+                CustomProfileTextField(controller: _workingControllers[fieldMSICCode], isRequired: _isRequired, label: "msic_code".tr),
               ],
             ),
             const SizedBox(),
@@ -444,7 +440,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 left: ResponsiveHelper.getSpacing(context, SizeType.m),
                 right: ResponsiveHelper.getSpacing(context, SizeType.m),
               ),
-              child: CustomFilledButton(label: AppStrings.saveChanges, onTap: () => _updateWorkingProfile()),
+              child: CustomFilledButton(label: "save_changes".tr, onTap: () => _updateWorkingProfile()),
             ),
           ],
         ),

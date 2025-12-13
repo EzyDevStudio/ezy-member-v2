@@ -1,16 +1,17 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/phone_detail.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 // Dialog: For action confirmation
 class CustomConfirmationDialog extends StatelessWidget {
   final Color backgroundColor;
   final IconData icon;
-  final String cancelText, confirmText, message, title;
+  final String message, title;
+  final String? cancelText, confirmText;
 
   const CustomConfirmationDialog({
     super.key,
@@ -62,7 +63,7 @@ class CustomConfirmationDialog extends StatelessWidget {
                       child: TextButton(
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, foregroundColor: Colors.black87),
                         onPressed: () => Navigator.pop(context, false),
-                        child: Text(cancelText),
+                        child: CustomText(cancelText ?? "cancel".tr, fontSize: 18.0),
                       ),
                     ),
                     Expanded(
@@ -72,7 +73,7 @@ class CustomConfirmationDialog extends StatelessWidget {
                           foregroundColor: Theme.of(context).colorScheme.onPrimary,
                         ),
                         onPressed: () => Navigator.pop(context, true),
-                        child: Text(confirmText),
+                        child: CustomText(confirmText ?? "confirm".tr, color: Theme.of(context).colorScheme.onPrimary, fontSize: 18.0),
                       ),
                     ),
                   ],
@@ -89,8 +90,8 @@ class CustomConfirmationDialog extends StatelessWidget {
     BuildContext context, {
     required Color backgroundColor,
     required IconData icon,
-    String cancelText = AppStrings.cancel,
-    String confirmText = AppStrings.confirm,
+    String? cancelText,
+    String? confirmText,
     required String message,
     required String title,
   }) => showDialog<bool>(

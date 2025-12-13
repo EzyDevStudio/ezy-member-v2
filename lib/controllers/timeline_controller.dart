@@ -1,3 +1,4 @@
+import 'package:ezy_member_v2/helpers/location_helper.dart';
 import 'package:ezy_member_v2/models/timeline_model.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
 import 'package:get/get.dart';
@@ -12,11 +13,14 @@ class TimelineController extends GetxController {
     isLoading.value = true;
     timelines.clear();
 
-    final response = await _api.get(
-      endPoint: companyID == null ? "get-all-timeline" : "get-branch-timeline",
-      module: "TimelineController - loadTimelines",
-      data: companyID == null ? null : {"company_id": companyID},
-    );
+    Map<String, dynamic>? data;
+
+    final Coordinate? current = await LocationHelper.getCurrentCoordinate();
+
+    if (current != null) data = {"city": current.city};
+    if (companyID != null) (data ??= {})["company_id"] = companyID;
+
+    final response = await _api.get(endPoint: "get-all-timeline", module: "TimelineController - loadTimelines", data: data);
 
     if (response == null || response.data[TimelineModel.keyTimeline] == null) {
       isLoading.value = false;

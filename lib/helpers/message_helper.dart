@@ -104,7 +104,7 @@ class MessageHelper {
                     spacing: kBorderRadiusM,
                     children: <Widget>[
                       CustomText(title, fontSize: 24.0, fontWeight: FontWeight.bold, textAlign: TextAlign.center),
-                      CustomText(message, fontSize: 18.0, textAlign: TextAlign.center),
+                      CustomText(message, fontSize: 18.0, textAlign: TextAlign.center, maxLines: null),
                     ],
                   ),
                 ),

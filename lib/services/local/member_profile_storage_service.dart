@@ -1,5 +1,5 @@
 import 'package:ezy_member_v2/hive/member_profile_hive.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class MemberProfileStorageService {
   static final MemberProfileStorageService _instance = MemberProfileStorageService._internal();
@@ -12,7 +12,6 @@ class MemberProfileStorageService {
   Box<MemberProfileHive>? _box;
 
   Future<void> init() async {
-    await Hive.initFlutter();
     if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(MemberProfileHiveAdapter());
     _box = await Hive.openBox<MemberProfileHive>(_boxName);
   }

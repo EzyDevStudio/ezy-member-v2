@@ -1,4 +1,3 @@
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/controllers/history_controller.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
@@ -20,10 +19,10 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   final _historyController = Get.put(HistoryController(), tag: "history");
   final _historyTypes = {
-    HistoryType.all: AppStrings.all,
-    HistoryType.point: AppStrings.points,
-    HistoryType.voucher: AppStrings.vouchers,
-    HistoryType.credit: AppStrings.credits,
+    HistoryType.all: "all".tr,
+    HistoryType.point: "points".tr,
+    HistoryType.voucher: "vouchers".tr,
+    HistoryType.credit: "credits".tr,
   };
 
   late String? _memberCode;
@@ -53,7 +52,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     ),
   );
 
-  Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text(AppStrings.history));
+  Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text("history".tr));
 
   Widget _buildChoiceChip() => SliverToBoxAdapter(
     child: Container(
@@ -79,7 +78,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
         : _historyController.histories.where((h) => h.type == _selectedType).toList();
 
     if (filteredHistories.isEmpty) {
-      return SliverFillRemaining(child: Center(child: CustomText(AppStrings.msgNoAvailableHistory, fontSize: 16.0, maxLines: 2)));
+      return SliverFillRemaining(
+        child: Center(child: CustomText("msg_no_available".trParams({"label": "history".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
+      );
     }
 
     final Map<String, List<HistoryModel>> grouped = {};
@@ -92,9 +93,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
       String header;
 
       if (date.year == today.year && date.month == today.month && date.day == today.day) {
-        header = AppStrings.today;
+        header = "today".tr;
       } else if (date.year == yesterday.year && date.month == yesterday.month && date.day == yesterday.day) {
-        header = AppStrings.yesterday;
+        header = "yesterday".tr;
       } else {
         header = FormatterHelper.dateTimeToString(date);
       }

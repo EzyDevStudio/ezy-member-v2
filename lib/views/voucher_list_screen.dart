@@ -1,5 +1,4 @@
 import 'package:ezy_member_v2/constants/app_routes.dart';
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/controllers/voucher_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
@@ -51,7 +50,7 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
     ),
   );
 
-  Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text(AppStrings.myVouchers));
+  Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text("my_vouchers".tr));
 
   Widget _buildContent() => SliverPadding(
     padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
@@ -63,7 +62,9 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
       }
 
       if (_voucherController.vouchers.isEmpty) {
-        return SliverFillRemaining(child: Center(child: CustomText(AppStrings.msgNoAvailableVoucher, fontSize: 16.0, maxLines: 2)));
+        return SliverFillRemaining(
+          child: Center(child: CustomText("msg_no_available".trParams({"label": "vouchers".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
+        );
       }
 
       return SliverToBoxAdapter(

@@ -1,5 +1,4 @@
 import 'package:ezy_member_v2/constants/app_routes.dart';
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
@@ -42,7 +41,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
     ),
   );
 
-  Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text(AppStrings.myCards));
+  Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text("my_cards".tr));
 
   Widget _buildContent() => SliverPadding(
     padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
@@ -54,7 +53,9 @@ class _MemberListScreenState extends State<MemberListScreen> {
       }
 
       if (_memberController.members.isEmpty) {
-        return SliverFillRemaining(child: Center(child: CustomText(AppStrings.msgNoAvailableMember, fontSize: 16.0, maxLines: 2)));
+        return SliverFillRemaining(
+          child: Center(child: CustomText("msg_no_available".trParams({"label": "member".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
+        );
       }
 
       _memberController.members.sort((a, b) {

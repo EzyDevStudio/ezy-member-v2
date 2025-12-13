@@ -18,18 +18,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Scaffold(body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent(size)]));
+    return Scaffold(body: CustomScrollView(slivers: <Widget>[_buildContent(size)]));
   }
-
-  Widget _buildAppBar() => SliverAppBar(
-    floating: true,
-    pinned: true,
-    backgroundColor: Theme.of(context).colorScheme.primary,
-    title: SizedBox(
-      height: kToolbarHeight * kAppBarLogoRatio,
-      child: Image.asset(AppStrings.tmpImgAppLogo, fit: BoxFit.fitHeight, color: Colors.white),
-    ),
-  );
 
   Widget _buildContent(Size size) => SliverFillRemaining(
     hasScrollBody: false,
@@ -50,10 +40,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
               children: <Widget>[
-                CustomText(AppStrings.welcome, color: Theme.of(context).colorScheme.primary, fontSize: 18.0, fontWeight: FontWeight.w700),
-                CustomText(AppStrings.msgWelcome, fontSize: 14.0, maxLines: null),
-                _buildOptionTile(() => Get.toNamed(AppRoutes.authentication), AppStrings.msgContinueSignIn, AppStrings.signInAccount),
-                _buildOptionTile(() => Get.offAllNamed(AppRoutes.home), AppStrings.msgContinueGuest, AppStrings.continueGuest),
+                CustomText("welcome".tr, color: Theme.of(context).colorScheme.primary, fontSize: 18.0, fontWeight: FontWeight.w700),
+                CustomText("msg_welcome".tr, fontSize: 14.0, maxLines: null),
+                _buildOptionTile(() => Get.toNamed(AppRoutes.authentication), "msg_continue_sign_in".tr, "sign_in_account".tr),
+                _buildOptionTile(() => Get.offAllNamed(AppRoutes.home), "msg_continue_guest".tr, "continue_guest".tr),
               ],
             ),
           ),

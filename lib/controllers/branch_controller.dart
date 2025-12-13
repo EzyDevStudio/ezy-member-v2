@@ -15,11 +15,9 @@ class BranchController extends GetxController {
 
     Map<String, dynamic>? data;
 
-    if (checkNearby) {
-      final Coordinate? current = await LocationHelper.getCurrentCoordinate();
+    final Coordinate? current = await LocationHelper.getCurrentCoordinate();
 
-      if (current != null) data = {"latitude": current.latitude, "longitude": current.longitude};
-    }
+    if (checkNearby && current != null) data = {"city": current.city, "latitude": current.latitude, "longitude": current.longitude};
 
     final response = await _api.get(endPoint: "get-all-branch", module: "BranchController - loadBranches", data: data);
 

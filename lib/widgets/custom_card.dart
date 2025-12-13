@@ -91,14 +91,14 @@ class CustomMemberCard extends StatelessWidget {
                 CustomLabelChip(
                   backgroundColor: DateTime.now().millisecondsSinceEpoch > member.memberCard.expiredDate ? Colors.red : Colors.green,
                   foregroundColor: Colors.white,
-                  label: DateTime.now().millisecondsSinceEpoch > member.memberCard.expiredDate ? AppStrings.expired : AppStrings.active,
+                  label: DateTime.now().millisecondsSinceEpoch > member.memberCard.expiredDate ? "expired".tr : "active".tr,
                 ),
                 const Spacer(),
                 CustomText(member.point.toString(), color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                CustomText(AppStrings.points, color: Colors.white, fontSize: 16.0),
+                CustomText("points".tr, color: Colors.white, fontSize: 16.0),
                 const Spacer(),
                 CustomText(member.credit.toStringAsFixed(1), color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                CustomText(AppStrings.credits, color: Colors.white, fontSize: 16.0),
+                CustomText("credits".tr, color: Colors.white, fontSize: 16.0),
               ],
             ),
           ],
@@ -164,7 +164,7 @@ class CustomNearbyCard extends StatelessWidget {
                           Positioned(
                             right: kPositionLabel,
                             top: kPositionLabel,
-                            child: CustomLabelChip(label: AppStrings.expired),
+                            child: CustomLabelChip(label: "expired".tr),
                           ),
                         Positioned(
                           bottom: kPositionLabel,
@@ -195,7 +195,7 @@ class CustomNearbyCard extends StatelessWidget {
                         Positioned(
                           right: kPositionLabel,
                           top: kPositionLabel,
-                          child: CustomLabelChip(label: AppStrings.joinNow),
+                          child: CustomLabelChip(label: "join_now".tr),
                         ),
                       ],
                     ],

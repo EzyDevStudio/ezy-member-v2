@@ -26,7 +26,7 @@ class AuthenticationScreen extends StatefulWidget {
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> with SingleTickerProviderStateMixin {
   final AuthenticationController _authController = Get.put(AuthenticationController(), tag: "authentication");
-  final Map<AuthType, String> _authTypes = {AuthType.email: AppStrings.email, AuthType.phone: AppStrings.phone};
+  final Map<AuthType, String> _authTypes = {AuthType.email: "email".tr, AuthType.phone: "phone".tr};
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -98,24 +98,24 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
     if (!isSignIn) {
       // Sign up validation
       if (username.isEmpty) {
-        message = AppStrings.msgEmptyUsername;
+        message = "msg_required".trParams({"label": "username".tr});
       } else if (email.isEmpty) {
-        message = AppStrings.msgEmptyEmail;
+        message = "msg_required".trParams({"label": "email".tr});
       } else if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(email)) {
-        message = AppStrings.msgEmailFormatInvalid;
+        message = "msg_email_invalid_format".tr;
       } else if (phone.isEmpty) {
-        message = AppStrings.msgEmptyPhone;
+        message = "msg_required".trParams({"label": "phone".tr});
       } else if (!RegExp(r"^\d{6,12}$").hasMatch(phone)) {
-        message = AppStrings.msgPhoneFormatInvalid;
+        message = "msg_phone_invalid_format".tr;
       }
     } else {
       // Sign in validation
       if ((_selectedType == AuthType.email) && email.isEmpty) {
-        message = AppStrings.msgEmptyEmail;
+        message = "msg_required".trParams({"label": "email".tr});
       } else if ((_selectedType == AuthType.phone) && phone.isEmpty) {
-        message = AppStrings.msgEmptyPhone;
+        message = "msg_required".trParams({"label": "phone".tr});
       } else if (password.isEmpty) {
-        message = AppStrings.msgEmptyPassword;
+        message = "msg_required".trParams({"label": "password".tr});
       }
     }
 
@@ -150,12 +150,12 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
       indicatorColor: Theme.of(context).colorScheme.onPrimary,
       labelColor: Theme.of(context).colorScheme.onPrimary,
       unselectedLabelColor: Colors.grey,
-      tabs: const <Tab>[
-        Tab(text: AppStrings.signIn),
-        Tab(text: AppStrings.signUp),
+      tabs: <Tab>[
+        Tab(text: "sign_in".tr),
+        Tab(text: "sign_up".tr),
       ],
     ),
-    title: Text(AppStrings.welcome),
+    title: Text("welcome".tr),
   );
 
   Widget _buildContent() => SliverFillRemaining(
@@ -175,13 +175,13 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
               spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
               children: <Widget>[
                 Image.asset(AppStrings.tmpImgSignIn, scale: kSquareRatio, height: ResponsiveHelper.getAuthImgHeight(context)),
-                CustomText(AppStrings.msgSignIn, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
+                CustomText("msg_sign_in".tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
                 CustomChoiceChip(values: _authTypes, selectedValue: _selectedType, onSelected: (type) => setState(() => _selectedType = type)),
-                if (isEmail) CustomOutlinedTextField(controller: _emailController, icon: Icons.email_rounded, label: AppStrings.email),
+                if (isEmail) CustomOutlinedTextField(controller: _emailController, icon: Icons.email_rounded, label: "email".tr),
                 if (!isEmail) CustomPhoneTextField(controller: _phoneController, phone: _phone, onChanged: (value) => setState(() => _phone = value)),
-                CustomOutlinedTextField(controller: _passwordController, isPassword: true, icon: Icons.lock_rounded, label: AppStrings.password),
+                CustomOutlinedTextField(controller: _passwordController, isPassword: true, icon: Icons.lock_rounded, label: "password".tr),
                 _buildForgotPassword(),
-                CustomFilledButton(label: AppStrings.signIn, onTap: _signIn),
+                CustomFilledButton(label: "sign_in".tr, onTap: _signIn),
                 _buildAuthMessage(true),
               ],
             ),
@@ -201,12 +201,12 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
             spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
             children: <Widget>[
               Image.asset(AppStrings.tmpImgSignUp, scale: kSquareRatio, height: ResponsiveHelper.getAuthImgHeight(context)),
-              CustomText(AppStrings.msgSignUp, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
-              CustomOutlinedTextField(controller: _usernameController, icon: Icons.account_circle_rounded, label: AppStrings.username),
-              CustomOutlinedTextField(controller: _emailController, icon: Icons.email_rounded, label: AppStrings.email),
+              CustomText("msg_sign_up".tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
+              CustomOutlinedTextField(controller: _usernameController, icon: Icons.account_circle_rounded, label: "username".tr),
+              CustomOutlinedTextField(controller: _emailController, icon: Icons.email_rounded, label: "email".tr),
               CustomPhoneTextField(controller: _phoneController, phone: _phone, onChanged: (value) => setState(() => _phone = value)),
               const SizedBox(),
-              CustomFilledButton(label: AppStrings.signUp, onTap: _signUp),
+              CustomFilledButton(label: "sign_up".tr, onTap: _signUp),
               _buildAuthMessage(false),
             ],
           ),
@@ -220,18 +220,18 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
     child: TextButton(
       style: TextButton.styleFrom(tapTargetSize: MaterialTapTargetSize.shrinkWrap, minimumSize: Size.zero),
       onPressed: () {},
-      child: CustomText(AppStrings.forgotPassword, color: Theme.of(context).colorScheme.primary, fontSize: 14.0, fontWeight: FontWeight.bold),
+      child: CustomText("forgot_password".tr, color: Theme.of(context).colorScheme.primary, fontSize: 14.0, fontWeight: FontWeight.bold),
     ),
   );
 
   Widget _buildAuthMessage(bool isSignIn) => RichText(
     text: TextSpan(
-      text: isSignIn ? AppStrings.msgAccountNotExist : AppStrings.msgAccountExists,
+      text: isSignIn ? "msg_account_not_exists".tr : "msg_account_exists".tr,
       style: TextStyle(color: Colors.black87, fontSize: 14.0),
       children: <TextSpan>[
         TextSpan(
           recognizer: TapGestureRecognizer()..onTap = () => _tabController.index = isSignIn ? 1 : 0,
-          text: isSignIn ? AppStrings.signUp : AppStrings.signIn,
+          text: isSignIn ? "sign_up".tr : "sign_in".tr,
           style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 14.0, fontWeight: FontWeight.bold),
         ),
       ],

@@ -1,10 +1,10 @@
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/history_model.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CustomHistoryListTile extends StatelessWidget {
   final HistoryModel history;
@@ -31,7 +31,7 @@ class CustomHistoryListTile extends StatelessWidget {
     } else if (history.type == HistoryType.voucher) {
       title = history.voucher!.batchDescription;
       location = [history.voucher?.branchName, history.voucher?.counterDesc].where((s) => s != null && s.isNotEmpty).join(" - ");
-      value = history.voucher!.redeemDate == 0 ? AppStrings.collect : AppStrings.redeem;
+      value = history.voucher!.redeemDate == 0 ? "collect".tr : "redeem".tr;
       textColor = history.voucher!.redeemDate == 0 ? Colors.green : Colors.red;
     }
 
@@ -55,7 +55,14 @@ class CustomHistoryListTile extends StatelessWidget {
         color: Colors.black54,
         fontSize: 12.0,
       ),
-      trailing: CustomText(value, color: textColor, fontSize: 14.0),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          CustomText(value, color: textColor, fontSize: 14.0),
+          if (history.type != HistoryType.voucher)
+            CustomText(history.type == HistoryType.point ? "points".tr : "credits".tr, color: Theme.of(context).colorScheme.primary, fontSize: 12.0),
+        ],
+      ),
     );
   }
 }

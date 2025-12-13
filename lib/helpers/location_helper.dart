@@ -41,7 +41,11 @@ class LocationHelper {
 
       if (locations.isEmpty) return null;
 
-      return Coordinate(address: address, latitude: locations.first.latitude, longitude: locations.first.longitude);
+      final List<Placemark> placemarks = await placemarkFromCoordinates(locations.first.latitude, locations.first.longitude);
+
+      if (placemarks.isEmpty && placemarks.first.locality != null) return null;
+
+      return Coordinate(address: address, city: placemarks.first.locality!, latitude: locations.first.latitude, longitude: locations.first.longitude);
     } catch (e) {
       log("LocationHelper - getCoordinate", time: DateTime.now(), error: e, name: "Unknown Error");
       return null;
@@ -54,11 +58,13 @@ class LocationHelper {
     if (!permissionGranted) return null;
 
     try {
-      LocationSettings locationSettings = const LocationSettings(distanceFilter: 0, accuracy: LocationAccuracy.high);
+      final LocationSettings locationSettings = const LocationSettings(distanceFilter: 0, accuracy: LocationAccuracy.high);
+      final Position position = await Geolocator.getCurrentPosition(locationSettings: locationSettings);
+      final List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
 
-      Position position = await Geolocator.getCurrentPosition(locationSettings: locationSettings);
+      if (placemarks.isEmpty && placemarks.first.locality != null) return null;
 
-      return Coordinate(address: "Current Location", latitude: position.latitude, longitude: position.longitude);
+      return Coordinate(address: "Current Location", city: placemarks.first.locality!, latitude: position.latitude, longitude: position.longitude);
     } catch (e) {
       log("LocationHelper - getCurrentCoordinate", time: DateTime.now(), error: e, name: "Unknown Error");
       return null;
@@ -84,8 +90,9 @@ class LocationHelper {
 
 class Coordinate {
   final String address;
+  final String city;
   final double latitude;
   final double longitude;
 
-  Coordinate({required this.address, required this.latitude, required this.longitude});
+  Coordinate({required this.address, required this.city, required this.latitude, required this.longitude});
 }

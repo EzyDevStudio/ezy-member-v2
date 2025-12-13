@@ -1,4 +1,3 @@
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/models/voucher_model.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
@@ -59,21 +58,21 @@ class VoucherController extends GetxController {
     final response = await _api.post(endPoint: "collect-voucher", module: "VoucherController - collectVoucher", data: data, memberToken: memberToken);
 
     if (response == null) {
-      _showError(AppStrings.msgSystemFailed);
+      _showError("msg_system_error".tr);
       return;
     }
 
     if (response.data[ApiService.keyStatusCode] == 200) {
       isSuccess.value = true;
-      _showSuccess(AppStrings.msgCollectVoucherSuccess);
+      _showSuccess("msg_voucher_collect_success".tr);
     } else if (response.data[ApiService.keyStatusCode] == 402) {
-      _showError(AppStrings.msgAllVouchersCollected);
+      _showError("msg_voucher_all_collected".tr);
     } else if (response.data[ApiService.keyStatusCode] == 403) {
-      _showError(AppStrings.msgCollectVoucherBefore);
+      _showError("msg_voucher_collected_before".tr);
     } else if (response.data[ApiService.keyStatusCode] == 520) {
-      _showError(AppStrings.msgInvalidToken);
+      _showError("msg_token_invalid".tr);
     } else {
-      _showError(AppStrings.msgInvalidToken);
+      _showError("msg_token_invalid".tr);
     }
   }
 

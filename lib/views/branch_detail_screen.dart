@@ -54,7 +54,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
   }
 
   Future<void> _redirectGoogleMap(String fullAddress) async {
-    MessageHelper.showDialog(type: DialogType.loading, title: AppStrings.redirecting, message: AppStrings.msgGoogleMapRedirecting);
+    MessageHelper.showDialog(type: DialogType.loading, title: "redirecting".tr, message: "msg_google_maps_redirecting".tr);
 
     Coordinate? current = await LocationHelper.getCurrentCoordinate();
     Coordinate? target = await LocationHelper.getCoordinate(fullAddress);
@@ -122,7 +122,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
         children: <Widget>[
-          CustomText(AppStrings.memberBenefits, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold),
+          CustomText("member_benefits".tr, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold),
           SizedBox(
             height: ResponsiveHelper.isDesktop(context) ? 150.0 : 100.0,
             child: Row(
@@ -130,7 +130,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
                 Expanded(
                   child: CustomImageTextButton(
                     assetName: AppStrings.tmpIconMyPoints,
-                    label: member.isMember ? AppStrings.myPoints : AppStrings.earnPoints,
+                    label: member.isMember ? "my_points".tr : "earn_points".tr,
                     content: member.isMember ? member.point.toString() : null,
                     onTap: member.isMember
                         ? () async {
@@ -147,7 +147,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
                 Expanded(
                   child: CustomImageTextButton(
                     assetName: AppStrings.tmpIconMyVoucher,
-                    label: member.isMember ? AppStrings.myVouchers : AppStrings.collectVouchers,
+                    label: member.isMember ? "my_vouchers".tr : "collect_vouchers".tr,
                     content: member.isMember ? (member.normalVoucherCount + member.specialVoucherCount).toString() : null,
                     onTap: member.isMember && _hive.memberProfile.value != null
                         ? () async {
@@ -168,7 +168,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
                 Expanded(
                   child: CustomImageTextButton(
                     assetName: AppStrings.tmpIconMyCredits,
-                    label: member.isMember ? AppStrings.myCredits : AppStrings.redeemByCredits,
+                    label: member.isMember ? "my_credits".tr : "redeem_by_credits".tr,
                     content: member.isMember ? member.credit.toStringAsFixed(1) : null,
                     onTap: member.isMember
                         ? () async {
@@ -185,7 +185,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
               ],
             ),
           ),
-          if (!member.isMember) CustomFilledButton(label: AppStrings.joinNow, onTap: () {}),
+          if (!member.isMember) CustomFilledButton(label: "join_now".tr, onTap: () {}),
         ],
       ),
     );
@@ -198,22 +198,18 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
       child: ExpansionTile(
         tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
         onExpansionChanged: (isExpanded) => setState(() => _isExpanded = isExpanded),
-        title: CustomText(AppStrings.aboutUs, fontSize: 18.0, fontWeight: FontWeight.bold),
-        trailing: CustomText(
-          _isExpanded ? AppStrings.less : AppStrings.more,
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
-          fontSize: 16.0,
-        ),
+        title: CustomText("about_us".tr, fontSize: 18.0, fontWeight: FontWeight.bold),
+        trailing: CustomText(_isExpanded ? "less".tr : "more".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 16.0),
         children: <Widget>[
           CustomInfoListTile(
             icon: Icons.location_on_rounded,
             title: _branch.fullAddress,
-            subtitle: AppStrings.msgGoogleMapTap,
+            subtitle: "msg_google_maps_tap".tr,
             onTap: () => _redirectGoogleMap(_branch.fullAddress),
           ),
           CustomInfoListTile(
             icon: Icons.category_rounded,
-            title: AppStrings.categories,
+            title: "categories".tr,
             subWidget: Padding(
               padding: EdgeInsets.only(top: ResponsiveHelper.getSpacing(context, SizeType.xs)),
               child: Wrap(
@@ -230,9 +226,9 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
               ),
             ),
           ),
-          CustomInfoListTile(icon: Icons.account_box_rounded, title: AppStrings.aboutUs, subtitle: _branch.branchDescription),
-          CustomInfoListTile(icon: Icons.email_rounded, title: AppStrings.email, subtitle: _branch.subCompany.companyEmail),
-          CustomInfoListTile(icon: Icons.phone_rounded, title: AppStrings.phone, subtitle: _branch.contactNumber),
+          CustomInfoListTile(icon: Icons.account_box_rounded, title: "about_us".tr, subtitle: _branch.branchDescription),
+          CustomInfoListTile(icon: Icons.email_rounded, title: "email".tr, subtitle: _branch.subCompany.companyEmail),
+          CustomInfoListTile(icon: Icons.phone_rounded, title: "phone".tr, subtitle: _branch.contactNumber),
         ],
       ),
     ),
@@ -241,17 +237,11 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
   Widget _buildTimeline() => Obx(() {
     if (_timelineController.isLoading.value) {
       return SliverFillRemaining(
-        child: SizedBox(
-          child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
-        ),
+        child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
       );
     }
 
-    if (_timelineController.timelines.isEmpty) {
-      return SliverFillRemaining(
-        child: SizedBox(child: Center(child: CustomText(AppStrings.msgNoAvailableTimeline, fontSize: 16.0, maxLines: 2))),
-      );
-    }
+    if (_timelineController.timelines.isEmpty) return SliverToBoxAdapter();
 
     return SliverToBoxAdapter(
       child: Container(
@@ -264,7 +254,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
                 horizontal: ResponsiveHelper.getSpacing(context, SizeType.m),
                 vertical: ResponsiveHelper.getSpacing(context, SizeType.l),
               ),
-              child: CustomText(AppStrings.whatNew, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
+              child: CustomText("what_new".tr, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             ListView.separated(
               shrinkWrap: true,

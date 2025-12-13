@@ -6,6 +6,7 @@ import 'package:ezy_member_v2/widgets/custom_modal.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 class CustomIDTypeTextField extends StatefulWidget {
   final TextEditingController typeController, valueController;
@@ -46,12 +47,12 @@ class _CustomIDTypeTextFieldState extends State<CustomIDTypeTextField> {
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: kBorderWidth),
               ),
-              hint: CustomText(AppStrings.registrationSchemeID, fontSize: 18.0, textAlign: TextAlign.center),
+              hint: CustomText("registration_scheme_id".tr, fontSize: 18.0, textAlign: TextAlign.center),
             ),
             onTap: () async {
               final pickedIDTypes = await CustomTypePickerDialog.show<String>(
                 context: context,
-                title: AppStrings.pickRegistrationType,
+                title: "pick_registration_type".tr,
                 options: _idTypes,
                 onDisplay: (option) => option,
               );
@@ -257,7 +258,7 @@ class CustomProfileTextField extends StatelessWidget {
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: kBorderWidth),
         ),
-        hint: CustomText(AppStrings().getHintText(label.toLowerCase()), color: Colors.black38, fontSize: 16.0),
+        hint: CustomText("msg_hint_text".trParams({"label": label.toLowerCase()}), color: Colors.black38, fontSize: 16.0),
       ),
       onTap: onTap,
     ),
@@ -417,7 +418,7 @@ class _CustomSearchTextFieldState extends State<CustomSearchTextField> {
           vertical: ResponsiveHelper.getSpacing(context, SizeType.s),
         ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(kBorderRadiusS), borderSide: BorderSide.none),
-        hintText: AppStrings.search,
+        hintText: "search".tr,
         prefixIcon: const Icon(Icons.search_rounded),
         suffixIcon: widget.controller.text.isEmpty
             ? null

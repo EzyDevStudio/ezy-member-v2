@@ -1,7 +1,6 @@
 import 'package:coupon_uikit/coupon_uikit.dart';
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_routes.dart';
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/voucher_model.dart';
@@ -63,25 +62,25 @@ class CustomCollectableVoucher extends StatelessWidget {
               Expanded(child: CustomText(voucher.batchDescription, fontSize: 14.0)),
               InkWell(
                 onTap: onTapCollect,
-                child: CustomText(AppStrings.collect, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 12.0),
+                child: CustomText("collect".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 12.0),
               ),
             ],
           ),
-          CustomText("${voucher.discountValue} ${AppStrings.off}", fontSize: 12.0),
+          CustomText("${voucher.discountValue} ${"off".tr}", fontSize: 12.0),
           const Spacer(),
-          CustomText("${AppStrings.minSpend} ${voucher.minimumSpend}", fontSize: 12.0),
+          CustomText("${"min_spend".tr} ${voucher.minimumSpend}", fontSize: 12.0),
           Row(
             children: <Widget>[
               Expanded(
                 child: CustomText(
-                  "${AppStrings.validTill} ${FormatterHelper.timestampToString(voucher.expiredDate)}",
+                  "${"valid_till".tr} ${FormatterHelper.timestampToString(voucher.expiredDate)}",
                   color: Colors.black54,
                   fontSize: 11.0,
                 ),
               ),
               InkWell(
                 onTap: () => Get.toNamed(AppRoutes.termsCondition, arguments: {"voucher": voucher}),
-                child: CustomText(AppStrings.tnc, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 11.0),
+                child: CustomText("tnc".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 11.0),
               ),
             ],
           ),
@@ -133,22 +132,22 @@ class CustomVoucher extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               CustomText(voucher.batchDescription, fontSize: 18.0, fontWeight: FontWeight.bold),
-              CustomText("${voucher.discountValue} ${AppStrings.off}", fontSize: 14.0),
+              CustomText("${voucher.discountValue} ${"off".tr}", fontSize: 14.0),
               const Spacer(),
-              CustomText("${AppStrings.minSpend} ${voucher.minimumSpend}", fontSize: 14.0),
+              CustomText("${"min_spend".tr} ${voucher.minimumSpend}", fontSize: 14.0),
               Row(
                 spacing: ResponsiveHelper.getSpacing(context, SizeType.s),
                 children: <Widget>[
                   Expanded(
                     child: CustomText(
-                      "${AppStrings.validTill} ${FormatterHelper.timestampToString(voucher.expiredDate)}",
+                      "${"valid_till".tr} ${FormatterHelper.timestampToString(voucher.expiredDate)}",
                       color: Colors.black54,
                       fontSize: 14.0,
                     ),
                   ),
                   InkWell(
                     onTap: () => Get.toNamed(AppRoutes.termsCondition, arguments: {"voucher": voucher}),
-                    child: CustomText(AppStrings.tnc, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 14.0),
+                    child: CustomText("tnc".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 14.0),
                   ),
                 ],
               ),
