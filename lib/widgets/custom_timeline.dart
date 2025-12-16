@@ -1,3 +1,4 @@
+import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/branch_model.dart';
@@ -22,7 +23,7 @@ class CustomTimeline extends StatelessWidget {
         child: Row(
           spacing: ResponsiveHelper.getSpacing(context, SizeType.s),
           children: <Widget>[
-            CustomAvatar(defaultSize: 50.0, desktopSize: 60.0, networkImage: branch.aboutUs.companyLogo),
+            CustomAvatar(size: ResponsiveHelper.getBranchImgSize(context), networkImage: branch.aboutUs.companyLogo),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +41,7 @@ class CustomTimeline extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, SizeType.m)),
         child: CustomText(timeline.timelineCaption, fontSize: 16.0, maxLines: null),
       ),
-      Image.network(timeline.timelineImage, fit: BoxFit.cover, height: 300.0, width: double.infinity),
+      Image.network(timeline.timelineImage, fit: BoxFit.cover, height: kTimelineHeight, width: double.infinity),
     ],
   );
 }

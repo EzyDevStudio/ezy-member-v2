@@ -15,13 +15,9 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+  Widget build(BuildContext context) => Scaffold(body: CustomScrollView(slivers: <Widget>[_buildContent()]));
 
-    return Scaffold(body: CustomScrollView(slivers: <Widget>[_buildContent(size)]));
-  }
-
-  Widget _buildContent(Size size) => SliverFillRemaining(
+  Widget _buildContent() => SliverFillRemaining(
     hasScrollBody: false,
     child: Padding(
       padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.l)),
@@ -30,12 +26,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         crossAxisAlignment: WrapCrossAlignment.center,
         runAlignment: WrapAlignment.center,
         children: <Widget>[
+          Image.asset(AppStrings.tmpImgWelcome, scale: kSquareRatio, width: ResponsiveHelper.getWelcomeImgSize(context) - 100.0),
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: ResponsiveHelper.getWelcomeMaxWidth(context) - 100.0),
-            child: Image.asset(AppStrings.tmpImgWelcome, fit: BoxFit.scaleDown, scale: kSquareRatio, width: size.width * 0.5),
-          ),
-          ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: ResponsiveHelper.getWelcomeMaxWidth(context) + 100.0),
+            constraints: BoxConstraints(maxWidth: ResponsiveHelper.getWelcomeImgSize(context) + 100.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: ResponsiveHelper.getSpacing(context, SizeType.m),

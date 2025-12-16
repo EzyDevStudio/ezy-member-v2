@@ -37,31 +37,19 @@ class ResponsiveHelper {
     return spacing;
   }
 
-  static double getAuthImgHeight(BuildContext context) {
-    return isDesktop(context) ? 300.0 : 200.0;
-  }
-
-  static double getImgIcBtnWidth(BuildContext context) {
-    return isDesktop(context) ? 200.0 : 125.0;
-  }
-
-  static double getNearbyHeight(BuildContext context) {
-    return isDesktop(context) ? 300.0 : 200.0;
-  }
-
-  static double getPromoAdsHeight(BuildContext context) {
-    return isDesktop(context) ? 200.0 : 150.0;
-  }
-
   static double getTextScaler(BuildContext context) {
     return isDesktop(context) ? 1.3 : 1.0;
   }
 
-  static double getVoucherCurvePosition(BuildContext context) {
-    return isDesktop(context) ? 120.0 : 90.0;
+  static double getWelcomeImgSize(BuildContext context) {
+    return isDesktop(context) ? 500.0 : 400.0;
   }
 
-  static double getVoucherImgSize(BuildContext context) {
+  static double getAuthImgSize(BuildContext context) {
+    return isDesktop(context) ? 300.0 : 200.0;
+  }
+
+  static double getBranchImgSize(BuildContext context) {
     return isDesktop(context) ? 70.0 : 50.0;
   }
 
@@ -73,11 +61,15 @@ class ResponsiveHelper {
     return isDesktop(context) ? 400.0 : 300.0;
   }
 
-  static double getWelcomeMaxWidth(BuildContext context) {
-    return isDesktop(context) ? 500.0 : 400.0;
+  static int getQuickAccessCount(BuildContext context) {
+    return isDesktop(context) ? 5 : (isTablet(context) ? 4 : 3);
   }
 
-  static int getHomeQuickAccessCount(BuildContext context) {
-    return isDesktop(context) ? 5 : (isTablet(context) ? 4 : 3);
+  static double getNearbyHeight(BuildContext context) {
+    return isDesktop(context) ? 300.0 : 200.0;
+  }
+
+  static double getPromoAdsHeight(BuildContext context) {
+    return isDesktop(context) ? 200.0 : 150.0;
   }
 }

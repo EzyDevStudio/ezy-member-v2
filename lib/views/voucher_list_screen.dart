@@ -67,16 +67,19 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
         );
       }
 
+      final vouchers = List.from(_voucherController.vouchers)..sort((a, b) => a.expiredDate.compareTo(b.expiredDate));
+
       return SliverToBoxAdapter(
         child: Wrap(
           runSpacing: ResponsiveHelper.getSpacing(context, SizeType.m),
           spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
           alignment: WrapAlignment.center,
-          children: _voucherController.vouchers.map((voucher) {
+          children: vouchers.map((voucher) {
             return ConstrainedBox(
               constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
               child: CustomVoucher(
                 voucher: voucher,
+                type: VoucherType.normal,
                 onTap: () async {
                   await Get.toNamed(AppRoutes.payment, arguments: {"scan_type": ScanType.voucher, "value": voucher.voucherCode});
 

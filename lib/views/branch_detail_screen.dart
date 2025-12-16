@@ -19,6 +19,7 @@ import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 
 class BranchDetailScreen extends StatefulWidget {
   const BranchDetailScreen({super.key});
@@ -48,9 +49,25 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
   Future<void> _onRefresh() async {
     _timelineController.loadTimelines(companyID: _branch.company.companyID);
 
-    await _hive.loadMemberHive();
-
     if (_hive.isSignIn) _memberController.loadMembersCheckStart(_hive.memberProfile.value!.memberCode);
+  }
+
+  void _shareContent(BuildContext context) async {
+    final box = context.findRenderObject() as RenderBox?;
+
+    final result = await SharePlus.instance.share(
+      ShareParams(
+        text:
+            "Hey! Join [COMPANY-NAME] as a member using my code [REFERRAL-CODE] and enjoy all the exclusive benefits. https://ezymember.com/COMPANY-NAME/REFERRAL-CODE",
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      ),
+    );
+
+    if (result.status == ShareResultStatus.success) {
+      print('Shared successfully!');
+    } else if (result.status == ShareResultStatus.dismissed) {
+      print('Share dismissed.');
+    }
   }
 
   Future<void> _redirectGoogleMap(String fullAddress) async {
@@ -78,7 +95,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
   Widget _buildAppBar() => SliverAppBar(
     floating: true,
     pinned: true,
-    actions: <IconButton>[IconButton(onPressed: () {}, icon: Icon(Icons.share_rounded))],
+    actions: <IconButton>[IconButton(onPressed: () => _shareContent(context), icon: Icon(Icons.share_rounded))],
     title: SizedBox(
       height: kToolbarHeight * kAppBarLogoRatio,
       child: Image.asset(AppStrings.tmpImgAppLogo, fit: BoxFit.fitHeight, color: Colors.white),
@@ -93,7 +110,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
           Row(
             spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
             children: <Widget>[
-              CustomAvatar(defaultSize: kProfileImgSizeM, desktopSize: kProfileImgSizeM, networkImage: _branch.aboutUs.companyLogo),
+              CustomAvatar(size: kProfileImgSizeM, networkImage: _branch.aboutUs.companyLogo),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

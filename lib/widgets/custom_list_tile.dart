@@ -60,7 +60,7 @@ class CustomHistoryListTile extends StatelessWidget {
         children: <Widget>[
           CustomText(value, color: textColor, fontSize: 14.0),
           if (history.type != HistoryType.voucher)
-            CustomText(history.type == HistoryType.point ? "points".tr : "credits".tr, color: Theme.of(context).colorScheme.primary, fontSize: 12.0),
+            CustomText(history.type == HistoryType.point ? "points".tr : "credits".tr, color: Theme.of(context).colorScheme.primary, fontSize: 11.0),
         ],
       ),
     );

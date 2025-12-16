@@ -56,15 +56,12 @@ class CustomImageTextButton extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 70.0),
-                child: Badge.count(
-                  isLabelVisible: isCountVisible!,
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                  textColor: Theme.of(context).colorScheme.onError,
-                  count: count!,
-                  child: Image.asset(assetName, scale: kSquareRatio),
-                ),
+              child: Badge.count(
+                isLabelVisible: isCountVisible!,
+                backgroundColor: Theme.of(context).colorScheme.error,
+                textColor: Theme.of(context).colorScheme.onError,
+                count: count!,
+                child: Image.asset(assetName, scale: kSquareRatio),
               ),
             ),
           ),

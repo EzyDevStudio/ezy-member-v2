@@ -29,6 +29,14 @@
     <string>We need your location to show nearby points even in background.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>We need your location to show nearby points.</string>
+    <key>NSUserNotificationUsageDescription</key>
+    <string>We need your permission to send notifications.</string>
+
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>location</string>
+        <string>remote-notification</string>
+    </array>
 
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

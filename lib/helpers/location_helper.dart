@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:math' hide log;
 
-import 'package:ezy_member_v2/helpers/permission_helper.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -53,10 +52,6 @@ class LocationHelper {
   }
 
   static Future<Coordinate?> getCurrentCoordinate() async {
-    bool permissionGranted = await PermissionHelper.checkAndRequestLocation();
-
-    if (!permissionGranted) return null;
-
     try {
       final LocationSettings locationSettings = const LocationSettings(distanceFilter: 0, accuracy: LocationAccuracy.high);
       final Position position = await Geolocator.getCurrentPosition(locationSettings: locationSettings);

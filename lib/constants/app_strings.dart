@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 class AppStrings {
   // App Name
   static const String appName = "EzyMember";
@@ -25,19 +27,7 @@ class AppStrings {
   static const String jsonCountryCode = "assets/json/country_codes.json";
   static const String jsonPostcode = "assets/json/postcodes.json";
 
-  List<String> genders = ["Male", "Female", "Prefer not to say"];
-  List<String> idTypes = ["BRN", "NRIC", "PASSPORT", "ARMY"];
+  Map<String, String> genders = {"M": "male".tr, "F": "female".tr, "O": "prefer_not_to_say".tr};
 
-  Map<String, String> gender = {
-    "M": "Male",
-    "F": "Female",
-    "O": "Prefer not to say",
-  };
-
-  Map<String, String> idType = {
-    "brn": "BRN",
-    "nric": "NRIC",
-    "passport": "PASSPORT",
-    "army": "ARMY",
-  };
+  Map<String, String> idTypes = {"nric": "NRIC", "brn": "BRN", "passport": "PASSPORT", "army": "ARMY"};
 }

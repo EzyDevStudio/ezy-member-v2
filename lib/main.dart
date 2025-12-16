@@ -6,6 +6,7 @@ import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/settings_controller.dart';
 import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/local/member_profile_storage_service.dart';
+import 'package:ezy_member_v2/services/local/notification_service.dart';
 import 'package:ezy_member_v2/services/local/settings_storage_service.dart';
 import 'package:ezy_member_v2/translations/translations.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 // Settle AssetImage, NetworkImage, Image.asset, Image.network
 // reminder for expired voucher - notification
-// custom model TypePicker change from List to Map - gender, and id scheme type
 // custom text field to autocomplete - postcode
-// handle loading empty for all Obx in screens
 
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
@@ -26,6 +25,7 @@ void main() async {
 
   await Hive.initFlutter();
   await MemberProfileStorageService().init();
+  await NotificationService.init();
   await SettingsStorageService().init();
 
   Get.put(MemberHiveController());

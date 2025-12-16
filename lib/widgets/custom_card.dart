@@ -65,7 +65,7 @@ class CustomMemberCard extends StatelessWidget {
             ),
           ],
         ),
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        padding: const EdgeInsets.all(16.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
@@ -74,14 +74,17 @@ class CustomMemberCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  CustomText(member.branch.subCompany.companyName, color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                  CustomText(member.branch.subCompany.companyName, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
                   const Spacer(),
-                  CustomAvatar(defaultSize: 60.0, desktopSize: 80.0, networkImage: member.branch.aboutUs.companyLogo),
+                  CustomAvatar(size: ResponsiveHelper.getBranchImgSize(context) * 1.2, networkImage: member.branch.aboutUs.companyLogo),
                   const Spacer(),
-                  CustomText(member.memberCard.memberCardNumber, color: Colors.white, fontSize: 24.0),
+                  CustomText(member.memberCard.memberCardNumber, color: Colors.white, fontSize: 22.0),
                   const Spacer(),
-                  CustomText(FormatterHelper.timestampToString(member.memberCard.expiredDate), color: Colors.white, fontSize: 16.0),
-                  CustomText(member.memberCard.cardDesc, color: Colors.white, fontSize: 16.0),
+                  CustomText(
+                    "${member.memberCard.cardDesc} · ${FormatterHelper.timestampToString(member.memberCard.expiredDate)}",
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
                 ],
               ),
             ),
@@ -312,14 +315,7 @@ class CustomProfileCard extends StatelessWidget {
       children: <Widget>[
         Stack(
           children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(fit: BoxFit.cover, image: AssetImage(image.isEmpty ? AppStrings.tmpImgDefaultAvatar : image)),
-              ),
-              height: kProfileImgSizeL,
-              width: kProfileImgSizeL,
-            ),
+            CustomAvatar(size: kProfileImgSizeL, networkImage: ""),
             Positioned(
               bottom: kPositionEmpty,
               right: kPositionEmpty,

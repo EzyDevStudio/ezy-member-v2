@@ -12,9 +12,11 @@ import 'package:ezy_member_v2/controllers/promotion_controller.dart';
 import 'package:ezy_member_v2/controllers/timeline_controller.dart';
 import 'package:ezy_member_v2/controllers/voucher_controller.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
+import 'package:ezy_member_v2/helpers/permission_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/branch_model.dart';
 import 'package:ezy_member_v2/services/local/connection_service.dart';
+import 'package:ezy_member_v2/services/local/notification_service.dart';
 import 'package:ezy_member_v2/translations/translations.dart';
 import 'package:ezy_member_v2/widgets/custom_avatar.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
@@ -39,11 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
   final _branchController = Get.put(BranchController(), tag: "home");
   final _memberController = Get.put(MemberController(), tag: "home");
   final _promoController = Get.put(PromotionController(), tag: "home");
-  final _settingsController = Get.find<SettingsController>();
-  final _voucherController = Get.put(VoucherController(), tag: "home");
-  final _hive = Get.find<MemberHiveController>();
-
   final _timelineController = Get.put(TimelineController(), tag: "home");
+  final _voucherController = Get.put(VoucherController(), tag: "home");
+
+  final _settingsController = Get.find<SettingsController>();
+  final _hive = Get.find<MemberHiveController>();
 
   late StreamSubscription<bool> _subscription;
 
@@ -68,12 +70,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _onRefresh() async {
+    await PermissionHelper.checkAndRequestLocation();
+
+    if (await PermissionHelper.checkAndRequestNotification()) {
+      await NotificationService.show(id: 0, title: "EzyMember", body: "2 vouchers will be expired by today.");
+    }
+
     _adsController.loadAdvertisements();
     _branchController.loadBranches(true);
     _promoController.loadPromotions();
     _timelineController.loadTimelines();
-
-    await _hive.loadMemberHive();
 
     if (_hive.isSignIn) {
       _voucherController.loadCollectableVouchers(_hive.memberProfile.value!.memberCode);
@@ -118,7 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: CustomScrollView(
           slivers: <Widget>[
             _buildAppBar(),
-            // _buildUserInfo(),
             if (_hive.isSignIn) ...[_buildVouchers(), _buildQuickAccess()],
             _buildSection("shops_nearby".tr, _buildNearby(), onTap: () {}, isPrimaryContainer: true),
             // _buildSection("promotions".tr, _buildPromotions(), isPrimaryContainer: true),
@@ -136,16 +141,15 @@ class _HomeScreenState extends State<HomeScreen> {
     snap: false,
     actions: _buildAppBarAction(),
     expandedHeight: _calculateAppBarHeight(),
-    bottom: _hive.isSignIn ? PreferredSize(
-      preferredSize: Size.fromHeight(ResponsiveHelper.getSpacing(context, SizeType.m) * 2 + kProfileBarcodeHeight),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: ResponsiveHelper.getSpacing(context, SizeType.xl),
-          vertical: ResponsiveHelper.getSpacing(context, SizeType.m),
-        ),
-        child: _hive.isSignIn ? _buildBarcode(_hive.memberProfile.value!.memberCode) : SizedBox.shrink(),
-      ),
-    ) : null,
+    bottom: _hive.isSignIn
+        ? PreferredSize(
+            preferredSize: Size.fromHeight(ResponsiveHelper.getSpacing(context, SizeType.m) * 2 + kProfileBarcodeHeight),
+            child: Padding(
+              padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+              child: _hive.isSignIn ? _buildBarcode(_hive.memberProfile.value!.memberCode) : SizedBox.shrink(),
+            ),
+          )
+        : null,
     flexibleSpace: FlexibleSpaceBar(
       background: Container(
         decoration: BoxDecoration(
@@ -167,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () => Get.toNamed(_hive.isSignIn ? AppRoutes.profileDetail : AppRoutes.authentication),
-                      child: CustomAvatar(defaultSize: kProfileImgSizeM, desktopSize: kProfileImgSizeM, networkImage: ""),
+                      child: CustomAvatar(size: kProfileImgSizeM, networkImage: ""),
                     ),
                     Expanded(
                       child: Column(
@@ -209,50 +213,14 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_hive.isSignIn) IconButton(onPressed: _signOut, icon: Icon(Icons.logout_rounded)),
   ];
 
-  Widget _buildUserInfo() => SliverToBoxAdapter(
-    child: CustomBackgroundCard(
-      child: Column(
-        spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
-        children: <Widget>[
-          Row(
-            spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
-            children: <Widget>[
-              GestureDetector(
-                onTap: () => Get.toNamed(_hive.isSignIn ? AppRoutes.profileDetail : AppRoutes.authentication),
-                child: CustomAvatar(defaultSize: kProfileImgSizeM, desktopSize: kProfileImgSizeM, networkImage: ""),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    CustomText(
-                      _hive.isSignIn ? _hive.memberProfile.value!.name : "guest".tr,
-                      color: Colors.white,
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    if (_hive.isSignIn)
-                      CustomText(_hive.memberProfile.value!.memberCode, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          if (_hive.isSignIn) _buildBarcode(_hive.memberProfile.value!.memberCode),
-        ],
-      ),
-    ),
-  );
-
-  Widget _buildBarcode(String memberCode) => Center(
+  Widget _buildBarcode(String memberCode) => ConstrainedBox(
+    constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
     child: Code(
       drawText: false,
       codeType: CodeType.code39(),
       backgroundColor: Colors.white,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusS), color: Colors.white),
       height: kProfileBarcodeHeight,
-      width: kProfileBarcodeWidth,
       padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
       data: memberCode,
     ),
@@ -293,10 +261,10 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          childAspectRatio: kQuickAccessRatio,
           crossAxisSpacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+          mainAxisExtent: 100.0,
           mainAxisSpacing: ResponsiveHelper.getSpacing(context, SizeType.m),
-          crossAxisCount: ResponsiveHelper.getHomeQuickAccessCount(context),
+          crossAxisCount: ResponsiveHelper.getQuickAccessCount(context),
         ),
         delegate: SliverChildListDelegate([
           CustomImageTextButton(
@@ -357,7 +325,9 @@ class _HomeScreenState extends State<HomeScreen> {
               left: index == 0 ? ResponsiveHelper.getSpacing(context, SizeType.m) : 0.0,
               right: index == vouchers.length - 1 ? ResponsiveHelper.getSpacing(context, SizeType.m) : 0.0,
             ),
-            child: CustomCollectableVoucher(
+            child: CustomVoucher(
+              voucher: vouchers[index],
+              type: VoucherType.collectable,
               onTapCollect: () async {
                 await _voucherController.collectVoucher(
                   vouchers[index].batchCode,
@@ -368,7 +338,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 _voucherController.loadCollectableVouchers(_hive.memberProfile.value!.memberCode);
               },
-              voucher: vouchers[index],
             ),
           ),
         ),

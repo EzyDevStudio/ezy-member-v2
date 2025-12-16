@@ -38,11 +38,12 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   MemberProfileModel _memberProfile = MemberProfileModel.empty();
   WorkingProfileModel _workingProfile = WorkingProfileModel.empty();
 
+  String _selectedGender = "";
+  String _selectedIDType = AppStrings().idTypes.keys.first;
+
   @override
   void initState() {
     super.initState();
-
-    _hive.loadMemberHive();
 
     _memberControllers = ProfileDetailControllers(_memberProfile);
     _workingControllers = ProfileDetailControllers(_workingProfile);
@@ -76,12 +77,25 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     if (isMember && _profileController.memberProfile.value != null) {
       _memberProfile = _profileController.memberProfile.value!;
       _memberControllers = ProfileDetailControllers(_memberProfile);
+
       await _phoneMember.update(_memberProfile.countryCode);
+
+      if (_memberProfile.gender.isNotEmpty) _selectedGender = _memberProfile.gender;
+
+      _memberControllers[fieldGender].text = AppStrings().genders[_selectedGender] ?? "";
       setState(() {});
     } else if (!isMember && _profileController.workingProfile.value != null) {
       _workingProfile = _profileController.workingProfile.value!;
       _workingControllers = ProfileDetailControllers(_workingProfile);
+
       await _phoneWorking.update(_workingProfile.countryCode);
+
+      if (_workingProfile.registrationSchemeID.isNotEmpty) _selectedIDType = _workingProfile.registrationSchemeID;
+
+      _workingControllers[fieldRegistrationSchemeID].text = AppStrings().idTypes[_selectedIDType] ?? AppStrings().idTypes.values.first;
+      setState(() {});
+    } else if (!isMember && _profileController.workingProfile.value == null) {
+      _workingControllers[fieldRegistrationSchemeID].text = AppStrings().idTypes[_selectedIDType] ?? AppStrings().idTypes.values.first;
       setState(() {});
     }
   }
@@ -133,7 +147,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       sstRegistrationNo: _memberControllers[fieldSSTRegistrationNo].text.trim(),
       ttxRegistrationNo: _memberControllers[fieldTTXRegistrationNo].text.trim(),
       name: _memberControllers[fieldName].text.trim(),
-      gender: _memberControllers[fieldGender].text.trim(),
+      gender: _selectedGender,
       dob: _memberControllers[fieldDOB].text.trim(),
       accountCode: _memberControllers[fieldAccountCode].text.trim(),
     );
@@ -168,7 +182,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       email: _workingControllers[fieldEmail].text.trim(),
       roc: _workingControllers[fieldROC].text.trim(),
       msic: _workingControllers[fieldMSICCode].text.trim(),
-      registrationSchemeID: _workingControllers[fieldRegistrationSchemeID].text.trim(),
+      registrationSchemeID: _selectedIDType,
       registrationSchemeNo: _workingControllers[fieldRegistrationSchemeNo].text.trim(),
     );
 
@@ -221,35 +235,40 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             CustomSectionCard(
               title: "basic_information".tr,
               children: <Widget>[
-                CustomProfileTextField(controller: _memberControllers[fieldName], label: "name".tr),
-                CustomProfileTextField(enabled: false, controller: _memberControllers[fieldEmail], label: "email".tr),
-                CustomProfilePhoneTextField(
+                CustomUnderlineTextField(controller: _memberControllers[fieldName], label: "name".tr),
+                CustomUnderlineTextField(enabled: false, controller: _memberControllers[fieldEmail], label: "email".tr),
+                CustomUnderlineTextField(
                   controller: _memberControllers[fieldContactNumber],
                   phone: _phoneMember,
                   label: "phone".tr,
-                  onChanged: (value) => setState(() => _phoneMember = value),
+                  type: UnderlineType.phone,
+                  keyboardType: TextInputType.phone,
+                  onPhoneChanged: (value) => setState(() => _phoneMember = value),
                 ),
                 Row(
                   spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
                   children: <Widget>[
                     Expanded(
-                      child: CustomProfileTextField(
+                      child: CustomUnderlineTextField(
                         controller: _memberControllers[fieldGender],
                         label: "gender".tr,
                         onTap: () async {
-                          final pickedGender = await CustomTypePickerDialog.show<String>(
+                          final pickedGender = await CustomTypePickerDialog.show<String, String>(
                             context: context,
                             title: "pick_gender".tr,
                             options: AppStrings().genders,
                             onDisplay: (option) => option,
                           );
 
-                          if (pickedGender != null) _memberControllers[fieldGender].text = pickedGender;
+                          if (pickedGender != null) {
+                            _memberControllers[fieldGender].text = pickedGender.value;
+                            _selectedGender = pickedGender.key;
+                          }
                         },
                       ),
                     ),
                     Expanded(
-                      child: CustomProfileTextField(
+                      child: CustomUnderlineTextField(
                         controller: _memberControllers[fieldDOB],
                         label: "dob".tr,
                         onTap: () => _selectDate(context, _memberControllers[fieldDOB]),
@@ -257,24 +276,28 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                     ),
                   ],
                 ),
-                CustomProfileTextField(controller: _memberControllers[fieldAccountCode], label: "account_code".tr),
+                CustomUnderlineTextField(controller: _memberControllers[fieldAccountCode], label: "account_code".tr),
               ],
             ),
             CustomSectionCard(
               title: "address".tr,
               children: <Widget>[
-                CustomProfileTextField(controller: _memberControllers[fieldAddress1], label: "${"address_line".tr} 1"),
-                CustomProfileTextField(controller: _memberControllers[fieldAddress2], label: "${"address_line".tr} 2"),
-                CustomProfileTextField(controller: _memberControllers[fieldAddress3], label: "${"address_line".tr} 3"),
-                CustomProfileTextField(controller: _memberControllers[fieldAddress4], label: "${"address_line".tr} 4"),
+                CustomUnderlineTextField(controller: _memberControllers[fieldAddress1], label: "${"address_line".tr} 1"),
+                CustomUnderlineTextField(controller: _memberControllers[fieldAddress2], label: "${"address_line".tr} 2"),
+                CustomUnderlineTextField(controller: _memberControllers[fieldAddress3], label: "${"address_line".tr} 3"),
+                CustomUnderlineTextField(controller: _memberControllers[fieldAddress4], label: "${"address_line".tr} 4"),
                 Row(
                   spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
                   children: <Widget>[
                     Expanded(
-                      child: CustomProfileTextField(controller: _workingControllers[fieldPostcode], isRequired: _isRequired, label: "postcode".tr),
+                      child: CustomUnderlineTextField(
+                        controller: _memberControllers[fieldPostcode],
+                        label: "postcode".tr,
+                        keyboardType: TextInputType.number,
+                      ),
                     ),
                     Expanded(
-                      child: CustomProfileTextField(controller: _memberControllers[fieldCity], label: "city".tr),
+                      child: CustomUnderlineTextField(controller: _memberControllers[fieldCity], label: "city".tr),
                     ),
                   ],
                 ),
@@ -282,10 +305,10 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
                   children: <Widget>[
                     Expanded(
-                      child: CustomProfileTextField(controller: _memberControllers[fieldState], label: "state".tr),
+                      child: CustomUnderlineTextField(controller: _memberControllers[fieldState], label: "state".tr),
                     ),
                     Expanded(
-                      child: CustomProfileTextField(
+                      child: CustomUnderlineTextField(
                         controller: _memberControllers[fieldCountry],
                         label: "country".tr,
                         onTap: () async {
@@ -302,9 +325,9 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             CustomSectionCard(
               title: "registration_information".tr,
               children: <Widget>[
-                CustomProfileTextField(controller: _memberControllers[fieldTIN], label: "tin".tr),
-                CustomProfileTextField(controller: _memberControllers[fieldSSTRegistrationNo], label: "sst_registration".tr),
-                CustomProfileTextField(controller: _memberControllers[fieldTTXRegistrationNo], label: "ttx_registration".tr),
+                CustomUnderlineTextField(controller: _memberControllers[fieldTIN], label: "tin".tr),
+                CustomUnderlineTextField(controller: _memberControllers[fieldSSTRegistrationNo], label: "sst_registration".tr),
+                CustomUnderlineTextField(controller: _memberControllers[fieldTTXRegistrationNo], label: "ttx_registration".tr),
               ],
             ),
             const SizedBox(),
@@ -348,7 +371,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               ),
               child: CheckboxListTile(
                 value: _isRequired,
-                contentPadding: const EdgeInsets.all(0.0),
+                contentPadding: EdgeInsets.zero,
                 onChanged: (value) => setState(() => _isRequired = value!),
                 subtitle: _isRequired ? CustomText("msg_required_e_invoice".tr, fontSize: 14.0) : null,
                 title: CustomText(
@@ -362,32 +385,44 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             CustomSectionCard(
               title: "company_information".tr,
               children: <Widget>[
-                CustomProfileTextField(controller: _workingControllers[fieldName], isRequired: _isRequired, label: "name".tr),
-                CustomProfileTextField(controller: _workingControllers[fieldEmail], isRequired: _isRequired, label: "email".tr),
-                CustomProfilePhoneTextField(
+                CustomUnderlineTextField(controller: _workingControllers[fieldName], isRequired: _isRequired, label: "name".tr),
+                CustomUnderlineTextField(
+                  controller: _workingControllers[fieldEmail],
                   isRequired: _isRequired,
+                  label: "email".tr,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                CustomUnderlineTextField(
                   controller: _workingControllers[fieldContactNumber],
+                  isRequired: _isRequired,
                   phone: _phoneWorking,
                   label: "phone".tr,
-                  onChanged: (value) => setState(() => _phoneWorking = value),
+                  type: UnderlineType.phone,
+                  keyboardType: TextInputType.phone,
+                  onPhoneChanged: (value) => setState(() => _phoneWorking = value),
                 ),
               ],
             ),
             CustomSectionCard(
               title: "address".tr,
               children: <Widget>[
-                CustomProfileTextField(controller: _workingControllers[fieldAddress1], isRequired: _isRequired, label: "${"address_line".tr} 1"),
-                CustomProfileTextField(controller: _workingControllers[fieldAddress2], label: "${"address_line".tr} 2"),
-                CustomProfileTextField(controller: _workingControllers[fieldAddress3], label: "${"address_line".tr} 3"),
-                CustomProfileTextField(controller: _workingControllers[fieldAddress4], label: "${"address_line".tr} 4"),
+                CustomUnderlineTextField(controller: _workingControllers[fieldAddress1], isRequired: _isRequired, label: "${"address_line".tr} 1"),
+                CustomUnderlineTextField(controller: _workingControllers[fieldAddress2], label: "${"address_line".tr} 2"),
+                CustomUnderlineTextField(controller: _workingControllers[fieldAddress3], label: "${"address_line".tr} 3"),
+                CustomUnderlineTextField(controller: _workingControllers[fieldAddress4], label: "${"address_line".tr} 4"),
                 Row(
                   spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
                   children: <Widget>[
                     Expanded(
-                      child: CustomProfileTextField(controller: _workingControllers[fieldPostcode], isRequired: _isRequired, label: "postcode".tr),
+                      child: CustomUnderlineTextField(
+                        controller: _workingControllers[fieldPostcode],
+                        isRequired: _isRequired,
+                        label: "postcode".tr,
+                        keyboardType: TextInputType.number,
+                      ),
                     ),
                     Expanded(
-                      child: CustomProfileTextField(controller: _workingControllers[fieldCity], isRequired: _isRequired, label: "city".tr),
+                      child: CustomUnderlineTextField(controller: _workingControllers[fieldCity], isRequired: _isRequired, label: "city".tr),
                     ),
                   ],
                 ),
@@ -395,12 +430,12 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
                   children: <Widget>[
                     Expanded(
-                      child: CustomProfileTextField(controller: _workingControllers[fieldState], isRequired: _isRequired, label: "state".tr),
+                      child: CustomUnderlineTextField(controller: _workingControllers[fieldState], isRequired: _isRequired, label: "state".tr),
                     ),
                     Expanded(
-                      child: CustomProfileTextField(
-                        isRequired: _isRequired,
+                      child: CustomUnderlineTextField(
                         controller: _workingControllers[fieldCountry],
+                        isRequired: _isRequired,
                         label: "country".tr,
                         onTap: () async {
                           final selectedPhone = await CustomCountryPickerDialog.show(context);
@@ -416,21 +451,35 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             CustomSectionCard(
               title: "registration_information".tr,
               children: <Widget>[
-                CustomIDTypeTextField(
+                CustomUnderlineTextField(
                   typeController: _workingControllers[fieldRegistrationSchemeID],
                   valueController: _workingControllers[fieldRegistrationSchemeNo],
                   isRequired: _isRequired,
                   label: "registration_scheme_id".tr,
+                  type: UnderlineType.idType,
+                  onTap: () async {
+                    final pickedIDTypes = await CustomTypePickerDialog.show<String, String>(
+                      context: context,
+                      title: "pick_registration_type".tr,
+                      options: AppStrings().idTypes,
+                      onDisplay: (option) => option,
+                    );
+
+                    if (pickedIDTypes != null) {
+                      _workingControllers[fieldRegistrationSchemeID].text = pickedIDTypes.value;
+                      _selectedIDType = pickedIDTypes.key;
+                    }
+                  },
                 ),
-                CustomProfileTextField(controller: _workingControllers[fieldTIN], isRequired: _isRequired, label: "tin".tr),
-                CustomProfileTextField(controller: _workingControllers[fieldSSTRegistrationNo], label: "sst_registration".tr),
-                CustomProfileTextField(
+                CustomUnderlineTextField(controller: _workingControllers[fieldTIN], isRequired: _isRequired, label: "tin".tr),
+                CustomUnderlineTextField(controller: _workingControllers[fieldSSTRegistrationNo], label: "sst_registration".tr),
+                CustomUnderlineTextField(
                   controller: _workingControllers[fieldTTXRegistrationNo],
                   isRequired: _isRequired,
                   label: "ttx_registration".tr,
                 ),
-                CustomProfileTextField(controller: _workingControllers[fieldROC], isRequired: _isRequired, label: "roc".tr),
-                CustomProfileTextField(controller: _workingControllers[fieldMSICCode], isRequired: _isRequired, label: "msic_code".tr),
+                CustomUnderlineTextField(controller: _workingControllers[fieldROC], isRequired: _isRequired, label: "roc".tr),
+                CustomUnderlineTextField(controller: _workingControllers[fieldMSICCode], isRequired: _isRequired, label: "msic_code".tr),
               ],
             ),
             const SizedBox(),

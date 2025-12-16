@@ -177,7 +177,7 @@ class _CustomCountryPickerDialogState extends State<CustomCountryPickerDialog> {
                 final String flag = PhoneDetail.countryCodeToEmoji(country.countryCode);
 
                 return ListTile(
-                  contentPadding: const EdgeInsets.all(0.0),
+                  contentPadding: EdgeInsets.zero,
                   onTap: () => Navigator.pop(context, country),
                   leading: CustomText(flag, fontSize: 25.0),
                   subtitle: CustomText(country.countryCode, color: Colors.black54, fontSize: 14.0),
@@ -194,10 +194,10 @@ class _CustomCountryPickerDialogState extends State<CustomCountryPickerDialog> {
 }
 
 // Dialog: Displays a selectable list of "Items"
-class CustomTypePickerDialog<T> extends StatelessWidget {
-  final List<T> options;
+class CustomTypePickerDialog<K, V> extends StatelessWidget {
+  final Map<K, V> options;
   final String title;
-  final String Function(T) onDisplay;
+  final String Function(V) onDisplay;
 
   const CustomTypePickerDialog({super.key, required this.options, required this.title, required this.onDisplay});
 
@@ -214,20 +214,22 @@ class CustomTypePickerDialog<T> extends StatelessWidget {
         spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
         children: <Widget>[
           CustomText(title, fontSize: 24.0, fontWeight: FontWeight.bold, textAlign: TextAlign.center),
-          ...options.map((option) => ListTile(title: CustomText(onDisplay(option), fontSize: 16.0), onTap: () => Navigator.pop(context, option))),
+          ...options.entries.map(
+            (entry) => ListTile(title: CustomText(onDisplay(entry.value), fontSize: 16.0), onTap: () => Navigator.pop(context, entry)),
+          ),
         ],
       ),
     ),
   );
 
-  static Future<T?> show<T>({
+  static Future<MapEntry<K, V>?> show<K, V>({
     required BuildContext context,
-    required List<T> options,
+    required Map<K, V> options,
     required String title,
-    required String Function(T) onDisplay,
-  }) => showDialog<T>(
+    required String Function(V) onDisplay,
+  }) => showDialog<MapEntry<K, V>>(
     context: context,
     barrierDismissible: true,
-    builder: (context) => CustomTypePickerDialog<T>(options: options, title: title, onDisplay: onDisplay),
+    builder: (context) => CustomTypePickerDialog<K, V>(options: options, title: title, onDisplay: onDisplay),
   );
 }

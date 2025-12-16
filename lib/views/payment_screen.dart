@@ -57,9 +57,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return "msg_expired_timer".trParams({"minutes": minutes.toString(), "seconds": seconds.toString().padLeft(2, "0")});
   }
 
-  Future<void> _onRefresh() async {
-    _hive.loadMemberHive();
-  }
+  Future<void> _onRefresh() async {}
 
   @override
   void dispose() {
@@ -72,76 +70,55 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: Theme.of(context).colorScheme.primary,
     appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.primary, title: Text("pay".tr)),
-    body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Expanded(
-          child: Center(
-            child: Image.asset(AppStrings.tmpImgAppLogo, fit: BoxFit.scaleDown, color: Colors.white),
-          ),
-        ),
-        Expanded(flex: 5, child: _buildContent()),
-      ],
-    ),
+    body: _buildContent(),
   );
 
   Widget _buildContent() => Center(
-    child: ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: ResponsiveHelper.mobileBreakpoint, maxWidth: ResponsiveHelper.mobileBreakpoint),
-      child: AspectRatio(
-        aspectRatio: kSquareRatio,
-        child: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusM), color: Colors.white),
-          margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.xl)),
-          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.l)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              if (_hive.isSignIn)
-                CustomText(
-                  _hive.memberProfile.value!.memberCode,
-                  color: Theme.of(context).colorScheme.primary,
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              if (_value != null && _scanType == ScanType.point) ..._buildBarcode(_value!),
-              if (_value != null && _scanType != ScanType.point) ..._buildQRCode(_value!),
-              if (_scanType != ScanType.point)
-                CustomText(_formatTime(_remainingSeconds), color: Theme.of(context).colorScheme.error, fontSize: 24.0, fontWeight: FontWeight.w700),
-            ],
-          ),
+    child: AspectRatio(
+      aspectRatio: kSquareRatio,
+      child: Container(
+        constraints: BoxConstraints(maxHeight: ResponsiveHelper.mobileBreakpoint, maxWidth: ResponsiveHelper.mobileBreakpoint),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusM), color: Colors.white),
+        margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.xl)),
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        child: Column(
+          spacing: ResponsiveHelper.getSpacing(context, SizeType.s),
+          children: <Widget>[
+            SizedBox(height: 50.0, child: Image.asset(AppStrings.tmpImgAppLogo, fit: BoxFit.scaleDown)),
+            const Spacer(),
+            if (_value != null && _scanType == ScanType.point) _buildBarcode(_value!),
+            if (_value != null && _scanType != ScanType.point) _buildQRCode(_value!),
+            const Spacer(),
+            CustomText(
+              _hive.memberProfile.value!.memberCode,
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+            ),
+            if (_scanType != ScanType.point) CustomText(_formatTime(_remainingSeconds), color: Theme.of(context).colorScheme.error, fontSize: 22.0),
+          ],
         ),
       ),
     ),
   );
 
-  List<Widget> _buildQRCode(String value) => [
-    Expanded(child: SizedBox()),
-    Expanded(
-      flex: 5,
-      child: Code(
-        drawText: false,
-        codeType: CodeType.qrCode(),
-        backgroundColor: Colors.white,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusS), color: Colors.white),
-        data: value,
-      ),
+  Widget _buildBarcode(String value) => AspectRatio(
+    aspectRatio: 4 / 1,
+    child: Code(
+      drawText: false,
+      codeType: CodeType.code39(),
+      backgroundColor: Colors.white,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusS)),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, SizeType.xl)),
+      data: value,
     ),
-    Expanded(child: SizedBox()),
-  ];
+  );
 
-  List<Widget> _buildBarcode(String value) => [
-    const Spacer(),
-    AspectRatio(
-      aspectRatio: 3 / 1,
-      child: Code(
-        drawText: false,
-        codeType: CodeType.code39(),
-        backgroundColor: Colors.white,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusS), color: Colors.white),
-        data: value,
-      ),
-    ),
-    const Spacer(),
-  ];
+  Widget _buildQRCode(String value) => Code(
+    drawText: false,
+    codeType: CodeType.qrCode(),
+    backgroundColor: Colors.white,
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusS)),
+    data: value,
+  );
 }
