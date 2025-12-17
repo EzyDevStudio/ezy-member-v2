@@ -49,7 +49,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
   Future<void> _onRefresh() async {
     _timelineController.loadTimelines(companyID: _branch.company.companyID);
 
-    if (_hive.isSignIn) _memberController.loadMembersCheckStart(_hive.memberProfile.value!.memberCode);
+    if (_hive.isSignIn) _memberController.loadMembers(_hive.memberProfile.value!.memberCode);
   }
 
   void _shareContent(BuildContext context) async {
@@ -64,10 +64,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
     );
 
     if (result.status == ShareResultStatus.success) {
-      print('Shared successfully!');
-    } else if (result.status == ShareResultStatus.dismissed) {
-      print('Share dismissed.');
-    }
+    } else if (result.status == ShareResultStatus.dismissed) {}
   }
 
   Future<void> _redirectGoogleMap(String fullAddress) async {
@@ -130,7 +127,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
   );
 
   Widget _buildBenefits() => Obx(() {
-    MemberModel member = _memberController.membersCheckStart.isNotEmpty ? _memberController.membersCheckStart[0] : MemberModel.empty();
+    MemberModel member = _memberController.members.firstWhere((m) => m.companyID == _branch.company.companyID, orElse: () => MemberModel.empty());
 
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusM)), color: Colors.white),

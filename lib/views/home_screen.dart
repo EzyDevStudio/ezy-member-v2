@@ -82,9 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _timelineController.loadTimelines();
 
     if (_hive.isSignIn) {
-      _voucherController.loadCollectableVouchers(_hive.memberProfile.value!.memberCode);
       _memberController.loadMembers(_hive.memberProfile.value!.memberCode);
-      _memberController.loadMembersCheckStart(_hive.memberProfile.value!.memberCode);
+      _voucherController.loadOverview(_hive.memberProfile.value!.memberCode);
     }
   }
 
@@ -99,7 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (result == true) {
       _hive.signOut();
-      _memberController.membersCheckStart.value = [];
     }
   }
 
@@ -189,6 +187,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
+                    Obx(() {
+                      int totalCount = _voucherController.redeemableCount.value + _voucherController.todayCount.value;
+
+                      if (totalCount <= 0) return SizedBox.shrink();
+
+                      return IconButton(
+                        onPressed: () {},
+                        icon: Badge.count(
+                          count: totalCount,
+                          child: Icon(Icons.notifications_rounded, color: Colors.white, size: 40.0),
+                        ),
+                      );
+                    }),
                   ],
                 ),
               ],
@@ -253,11 +264,8 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 
-  Widget _buildQuickAccess() => Obx(() {
-    int memberCount = _memberController.members.length;
-    int voucherCount = _memberController.members.fold(0, (sum, item) => sum + (item.normalVoucherCount) + (item.specialVoucherCount));
-
-    return SliverPadding(
+  Widget _buildQuickAccess() => Obx(
+    () => SliverPadding(
       padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -269,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
         delegate: SliverChildListDelegate([
           CustomImageTextButton(
             isCountVisible: true,
-            count: voucherCount,
+            count: _voucherController.redeemedCount.value,
             assetName: AppStrings.tmpIconMyVoucher,
             label: "my_vouchers".tr,
             onTap: () async {
@@ -280,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           CustomImageTextButton(
             isCountVisible: true,
-            count: memberCount,
+            count: _memberController.members.length,
             assetName: AppStrings.tmpIconMyMember,
             label: "my_cards".tr,
             onTap: () async {
@@ -302,15 +310,15 @@ class _HomeScreenState extends State<HomeScreen> {
           CustomImageTextButton(assetName: AppStrings.tmpIconInvoice, label: "e_invoice".tr, onTap: () {}),
         ]),
       ),
-    );
-  });
+    ),
+  );
 
   Widget _buildVouchers() => Obx(() {
-    if (_voucherController.collectableVouchers.isEmpty) {
+    if (_voucherController.vouchers.isEmpty) {
       return SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
-    final vouchers = _voucherController.collectableVouchers;
+    final vouchers = _voucherController.vouchers;
 
     return _buildSection("vouchers".tr, [
       SizedBox(
@@ -328,16 +336,12 @@ class _HomeScreenState extends State<HomeScreen> {
             child: CustomVoucher(
               voucher: vouchers[index],
               type: VoucherType.collectable,
-              onTapCollect: () async {
-                await _voucherController.collectVoucher(
-                  vouchers[index].batchCode,
-                  vouchers[index].companyID,
-                  _hive.memberProfile.value!.memberCode,
-                  _hive.memberProfile.value!.token,
-                );
-
-                _voucherController.loadCollectableVouchers(_hive.memberProfile.value!.memberCode);
-              },
+              onTapCollect: () async => _voucherController.collectVoucher(
+                vouchers[index].batchCode,
+                vouchers[index].companyID,
+                _hive.memberProfile.value!.memberCode,
+                _hive.memberProfile.value!.token,
+              ),
             ),
           ),
         ),
@@ -347,7 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> _buildNearby() => [
     Obx(() {
-      if (_branchController.isLoading.value || _memberController.isLoading.value) {
+      if (_branchController.isLoading.value) {
         return SizedBox(
           height: ResponsiveHelper.getNearbyHeight(context),
           child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
@@ -379,7 +383,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 _onRefresh();
               },
-              child: CustomNearbyCard(branch: _branchController.branches[index], members: _memberController.membersCheckStart),
+              child: CustomNearbyCard(branch: _branchController.branches[index], members: _memberController.members),
             ),
           ),
         ),

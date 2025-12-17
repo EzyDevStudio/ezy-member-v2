@@ -11,15 +11,9 @@ class TimelineController extends GetxController {
 
   Future<void> loadTimelines({String? companyID}) async {
     isLoading.value = true;
-    timelines.clear();
 
-    Map<String, dynamic>? data;
-
-    final Coordinate? current = await LocationHelper.getCurrentCoordinate();
-
-    if (current != null) data = {"city": current.city};
-    if (companyID != null) (data ??= {})["company_id"] = companyID;
-
+    final Coordinate? c = await LocationHelper.getCurrentCoordinate();
+    final Map<String, dynamic> data = {if (c != null) "city": c.city, if (companyID != null) "company_id": companyID};
     final response = await _api.get(endPoint: "get-all-timeline", module: "TimelineController - loadTimelines", data: data);
 
     if (response == null || response.data[TimelineModel.keyTimeline] == null) {
@@ -30,7 +24,7 @@ class TimelineController extends GetxController {
     if (response.data[ApiService.keyStatusCode] == 200) {
       final List<dynamic> list = response.data[TimelineModel.keyTimeline];
 
-      timelines.addAll(list.map((e) => TimelineModel.fromJson(Map<String, dynamic>.from(e))).toList());
+      timelines.value = list.map((e) => TimelineModel.fromJson(Map<String, dynamic>.from(e))).toList();
     }
 
     isLoading.value = false;

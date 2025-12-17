@@ -8,43 +8,25 @@ class MemberController extends GetxController {
 
   var isLoading = false.obs;
   var members = <MemberModel>[].obs;
-  var membersCheckStart = <MemberModel>[].obs;
 
-  Future<List<MemberModel>> _fetchMembers(String memberCode, int checkStart, bool getBranch) async {
+  Future<void> loadMembers(String memberCode, {bool getBranch = false}) async {
     isLoading.value = true;
 
-    final List<MemberModel> tmpMembers = [];
-    final Coordinate? current = getBranch ? await LocationHelper.getCurrentCoordinate() : null;
-
-    final Map<String, dynamic> data = {
-      "member_code": memberCode,
-      "check_start": checkStart,
-      if (current != null) "latitude": current.latitude,
-      if (current != null) "longitude": current.longitude,
-    };
-
-    final response = await _api.get(endPoint: "get-member-detail", module: "MemberController - _fetchMembers", data: data);
+    final Coordinate? c = getBranch ? await LocationHelper.getCurrentCoordinate() : null;
+    final Map<String, dynamic> data = {"member_code": memberCode, if (c != null) "latitude": c.latitude, if (c != null) "longitude": c.longitude};
+    final response = await _api.get(endPoint: "get-member-detail", module: "MemberController - loadMembers", data: data);
 
     if (response == null || response.data[MemberModel.keyMember] == null) {
       isLoading.value = false;
-      return [];
+      return;
     }
 
     if (response.data[ApiService.keyStatusCode] == 200) {
-      final List<dynamic> list = response.data[MemberModel.keyMember];
+      final List<dynamic> list = response.data[MemberModel.keyMember] ?? [];
 
-      tmpMembers.addAll(list.map((e) => MemberModel.fromJson(Map<String, dynamic>.from(e))).toList());
+      members.value = list.map((e) => MemberModel.fromJson(Map<String, dynamic>.from(e))).toList();
     }
 
     isLoading.value = false;
-    return tmpMembers;
-  }
-
-  Future<void> loadMembers(String memberCode, {bool getBranch = false}) async {
-    members.value = await _fetchMembers(memberCode, 0, getBranch);
-  }
-
-  Future<void> loadMembersCheckStart(String memberCode, {bool getBranch = false}) async {
-    membersCheckStart.value = await _fetchMembers(memberCode, 1, getBranch);
   }
 }
