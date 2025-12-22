@@ -1,5 +1,6 @@
 import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/controllers/member_controller.dart';
+import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
@@ -14,77 +15,67 @@ class MemberListScreen extends StatefulWidget {
 }
 
 class _MemberListScreenState extends State<MemberListScreen> {
+  final _hive = Get.find<MemberHiveController>();
   final _memberController = Get.put(MemberController(), tag: "memberList");
-
-  late String? _memberCode;
 
   @override
   void initState() {
     super.initState();
 
-    final args = Get.arguments ?? {};
-
-    _memberCode = args["member_code"];
-
     WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
   }
 
   Future<void> _onRefresh() async {
-    if (_memberCode != null) _memberController.loadMembers(_memberCode!, getBranch: true);
+    _memberController.loadMembers(_hive.memberProfile.value!.memberCode, getBranch: true);
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: RefreshIndicator(
-      onRefresh: _onRefresh,
-      child: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()]),
-    ),
+    appBar: AppBar(title: Text("my_cards".tr)),
+    body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
   );
 
-  Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text("my_cards".tr));
-
-  Widget _buildContent() => SliverPadding(
-    padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
-    sliver: Obx(() {
-      if (_memberController.isLoading.value) {
-        return SliverFillRemaining(
-          child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
-        );
-      }
-
-      if (_memberController.members.isEmpty) {
-        return SliverFillRemaining(
-          child: Center(child: CustomText("msg_no_available".trParams({"label": "member".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
-        );
-      }
-
-      _memberController.members.sort((a, b) {
-        final d1 = a.branch.distanceKm ?? double.infinity;
-        final d2 = b.branch.distanceKm ?? double.infinity;
-
-        return d1.compareTo(d2);
-      });
-
-      return SliverToBoxAdapter(
-        child: Wrap(
-          runSpacing: ResponsiveHelper.getSpacing(context, SizeType.m),
-          spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
-          alignment: WrapAlignment.center,
-          children: _memberController.members.map((member) {
-            return ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.7),
-              child: CustomMemberCard(
-                member: member,
-                onTap: () async {
-                  await Get.toNamed(AppRoutes.branchDetail, arguments: {"branch": member.branch});
-
-                  _onRefresh();
-                },
-              ),
-            );
-          }).toList(),
-        ),
+  Widget _buildContent() => Obx(() {
+    if (_memberController.isLoading.value) {
+      return Padding(
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
       );
-    }),
-  );
+    }
+
+    if (_memberController.members.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        child: Center(child: CustomText("msg_no_available".trParams({"label": "member".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
+      );
+    }
+
+    _memberController.members.sort((a, b) {
+      final d1 = a.branch.distanceKm ?? double.infinity;
+      final d2 = b.branch.distanceKm ?? double.infinity;
+
+      return d1.compareTo(d2);
+    });
+
+    return ListView.builder(
+      itemCount: _memberController.members.length,
+      itemBuilder: (context, index) => Padding(
+        padding: EdgeInsetsGeometry.only(
+          bottom: index == _memberController.members.length - 1 ? ResponsiveHelper.getSpacing(context, SizeType.m) : 0.0,
+          left: ResponsiveHelper.getSpacing(context, SizeType.m),
+          right: ResponsiveHelper.getSpacing(context, SizeType.m),
+          top: ResponsiveHelper.getSpacing(context, SizeType.m),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.7),
+            child: CustomMemberCard(
+              member: _memberController.members[index],
+              onTap: () async => await Get.toNamed(AppRoutes.branchDetail, arguments: {"branch": _memberController.members[index].branch}),
+            ),
+          ),
+        ),
+      ),
+    );
+  });
 }

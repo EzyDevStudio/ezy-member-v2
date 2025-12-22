@@ -11,10 +11,10 @@ class AppColors {
   static const Color lightSecondaryContainer = Color(0xFFBBDEFB);
   static const Color lightOnSecondaryContainer = Color(0xFF0656A0);
 
-  static const Color lightTertiary = Color(0xFF28A6D8);
+  static const Color lightTertiary = Color(0xFFFFB115);
   static const Color lightOnTertiary = Color(0xFFFFFFFF);
-  static const Color lightTertiaryContainer = Color(0xFFB3E5FC);
-  static const Color lightOnTertiaryContainer = Color(0xFF0656A0);
+  static const Color lightTertiaryContainer = Color(0xFFFFE082);
+  static const Color lightOnTertiaryContainer = Color(0xFF0A3D91);
 
   static const Color lightError = Color(0xFFF44336);
   static const Color lightOnError = Color(0xFFFFFFFF);

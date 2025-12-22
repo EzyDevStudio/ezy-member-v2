@@ -1,6 +1,5 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_routes.dart';
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +25,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         crossAxisAlignment: WrapCrossAlignment.center,
         runAlignment: WrapAlignment.center,
         children: <Widget>[
-          Image.asset(AppStrings.tmpImgWelcome, scale: kSquareRatio, width: ResponsiveHelper.getWelcomeImgSize(context) - 100.0),
+          Image.asset("assets/images/welcome.png", scale: kSquareRatio, width: ResponsiveHelper.getWelcomeImgSize(context) - 100.0),
           ConstrainedBox(
             constraints: BoxConstraints(maxWidth: ResponsiveHelper.getWelcomeImgSize(context) + 100.0),
             child: Column(

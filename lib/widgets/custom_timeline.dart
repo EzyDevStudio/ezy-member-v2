@@ -3,7 +3,7 @@ import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/branch_model.dart';
 import 'package:ezy_member_v2/models/timeline_model.dart';
-import 'package:ezy_member_v2/widgets/custom_avatar.dart';
+import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +23,7 @@ class CustomTimeline extends StatelessWidget {
         child: Row(
           spacing: ResponsiveHelper.getSpacing(context, SizeType.s),
           children: <Widget>[
-            CustomAvatar(size: ResponsiveHelper.getBranchImgSize(context), networkImage: branch.aboutUs.companyLogo),
+            CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context), networkImage: branch.aboutUs.companyLogo),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

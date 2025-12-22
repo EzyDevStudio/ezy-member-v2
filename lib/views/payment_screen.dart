@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:ezy_member_v2/constants/app_constants.dart';
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
@@ -84,7 +83,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Column(
           spacing: ResponsiveHelper.getSpacing(context, SizeType.s),
           children: <Widget>[
-            SizedBox(height: 50.0, child: Image.asset(AppStrings.tmpImgAppLogo, fit: BoxFit.scaleDown)),
+            SizedBox(height: 50.0, child: Image.asset("assets/images/splash_logo.png", fit: BoxFit.scaleDown)),
             const Spacer(),
             if (_value != null && _scanType == ScanType.point) _buildBarcode(_value!),
             if (_value != null && _scanType != ScanType.point) _buildQRCode(_value!),

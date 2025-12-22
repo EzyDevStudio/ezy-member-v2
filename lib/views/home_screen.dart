@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_routes.dart';
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/controllers/advertisement_controller.dart';
 import 'package:ezy_member_v2/controllers/branch_controller.dart';
 import 'package:ezy_member_v2/controllers/settings_controller.dart';
@@ -18,7 +17,7 @@ import 'package:ezy_member_v2/models/branch_model.dart';
 import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/local/notification_service.dart';
 import 'package:ezy_member_v2/translations/translations.dart';
-import 'package:ezy_member_v2/widgets/custom_avatar.dart';
+import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
 import 'package:ezy_member_v2/widgets/custom_modal.dart';
@@ -101,12 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  double _calculateAppBarHeight() {
-    if (_hive.isSignIn) return kToolbarHeight + ResponsiveHelper.getSpacing(context, SizeType.m) * 3 + kProfileImgSizeM + kProfileBarcodeHeight;
-
-    return kToolbarHeight + ResponsiveHelper.getSpacing(context, SizeType.m) * 2 + kProfileImgSizeM;
-  }
-
   @override
   void dispose() {
     _subscription.cancel();
@@ -138,76 +131,86 @@ class _HomeScreenState extends State<HomeScreen> {
     pinned: true,
     snap: false,
     actions: _buildAppBarAction(),
-    expandedHeight: _calculateAppBarHeight(),
-    bottom: _hive.isSignIn
-        ? PreferredSize(
-            preferredSize: Size.fromHeight(ResponsiveHelper.getSpacing(context, SizeType.m) * 2 + kProfileBarcodeHeight),
-            child: Padding(
-              padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
-              child: _hive.isSignIn ? _buildBarcode(_hive.memberProfile.value!.memberCode) : SizedBox.shrink(),
-            ),
-          )
-        : null,
-    flexibleSpace: FlexibleSpaceBar(
-      background: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(Colors.black.withAlpha((0.25 * 255).round()), BlendMode.darken),
-            image: AssetImage(AppStrings.tmpImgBackground),
-          ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, SizeType.m)),
-          child: SafeArea(
-            child: Column(
-              spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
-              children: <Widget>[
-                Container(height: kToolbarHeight),
-                Row(
-                  spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () => Get.toNamed(_hive.isSignIn ? AppRoutes.profileDetail : AppRoutes.authentication),
-                      child: CustomAvatar(size: kProfileImgSizeM, networkImage: ""),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          CustomText(
-                            _hive.isSignIn ? _hive.memberProfile.value!.name : "guest".tr,
-                            color: Colors.white,
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          if (_hive.isSignIn)
-                            CustomText(_hive.memberProfile.value!.memberCode, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
-                        ],
+    bottom: PreferredSize(
+      preferredSize: Size.fromHeight(kProfileImgSizeM + ResponsiveHelper.getSpacing(context, SizeType.m) * 2),
+      child: Padding(
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        child: SafeArea(
+          child: Column(
+            spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+            children: <Widget>[
+              Row(
+                spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+                children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () => Get.toNamed(_hive.isSignIn ? AppRoutes.profileDetail : AppRoutes.authentication),
+                        child: CustomAvatarImage(size: kProfileImgSizeM, networkImage: _hive.isSignIn ? _hive.memberProfile.value!.image : ""),
                       ),
-                    ),
-                    Obx(() {
-                      int totalCount = _voucherController.redeemableCount.value + _voucherController.todayCount.value;
-
-                      if (totalCount <= 0) return SizedBox.shrink();
-
-                      return IconButton(
-                        onPressed: () {},
-                        icon: Badge.count(
-                          count: totalCount,
-                          child: Icon(Icons.notifications_rounded, color: Colors.white, size: 40.0),
+                      Positioned(
+                        bottom: kPositionEmpty,
+                        right: kPositionEmpty,
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                            padding: const EdgeInsets.all(4.0),
+                            child: Icon(Icons.edit_rounded, color: Theme.of(context).colorScheme.primary, size: 15.0),
+                          ),
                         ),
-                      );
-                    }),
-                  ],
-                ),
-              ],
-            ),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        CustomText(
+                          _hive.isSignIn ? _hive.memberProfile.value!.name : "guest".tr,
+                          color: Colors.white,
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        if (_hive.isSignIn)
+                          CustomText(_hive.memberProfile.value!.memberCode, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ],
+                    ),
+                  ),
+                  Obx(() {
+                    int totalCount = _voucherController.redeemableCount.value + _voucherController.todayCount.value;
+
+                    if (!_hive.isSignIn || totalCount <= 0) return SizedBox.shrink();
+
+                    return IconButton(
+                      onPressed: () => Get.toNamed(AppRoutes.notification),
+                      icon: Badge.count(
+                        count: totalCount,
+                        child: Icon(Icons.notifications_rounded, color: Colors.white, size: 40.0),
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ],
           ),
         ),
       ),
     ),
+    flexibleSpace: FlexibleSpaceBar(background: CustomBackgroundImage(backgroundImage: _hive.backgroundImage)),
+    // flexibleSpace: FlexibleSpaceBar(
+    //   background: Container(
+    //     decoration: BoxDecoration(
+    //       color: Theme.of(context).colorScheme.primary,
+    //       image: DecorationImage(
+    //         fit: BoxFit.cover,
+    //         colorFilter: ColorFilter.mode(Colors.black.withAlpha((0.25 * 255).round()), BlendMode.darken),
+    //         image: AssetImage("assets/images/cat_groceries.png"),
+    //       ),
+    //     ),
+    //   ),
+    // ),
     title: Text("home".tr),
   );
 
@@ -223,19 +226,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     if (_hive.isSignIn) IconButton(onPressed: _signOut, icon: Icon(Icons.logout_rounded)),
   ];
-
-  Widget _buildBarcode(String memberCode) => ConstrainedBox(
-    constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
-    child: Code(
-      drawText: false,
-      codeType: CodeType.code39(),
-      backgroundColor: Colors.white,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusS), color: Colors.white),
-      height: kProfileBarcodeHeight,
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
-      data: memberCode,
-    ),
-  );
 
   Widget _buildSection(String header, List<Widget> children, {bool? isPrimaryContainer = false, VoidCallback? onTap}) => SliverToBoxAdapter(
     child: Container(
@@ -278,36 +268,20 @@ class _HomeScreenState extends State<HomeScreen> {
           CustomImageTextButton(
             isCountVisible: true,
             count: _voucherController.redeemedCount.value,
-            assetName: AppStrings.tmpIconMyVoucher,
+            assetName: "assets/icons/my_vouchers.png",
             label: "my_vouchers".tr,
-            onTap: () async {
-              await Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0, "member_code": _hive.memberProfile.value!.memberCode});
-
-              _onRefresh();
-            },
+            onTap: () async => await Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
           ),
           CustomImageTextButton(
             isCountVisible: true,
             count: _memberController.members.length,
-            assetName: AppStrings.tmpIconMyMember,
+            assetName: "assets/icons/my_members.png",
             label: "my_cards".tr,
-            onTap: () async {
-              await Get.toNamed(AppRoutes.memberList, arguments: {"member_code": _hive.memberProfile.value!.memberCode});
-
-              _onRefresh();
-            },
+            onTap: () async => await Get.toNamed(AppRoutes.memberList),
           ),
-          CustomImageTextButton(
-            assetName: AppStrings.tmpIconHistory,
-            label: "history".tr,
-            onTap: () async {
-              await Get.toNamed(AppRoutes.history, arguments: {"member_code": _hive.memberProfile.value!.memberCode});
-
-              _onRefresh();
-            },
-          ),
-          CustomImageTextButton(assetName: AppStrings.tmpIconReferralProgram, label: "referral_program".tr, onTap: () {}),
-          CustomImageTextButton(assetName: AppStrings.tmpIconInvoice, label: "e_invoice".tr, onTap: () {}),
+          CustomImageTextButton(assetName: "assets/icons/history.png", label: "history".tr, onTap: () async => await Get.toNamed(AppRoutes.history)),
+          CustomImageTextButton(assetName: "assets/icons/referral_program.png", label: "referral_program".tr, onTap: () {}),
+          CustomImageTextButton(assetName: "assets/icons/invoice.png", label: "e_invoice".tr, onTap: () {}),
         ]),
       ),
     ),

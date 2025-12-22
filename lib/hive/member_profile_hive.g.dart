@@ -14,13 +14,20 @@ class MemberProfileHiveAdapter extends TypeAdapter<MemberProfileHive> {
   MemberProfileHive read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read()};
-    return MemberProfileHive(id: fields[0] as int, memberCode: fields[1] as String, name: fields[2] as String, token: fields[3] as String);
+    return MemberProfileHive(
+      id: fields[0] as int,
+      memberCode: fields[1] as String,
+      name: fields[2] as String,
+      token: fields[3] as String,
+      image: fields[4] as String,
+      backgroundImage: fields[5] as String,
+    );
   }
 
   @override
   void write(BinaryWriter writer, MemberProfileHive obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -28,7 +35,11 @@ class MemberProfileHiveAdapter extends TypeAdapter<MemberProfileHive> {
       ..writeByte(2)
       ..write(obj.name)
       ..writeByte(3)
-      ..write(obj.token);
+      ..write(obj.token)
+      ..writeByte(4)
+      ..write(obj.image)
+      ..writeByte(5)
+      ..write(obj.backgroundImage);
   }
 
   @override

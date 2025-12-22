@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:flutter/services.dart';
 
 class PhoneDetail {
@@ -24,7 +23,7 @@ class PhoneDetail {
   String get displayFlagCode => "${countryCodeToEmoji(countryCode)} (+$dialCode)";
 
   static Future<List<PhoneDetail>> loadAll() async {
-    final String response = await rootBundle.loadString(AppStrings.jsonCountryCode);
+    final String response = await rootBundle.loadString("assets/jsons/country_codes.json");
     final List<dynamic> data = json.decode(response);
 
     return data.map((detail) => PhoneDetail.fromJson(detail)).toList();

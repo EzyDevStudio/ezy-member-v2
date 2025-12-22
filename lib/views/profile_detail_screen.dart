@@ -25,8 +25,8 @@ class ProfileDetailScreen extends StatefulWidget {
 }
 
 class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTickerProviderStateMixin {
-  final _profileController = Get.put(ProfileController(), tag: "profileDetail");
   final _hive = Get.find<MemberHiveController>();
+  final _profileController = Get.put(ProfileController(), tag: "profileDetail");
 
   late ProfileDetailControllers _memberControllers;
   late ProfileDetailControllers _workingControllers;
@@ -231,7 +231,13 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: ResponsiveHelper.getSpacing(context, SizeType.s),
           children: <Widget>[
-            CustomProfileCard(image: AppStrings.tmpImgSplashLogo, memberCode: _memberProfile.memberCode, name: _memberProfile.name, onTapEdit: () {}),
+            CustomProfileCard(
+              backgroundImage: _hive.isSignIn ? _hive.memberProfile.value!.backgroundImage : "",
+              image: _hive.isSignIn ? _hive.memberProfile.value!.image : "",
+              memberCode: _memberProfile.memberCode,
+              name: _memberProfile.name,
+              onTapEdit: () {},
+            ),
             CustomSectionCard(
               title: "basic_information".tr,
               children: <Widget>[

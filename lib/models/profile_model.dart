@@ -21,6 +21,8 @@ const String fieldTTXRegistrationNo = "ttx_registration_no";
 const String fieldName = "name";
 const String fieldEmail = "email";
 const String fieldPassword = "password";
+const String fieldImage = "image";
+const String fieldBackgroundImage = "background_image";
 const String fieldGender = "gender";
 const String fieldDOB = "date_of_birth";
 const String fieldAccountCode = "account_code";
@@ -101,6 +103,8 @@ class MemberProfileModel extends ProfileModel {
   final String name;
   final String email;
   final String password;
+  final String image;
+  final String backgroundImage;
   final String gender;
   final int dob;
   final String accountCode;
@@ -126,6 +130,8 @@ class MemberProfileModel extends ProfileModel {
     this.name = "",
     this.email = "",
     this.password = "",
+    this.image = "",
+    this.backgroundImage = "",
     this.gender = "",
     this.dob = 0,
     this.accountCode = "",
@@ -157,6 +163,8 @@ class MemberProfileModel extends ProfileModel {
       name: data[fieldName] ?? "",
       email: data[fieldEmail] ?? "",
       password: data[fieldPassword] ?? "",
+      image: data[fieldImage] ?? "",
+      backgroundImage: data[fieldBackgroundImage] ?? "",
       gender: data[fieldGender] ?? "",
       dob: data[fieldDOB] != null ? DateTime.tryParse(data[fieldDOB])?.millisecondsSinceEpoch ?? 0 : 0,
       accountCode: data[fieldAccountCode] ?? "",
@@ -223,7 +231,7 @@ class MemberProfileModel extends ProfileModel {
   String toString() =>
       "MemberProfileModel(\n"
       "${super.toString()}"
-      "\tname: $name, email: $email, password: $password, gender: $gender, dob: $dob\n"
+      "\tname: $name, email: $email, password: $password, image: $image, backgroundImage: $backgroundImage, gender: $gender, dob: $dob\n"
       "\taccountCode: $accountCode, status: $status, token: $token\n"
       ")";
 }

@@ -11,7 +11,6 @@ class BranchController extends GetxController {
 
   Future<void> loadBranches(bool checkNearby) async {
     isLoading.value = true;
-    branches.clear();
 
     Map<String, dynamic>? data;
 
@@ -27,9 +26,9 @@ class BranchController extends GetxController {
     }
 
     if (response.data[ApiService.keyStatusCode] == 200) {
-      final List<dynamic> list = response.data[BranchModel.keyBranch];
+      final List<dynamic> list = response.data[BranchModel.keyBranch] ?? [];
 
-      branches.addAll(list.map((e) => BranchModel.fromJson(Map<String, dynamic>.from(e))).toList());
+      branches.value = list.map((e) => BranchModel.fromJson(Map<String, dynamic>.from(e))).toList();
     }
 
     isLoading.value = false;

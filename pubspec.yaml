@@ -39,7 +39,7 @@ dependencies:
   dio: ^5.9.0
   flutter_local_notifications: ^19.5.0
   flutter_localization: ^0.3.3
-  geocoding: ^4.0.0
+  geocoding: ^4.0.0 # web app doesn't allow
   geolocator: ^14.0.2
   get: ^4.7.3
   hive: ^2.2.3
@@ -55,8 +55,18 @@ dev_dependencies:
     sdk: flutter
 
   build_runner: ^2.4.6
+  flutter_launcher_icons: "^0.14.4"
   flutter_lints: ^6.0.0
   hive_generator: ^2.0.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/app_logo.png"
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: "assets/images/app_logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -66,22 +76,11 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/tmp_app_logo.png
-    - assets/images/tmp_background.jpg
-    - assets/images/tmp_default_avatar.jpg
-    - assets/images/tmp_ic_history.png
-    - assets/images/tmp_ic_invoice.png
-    - assets/images/tmp_ic_my_credits.png
-    - assets/images/tmp_ic_my_member.png
-    - assets/images/tmp_ic_my_points.png
-    - assets/images/tmp_ic_my_voucher.png
-    - assets/images/tmp_ic_referral_program.png
-    - assets/images/tmp_sign_in.png
-    - assets/images/tmp_sign_up.png
-    - assets/images/tmp_splash_logo.jpg
-    - assets/images/tmp_welcome.png
-    - assets/json/country_codes.json
-    - assets/json/postcodes.json
+    - assets/
+    - assets/icons/
+    - assets/images/
+    - assets/jsons/
+
   fonts:
     - family: AlibabaPuHuiTi
       fonts:

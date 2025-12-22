@@ -1,5 +1,7 @@
+import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/controllers/history_controller.dart';
+import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/history_model.dart';
@@ -17,15 +19,9 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  final _hive = Get.find<MemberHiveController>();
   final _historyController = Get.put(HistoryController(), tag: "history");
-  final _historyTypes = {
-    HistoryType.all: "all".tr,
-    HistoryType.point: "points".tr,
-    HistoryType.voucher: "vouchers".tr,
-    HistoryType.credit: "credits".tr,
-  };
-
-  late String? _memberCode;
+  final _historyTypes = AppStrings().historyTypes;
 
   HistoryType _selectedType = HistoryType.all;
 
@@ -33,42 +29,42 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void initState() {
     super.initState();
 
-    final args = Get.arguments ?? {};
-
-    _memberCode = args["member_code"];
-
     WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
   }
 
   Future<void> _onRefresh() async {
-    if (_memberCode != null) await _historyController.loadHistories(_memberCode!);
+    await _historyController.loadHistories(_hive.memberProfile.value!.memberCode);
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text("history".tr)),
     body: RefreshIndicator(
       onRefresh: _onRefresh,
-      child: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildChoiceChip(), _buildHistory()]),
-    ),
-  );
-
-  Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text("history".tr));
-
-  Widget _buildChoiceChip() => SliverToBoxAdapter(
-    child: Container(
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
-      child: CustomChoiceChip<HistoryType>(
-        values: _historyTypes,
-        selectedValue: _selectedType,
-        onSelected: (type) => setState(() => _selectedType = type),
-        alignment: WrapAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _buildChoiceChip(),
+          Expanded(child: _buildContent()),
+        ],
       ),
     ),
   );
 
-  Widget _buildHistory() => Obx(() {
+  Widget _buildChoiceChip() => Container(
+    padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+    child: CustomChoiceChip<HistoryType>(
+      values: _historyTypes,
+      selectedValue: _selectedType,
+      onSelected: (type) => setState(() => _selectedType = type),
+      alignment: WrapAlignment.start,
+    ),
+  );
+
+  Widget _buildContent() => Obx(() {
     if (_historyController.isLoading.value) {
-      return SliverFillRemaining(
+      return Padding(
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
         child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
       );
     }
@@ -78,7 +74,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
         : _historyController.histories.where((h) => h.type == _selectedType).toList();
 
     if (filteredHistories.isEmpty) {
-      return SliverFillRemaining(
+      return Padding(
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
         child: Center(child: CustomText("msg_no_available".trParams({"label": "history".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
       );
     }
@@ -115,33 +112,36 @@ class _HistoryScreenState extends State<HistoryScreen> {
       }
     });
 
-    return SliverList(
-      delegate: SliverChildBuilderDelegate((context, index) {
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) {
         final item = items[index];
 
-        if (item["isHeader"] == true) {
-          return Container(
-            color: Theme.of(context).colorScheme.primaryContainer,
-            padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
-            child: CustomText(item["header"], fontSize: 16.0, fontWeight: FontWeight.bold),
-          );
-        } else {
-          final HistoryModel history = item["data"];
-
-          return Column(
-            children: <Widget>[
-              CustomHistoryListTile(history: history),
-              if (index + 1 < items.length && items[index + 1]["isHeader"] == false)
-                Divider(
-                  color: Colors.grey.shade200,
-                  endIndent: ResponsiveHelper.getSpacing(context, SizeType.m),
-                  indent: ResponsiveHelper.getSpacing(context, SizeType.m),
-                  height: 1.0,
-                ),
-            ],
-          );
-        }
-      }, childCount: items.length),
+        return item["isHeader"] == true ? _buildHistoryHeader(context, item) : _buildHistoryItem(context, index, items, item);
+      },
     );
   });
+
+  Widget _buildHistoryHeader(BuildContext context, Map<String, dynamic> item) => Container(
+    color: Theme.of(context).colorScheme.primaryContainer,
+    padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+    child: CustomText(item["header"], fontSize: 16.0, fontWeight: FontWeight.bold),
+  );
+
+  Widget _buildHistoryItem(BuildContext context, int index, List<Map<String, dynamic>> items, Map<String, dynamic> item) {
+    final HistoryModel history = item["data"];
+
+    return Column(
+      children: <Widget>[
+        CustomHistoryListTile(history: history),
+        if (index + 1 < items.length && items[index + 1]["isHeader"] == false)
+          Divider(
+            color: Colors.grey.shade200,
+            endIndent: ResponsiveHelper.getSpacing(context, SizeType.m),
+            indent: ResponsiveHelper.getSpacing(context, SizeType.m),
+            height: 1.0,
+          ),
+      ],
+    );
+  }
 }

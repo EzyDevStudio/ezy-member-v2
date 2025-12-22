@@ -8,6 +8,8 @@ class MemberHiveController extends GetxController {
   var memberProfile = Rxn<MemberProfileHive>();
 
   bool get isSignIn => memberProfile.value?.memberCode.isNotEmpty == true;
+  String get backgroundImage => memberProfile.value != null ? memberProfile.value!.backgroundImage : "";
+  String get image => memberProfile.value != null ? memberProfile.value!.image : "";
 
   @override
   void onInit() {

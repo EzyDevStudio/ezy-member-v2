@@ -15,97 +15,48 @@ class HistoryController extends GetxController {
   var vouchers = <VoucherModel>[].obs;
   var histories = <HistoryModel>[].obs;
 
-  Future<List<T>> _fetchHistories<T>(
-    String memberCode,
-    String endPoint,
-    String module,
-    String listKey,
-    T Function(Map<String, dynamic>) fromJson,
-  ) async {
-    final Map<String, dynamic> data = {"member_code": memberCode};
-    final response = await _api.get(endPoint: endPoint, module: module, data: data);
-
-    if (response == null || response.data[listKey] == null) return [];
-
-    final List<dynamic> list = response.data[listKey] ?? [];
-
-    return list.map((e) => fromJson(Map<String, dynamic>.from(e))).toList();
-  }
-
-  Future<void> loadCredits(String memberCode) async {
-    isLoading.value = true;
-
-    credits.value = await _fetchHistories(
-      memberCode,
-      "get-credit-history",
-      "HistoryController - loadCredits",
-      CreditModel.keyCredit,
-      (json) => CreditModel.fromJson(json),
-    );
-
-    isLoading.value = false;
-  }
-
-  Future<void> loadPoints(String memberCode) async {
-    isLoading.value = true;
-
-    points.value = await _fetchHistories(
-      memberCode,
-      "get-point-history",
-      "HistoryController - loadPoints",
-      PointModel.keyPoint,
-      (json) => PointModel.fromJson(json),
-    );
-
-    isLoading.value = false;
-  }
-
-  Future<void> loadVouchers(String memberCode) async {
-    isLoading.value = true;
-
-    final normalVouchers = await _fetchHistories(
-      memberCode,
-      "get-voucher-history",
-      "HistoryController - loadVouchers",
-      VoucherModel.keyNormalVoucher,
-      (json) => VoucherModel.fromJson(json),
-    );
-
-    final specialVouchers = await _fetchHistories(
-      memberCode,
-      "get-voucher-history",
-      "HistoryController - loadVouchers",
-      VoucherModel.keySpecialVoucher,
-      (json) => VoucherModel.fromJson(json),
-    );
-
-    vouchers.value = [...normalVouchers, ...specialVouchers];
-    isLoading.value = false;
-  }
-
   Future<void> loadHistories(String memberCode) async {
     isLoading.value = true;
 
-    await loadCredits(memberCode);
-    await loadPoints(memberCode);
-    await loadVouchers(memberCode);
+    final Map<String, dynamic> data = {"member_code": memberCode};
+    final response = await _api.get(endPoint: "get-all-history", module: "HistoryController - loadHistories", data: data);
 
-    histories.clear();
-
-    for (var credit in credits) {
-      histories.add(HistoryModel(type: HistoryType.credit, transactionDate: credit.transactionDate, credit: credit));
+    if (response == null) {
+      isLoading.value = false;
+      return;
     }
 
-    for (var point in points) {
-      histories.add(HistoryModel(type: HistoryType.point, transactionDate: point.transactionDate, point: point));
+    if (response.data[ApiService.keyStatusCode] == 200) {
+      final List<dynamic> creditList = response.data[CreditModel.keyCredit] ?? [];
+      final List<dynamic> pointList = response.data[PointModel.keyPoint] ?? [];
+      final List<dynamic> normalList = response.data[VoucherModel.keyNormalVoucher] ?? [];
+      final List<dynamic> specialList = response.data[VoucherModel.keySpecialVoucher] ?? [];
+
+      credits.value = creditList.map((e) => CreditModel.fromJson(Map<String, dynamic>.from(e))).toList();
+      points.value = pointList.map((e) => PointModel.fromJson(Map<String, dynamic>.from(e))).toList();
+      vouchers.value = [
+        ...normalList.map((e) => VoucherModel.fromJson(Map<String, dynamic>.from(e))),
+        ...specialList.map((e) => VoucherModel.fromJson(Map<String, dynamic>.from(e))),
+      ];
+
+      histories.clear();
+
+      for (var credit in credits) {
+        histories.add(HistoryModel(type: HistoryType.credit, transactionDate: credit.transactionDate, credit: credit));
+      }
+
+      for (var point in points) {
+        histories.add(HistoryModel(type: HistoryType.point, transactionDate: point.transactionDate, point: point));
+      }
+
+      for (var voucher in vouchers) {
+        histories.add(HistoryModel(type: HistoryType.voucher, transactionDate: voucher.createdAt, voucher: voucher));
+        histories.addIf(voucher.redeemDate != 0, HistoryModel(type: HistoryType.voucher, transactionDate: voucher.redeemDate, voucher: voucher));
+      }
+
+      histories.sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
     }
 
-    for (var voucher in vouchers) {
-      histories.add(HistoryModel(type: HistoryType.voucher, transactionDate: voucher.createdAt, voucher: voucher));
-      histories.addIf(voucher.redeemDate != 0, HistoryModel(type: HistoryType.voucher, transactionDate: voucher.redeemDate, voucher: voucher));
-    }
-
-    histories.sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
     isLoading.value = false;
   }
 }

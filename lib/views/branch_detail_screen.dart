@@ -1,6 +1,5 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_routes.dart';
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
@@ -10,7 +9,7 @@ import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/branch_model.dart';
 import 'package:ezy_member_v2/models/member_model.dart';
-import 'package:ezy_member_v2/widgets/custom_avatar.dart';
+import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
 import 'package:ezy_member_v2/widgets/custom_chip.dart';
@@ -29,9 +28,9 @@ class BranchDetailScreen extends StatefulWidget {
 }
 
 class _BranchDetailScreenState extends State<BranchDetailScreen> {
+  final _hive = Get.find<MemberHiveController>();
   final _memberController = Get.put(MemberController(), tag: "branchDetail");
   final _timelineController = Get.put(TimelineController(), tag: "branchDetail");
-  final _hive = Get.find<MemberHiveController>();
 
   late BranchModel _branch;
 
@@ -86,44 +85,46 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildBranchHeader(), _buildBranchInfo(), _buildTimeline()]));
+  Widget build(BuildContext context) => Scaffold(body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildBranchInfo(), _buildTimeline()]));
 
-  Widget _buildAppBar() => SliverAppBar(
-    floating: true,
-    pinned: true,
-    actions: <IconButton>[IconButton(onPressed: () => _shareContent(context), icon: Icon(Icons.share_rounded))],
-    title: SizedBox(
-      height: kToolbarHeight * kAppBarLogoRatio,
-      child: Image.asset(AppStrings.tmpImgAppLogo, fit: BoxFit.fitHeight, color: Colors.white),
-    ),
-  );
+  Widget _buildAppBar() {
+    return SliverAppBar(
+      floating: false,
+      pinned: true,
+      expandedHeight: 300.0,
+      actions: [IconButton(onPressed: () => _shareContent(context), icon: Icon(Icons.share_rounded))],
+      flexibleSpace: FlexibleSpaceBar(background: CustomBackgroundImage(backgroundImage: _branch.company.categories[0].categoryImage)),
+      // flexibleSpace: FlexibleSpaceBar(
+      //   background: Container(
+      //     decoration: BoxDecoration(
+      //       color: Theme.of(context).colorScheme.primary,
+      //       image: DecorationImage(
+      //         fit: BoxFit.cover,
+      //         colorFilter: ColorFilter.mode(Colors.black.withAlpha((0.25 * 255).round()), BlendMode.darken),
+      //         image: AssetImage("assets/images/cat_groceries.png"),
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      bottom: PreferredSize(preferredSize: Size.fromHeight(200.0), child: _buildBenefits()),
+    );
+  }
 
-  Widget _buildBranchHeader() => SliverToBoxAdapter(
-    child: CustomBackgroundCard(
-      child: Column(
-        spacing: ResponsiveHelper.getSpacing(context, SizeType.l),
-        children: <Widget>[
-          Row(
-            spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
-            children: <Widget>[
-              CustomAvatar(size: kProfileImgSizeM, networkImage: _branch.aboutUs.companyLogo),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    CustomText(_branch.branchName, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
-                    CustomText(_branch.contactNumber, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          _buildBenefits(),
-        ],
+  Widget _buildBranchHeader() => Row(
+    spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+    children: <Widget>[
+      CustomAvatarImage(size: kProfileImgSizeM, networkImage: _branch.aboutUs.companyLogo),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            CustomText(_branch.branchName, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
+            CustomText(_branch.contactNumber, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+          ],
+        ),
       ),
-    ),
+    ],
   );
 
   Widget _buildBenefits() => Obx(() {
@@ -131,6 +132,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
 
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusM)), color: Colors.white),
+      margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.l)),
       padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -143,7 +145,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
               children: <Widget>[
                 Expanded(
                   child: CustomImageTextButton(
-                    assetName: AppStrings.tmpIconMyPoints,
+                    assetName: "assets/icons/my_points.png",
                     label: member.isMember ? "my_points".tr : "earn_points".tr,
                     content: member.isMember ? member.point.toString() : null,
                     onTap: member.isMember
@@ -152,36 +154,25 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
                               AppRoutes.payment,
                               arguments: {"scan_type": ScanType.point, "value": _hive.memberProfile.value!.memberCode},
                             );
-
-                            _onRefresh();
                           }
                         : null,
                   ),
                 ),
                 Expanded(
                   child: CustomImageTextButton(
-                    assetName: AppStrings.tmpIconMyVoucher,
+                    assetName: "assets/icons/my_vouchers.png",
                     label: member.isMember ? "my_vouchers".tr : "collect_vouchers".tr,
                     content: member.isMember ? (member.normalVoucherCount + member.specialVoucherCount).toString() : null,
                     onTap: member.isMember && _hive.memberProfile.value != null
                         ? () async {
-                            await Get.toNamed(
-                              AppRoutes.voucherList,
-                              arguments: {
-                                "check_start": 1,
-                                "company_id": _branch.company.companyID,
-                                "member_code": _hive.memberProfile.value!.memberCode,
-                              },
-                            );
-
-                            _onRefresh();
+                            await Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _branch.company.companyID});
                           }
                         : null,
                   ),
                 ),
                 Expanded(
                   child: CustomImageTextButton(
-                    assetName: AppStrings.tmpIconMyCredits,
+                    assetName: "assets/icons/my_credits.png",
                     label: member.isMember ? "my_credits".tr : "redeem_by_credits".tr,
                     content: member.isMember ? member.credit.toStringAsFixed(1) : null,
                     onTap: member.isMember
@@ -190,8 +181,6 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
                               AppRoutes.payment,
                               arguments: {"scan_type": ScanType.credit, "value": _hive.memberProfile.value!.memberCode},
                             );
-
-                            _onRefresh();
                           }
                         : null,
                   ),

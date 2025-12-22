@@ -4,6 +4,7 @@ import 'package:ezy_member_v2/views/branch_detail_screen.dart';
 import 'package:ezy_member_v2/views/history_screen.dart';
 import 'package:ezy_member_v2/views/home_screen.dart';
 import 'package:ezy_member_v2/views/member_list_screen.dart';
+import 'package:ezy_member_v2/views/notification_screen.dart';
 import 'package:ezy_member_v2/views/payment_screen.dart';
 import 'package:ezy_member_v2/views/profile_detail_screen.dart';
 import 'package:ezy_member_v2/views/terms_condition_screen.dart';
@@ -18,6 +19,7 @@ class AppRoutes {
   static const history = "/history";
   static const home = "/home";
   static const memberList = "/member_list";
+  static const notification = "/notification";
   static const payment = "/payment";
   static const profileDetail = "/profile_detail";
   static const termsCondition = "/terms_condition";
@@ -31,6 +33,7 @@ class AppRoutes {
     GetPage(name: history, page: () => HistoryScreen()),
     GetPage(name: home, page: () => HomeScreen()),
     GetPage(name: memberList, page: () => MemberListScreen()),
+    GetPage(name: notification, page: () => NotificationScreen()),
     GetPage(name: payment, page: () => PaymentScreen()),
     GetPage(name: profileDetail, page: () => ProfileDetailScreen()),
     GetPage(name: termsCondition, page: () => TermsConditionScreen()),

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:flutter/services.dart';
 
 class PostcodeDetail {
@@ -17,7 +16,7 @@ class PostcodeDetail {
   );
 
   static Future<List<PostcodeDetail>> loadAll() async {
-    final String response = await rootBundle.loadString(AppStrings.jsonPostcode);
+    final String response = await rootBundle.loadString("assets/jsons/postcodes.json");
     final List<dynamic> data = json.decode(response);
 
     return data.map((detail) => PostcodeDetail.fromJson(detail)).toList();

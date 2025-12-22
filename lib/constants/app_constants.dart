@@ -38,3 +38,4 @@ const double kTimelineHeight = 300.0;
 
 // Voucher
 const double kVoucherDefaultHeight = 150.0;
+const double kVerVoucherDefaultHeight = 350.0;

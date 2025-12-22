@@ -1,5 +1,4 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/controllers/authentication_controller.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
@@ -174,7 +173,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
               children: <Widget>[
-                Image.asset(AppStrings.tmpImgSignIn, scale: kSquareRatio, height: ResponsiveHelper.getAuthImgSize(context)),
+                Image.asset("assets/images/sign_in.png", scale: kSquareRatio, height: ResponsiveHelper.getAuthImgSize(context)),
                 CustomText("msg_sign_in".tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
                 CustomChoiceChip(values: _authTypes, selectedValue: _selectedType, onSelected: (type) => setState(() => _selectedType = type)),
                 if (isEmail)
@@ -215,7 +214,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
             children: <Widget>[
-              Image.asset(AppStrings.tmpImgSignUp, scale: kSquareRatio, height: ResponsiveHelper.getAuthImgSize(context)),
+              Image.asset("assets/images/sign_up.png", scale: kSquareRatio, height: ResponsiveHelper.getAuthImgSize(context)),
               CustomText("msg_sign_up".tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
               CustomOutlinedTextField(
                 controller: _usernameController,

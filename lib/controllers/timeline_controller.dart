@@ -22,7 +22,7 @@ class TimelineController extends GetxController {
     }
 
     if (response.data[ApiService.keyStatusCode] == 200) {
-      final List<dynamic> list = response.data[TimelineModel.keyTimeline];
+      final List<dynamic> list = response.data[TimelineModel.keyTimeline] ?? [];
 
       timelines.value = list.map((e) => TimelineModel.fromJson(Map<String, dynamic>.from(e))).toList();
     }

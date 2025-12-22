@@ -4,7 +4,8 @@ import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/voucher_model.dart';
-import 'package:ezy_member_v2/widgets/custom_avatar.dart';
+import 'package:ezy_member_v2/widgets/custom_image.dart';
+import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -51,7 +52,7 @@ class CustomVoucher extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          CustomAvatar(size: ResponsiveHelper.getBranchImgSize(context) * (isCollectable ? 1 : 1.2), networkImage: voucher.companyLogo),
+          CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context) * (isCollectable ? 1 : 1.2), networkImage: voucher.companyLogo),
           CustomText(
             voucher.companyName,
             color: Theme.of(context).colorScheme.onPrimary,
@@ -101,7 +102,7 @@ class CustomVoucher extends StatelessWidget {
                 ),
             ],
           ),
-          CustomText("${voucher.discountValue} ${"off".tr}", fontSize: isCollectable ? 12.0 : 14.0),
+          CustomText("${voucher.discountValue.toStringAsFixed(1)} ${"off".tr}", fontSize: isCollectable ? 12.0 : 14.0),
           const Spacer(),
           CustomText("${"min_spend".tr} ${voucher.minimumSpend}", fontSize: isCollectable ? 12.0 : 14.0),
           Row(
@@ -124,4 +125,83 @@ class CustomVoucher extends StatelessWidget {
       ),
     );
   }
+}
+
+class CustomSpecialVoucher extends StatelessWidget {
+  final VoucherModel voucher;
+  final VoidCallback onTapRedeem;
+
+  const CustomSpecialVoucher({super.key, required this.voucher, required this.onTapRedeem});
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => CouponCard(
+      curveAxis: Axis.horizontal,
+      clockwise: false,
+      borderRadius: kBorderRadiusM,
+      curvePosition: kVerVoucherDefaultHeight * 0.5,
+      curveRadius: kBorderRadiusS * 3,
+      height: kVerVoucherDefaultHeight,
+      shadow: const Shadow(color: Colors.black12, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
+      firstChild: Container(
+        color: Theme.of(context).colorScheme.tertiary,
+        padding: EdgeInsetsGeometry.all(kBorderRadiusM),
+        child: Column(
+          children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusS)),
+                image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(voucher.companyLogo)),
+              ),
+              height: kProfileImgSizeM,
+              width: kProfileImgSizeM,
+            ),
+            const Spacer(),
+            CustomText(voucher.companyName, color: Theme.of(context).colorScheme.onPrimary, fontSize: 18.0, fontWeight: FontWeight.bold),
+            SizedBox(height: ResponsiveHelper.getSpacing(context, SizeType.xs)),
+            CustomText(
+              "${voucher.batchDescription} • ${voucher.discountValue.toStringAsFixed(1)} ${"off".tr}",
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontSize: 14.0,
+            ),
+          ],
+        ),
+      ),
+      secondChild: Container(
+        color: Colors.white,
+        padding: EdgeInsetsGeometry.all(kBorderRadiusM),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: CustomText(
+                    "${"valid_till".tr}\n${FormatterHelper.timestampToString(voucher.expiredDate)}",
+                    fontSize: 14.0,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Expanded(
+                  child: CustomText(
+                    "${"redeem_with".tr}\n${voucher.usePointRedeem} ${"points".tr}",
+                    fontSize: 14.0,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+            CustomFilledButton(label: "redeem".tr, onTap: onTapRedeem),
+            InkWell(
+              onTap: () => Get.toNamed(AppRoutes.termsCondition, arguments: {"voucher": voucher}),
+              child: CustomText("tnc_long".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 12.0, textAlign: TextAlign.center),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

@@ -15,7 +15,6 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 // Settle AssetImage, NetworkImage, Image.asset, Image.network
-// reminder for expired voucher - notification
 // custom text field to autocomplete - postcode
 
 // run "adb devices" to get devices
@@ -43,11 +42,7 @@ void main() async {
       fallbackLocale: Locale(AppTranslations.defaultLanguage),
       translations: AppTranslations(),
       supportedLocales: AppTranslations.languages.keys.map((langCode) => Locale(langCode, "")).toList(),
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
+      localizationsDelegates: [GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate, GlobalWidgetsLocalizations.delegate],
     ),
   );
 }
@@ -101,14 +96,26 @@ class _WrapperScreenState extends State<WrapperScreen> with SingleTickerProvider
   }
 
   @override
-  Widget build(BuildContext context) => SafeArea(
-    child: Scaffold(
-      body: Center(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: ScaleTransition(scale: _scaleAnimation, child: Image.asset(AppStrings.tmpImgSplashLogo)),
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.sizeOf(context);
+
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: ScaleTransition(
+              scale: _scaleAnimation,
+              child: Center(
+                child: Container(
+                  constraints: BoxConstraints(maxHeight: size.height * 0.5, maxWidth: size.width * 0.5),
+                  decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/splash_logo.png"))),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

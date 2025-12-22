@@ -46,7 +46,7 @@ class ProfileController extends GetxController {
 
     final bool isMember = type == ProfileType.member;
     final String endpoint = isMember ? "update-personal-profile" : "update-working-profile";
-    final response = await _api.post(endPoint: endpoint, data: json, module: "ProfileController - updateProfile", memberToken: memberToken);
+    final response = await _api.post(endPoint: endpoint, module: "ProfileController - updateProfile", data: json, memberToken: memberToken);
 
     _hideLoading();
 

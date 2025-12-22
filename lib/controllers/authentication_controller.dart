@@ -68,7 +68,16 @@ class AuthenticationController extends GetxController {
         isSuccess.value = true;
 
         final hive = Get.find<MemberHiveController>();
-        await hive.signIn(MemberProfileHive(id: profile.id, memberCode: profile.memberCode, name: profile.name, token: profile.token));
+        await hive.signIn(
+          MemberProfileHive(
+            id: profile.id,
+            memberCode: profile.memberCode,
+            name: profile.name,
+            token: profile.token,
+            image: profile.image,
+            backgroundImage: profile.backgroundImage,
+          ),
+        );
 
         _showSuccess("msg_sign_in_success".tr);
         Get.offAllNamed(AppRoutes.home);

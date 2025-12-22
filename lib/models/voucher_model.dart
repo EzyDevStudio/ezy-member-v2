@@ -8,6 +8,7 @@ const String fieldRedeemDate = "redeem_date";
 const String fieldRedeemCounter = "redeem_counter";
 const String fieldDocNo = "doc_no";
 const String fieldCreatedAt = "created_at";
+const String fieldUsePointRedeem = "use_point_redeem";
 const String fieldBatchDescription = "batch_description";
 const String fieldDiscountValue = "discount_value";
 const String fieldMinimumSpend = "minimum_spend";
@@ -35,6 +36,7 @@ class VoucherModel {
   final String redeemCounter;
   final String docNo;
   final int createdAt;
+  final int usePointRedeem;
   final String batchDescription;
   final int discountValue;
   final double minimumSpend;
@@ -59,6 +61,7 @@ class VoucherModel {
     this.redeemCounter = "",
     this.docNo = "",
     this.createdAt = 0,
+    this.usePointRedeem = 0,
     this.batchDescription = "",
     this.discountValue = 0,
     this.minimumSpend = 0.0,
@@ -86,6 +89,7 @@ class VoucherModel {
     redeemCounter: data[fieldRedeemCounter] ?? "",
     docNo: data[fieldDocNo] ?? "",
     createdAt: data[fieldCreatedAt] != null ? DateTime.tryParse(data[fieldCreatedAt])?.millisecondsSinceEpoch ?? 0 : 0,
+    usePointRedeem: data[fieldUsePointRedeem] ?? 0,
     batchDescription: data[fieldBatchDescription] ?? "",
     discountValue: data[fieldDiscountValue] ?? 0,
     minimumSpend: (data[fieldMinimumSpend] ?? 0).toDouble(),
@@ -102,5 +106,5 @@ class VoucherModel {
 
   @override
   String toString() =>
-      "VoucherModel(id: $id, batchCode: $batchCode, voucherCode: $voucherCode, holder: $holder, status: $status, redeemMember: $redeemMember, redeemDate: $redeemDate, redeemCounter: $redeemCounter, docNo: $docNo, createdAt: $createdAt, batchDescription: $batchDescription, discountValue: $discountValue, minimumSpend: $minimumSpend, startDate: $startDate, expiredDate: $expiredDate, quantity: $quantity, termsCondition: $termsCondition, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo, branchName: $branchName, counterDesc: $counterDesc)\n";
+      "VoucherModel(id: $id, batchCode: $batchCode, voucherCode: $voucherCode, holder: $holder, status: $status, redeemMember: $redeemMember, redeemDate: $redeemDate, redeemCounter: $redeemCounter, docNo: $docNo, createdAt: $createdAt, usePointRedeem: $usePointRedeem, batchDescription: $batchDescription, discountValue: $discountValue, minimumSpend: $minimumSpend, startDate: $startDate, expiredDate: $expiredDate, quantity: $quantity, termsCondition: $termsCondition, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo, branchName: $branchName, counterDesc: $counterDesc)\n";
 }

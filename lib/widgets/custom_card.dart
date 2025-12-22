@@ -1,41 +1,17 @@
 import 'dart:async';
 
 import 'package:ezy_member_v2/constants/app_constants.dart';
-import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/advertisement_model.dart';
 import 'package:ezy_member_v2/models/branch_model.dart';
 import 'package:ezy_member_v2/models/member_model.dart';
 import 'package:ezy_member_v2/models/promotion_model.dart';
-import 'package:ezy_member_v2/widgets/custom_avatar.dart';
+import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_chip.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-class CustomBackgroundCard extends StatelessWidget {
-  final Widget child;
-
-  const CustomBackgroundCard({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) => Container(
-    decoration: BoxDecoration(
-      color: Colors.black.withAlpha((0.25 * 255).round()),
-      image: DecorationImage(
-        fit: BoxFit.cover,
-        colorFilter: ColorFilter.mode(Colors.black.withAlpha((0.25 * 255).round()), BlendMode.darken),
-        image: AssetImage(AppStrings.tmpImgBackground),
-      ),
-    ),
-    padding: EdgeInsets.symmetric(
-      horizontal: ResponsiveHelper.getSpacing(context, SizeType.m),
-      vertical: ResponsiveHelper.getSpacing(context, SizeType.xl),
-    ),
-    child: child,
-  );
-}
 
 class CustomMemberCard extends StatelessWidget {
   final MemberModel member;
@@ -48,63 +24,52 @@ class CustomMemberCard extends StatelessWidget {
     onTap: onTap,
     child: AspectRatio(
       aspectRatio: kCardRatio,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(kBorderRadiusM),
-          color: Theme.of(context).colorScheme.primary,
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(Colors.black.withAlpha((0.25 * 255).round()), BlendMode.darken),
-            image: NetworkImage(member.memberCard.cardImage),
-          ),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Theme.of(context).colorScheme.primary.withAlpha((0.5 * 255).round()),
-              blurRadius: kBlurRadius,
-              offset: Offset(kOffsetX, kOffsetY),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      child: CustomBackgroundImage(
+        isBorderRadius: true,
+        isShadow: true,
+        backgroundImage: member.memberCard.cardImage,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    CustomText(member.branch.subCompany.companyName, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                    const Spacer(),
+                    CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context) * 1.2, networkImage: member.branch.aboutUs.companyLogo),
+                    const Spacer(),
+                    CustomText(member.memberCard.memberCardNumber, color: Colors.white, fontSize: 22.0),
+                    const Spacer(),
+                    CustomText(
+                      "${member.memberCard.cardDesc} · ${FormatterHelper.timestampToString(member.memberCard.expiredDate)}",
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  CustomText(member.branch.subCompany.companyName, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
-                  const Spacer(),
-                  CustomAvatar(size: ResponsiveHelper.getBranchImgSize(context) * 1.2, networkImage: member.branch.aboutUs.companyLogo),
-                  const Spacer(),
-                  CustomText(member.memberCard.memberCardNumber, color: Colors.white, fontSize: 22.0),
-                  const Spacer(),
-                  CustomText(
-                    "${member.memberCard.cardDesc} · ${FormatterHelper.timestampToString(member.memberCard.expiredDate)}",
-                    color: Colors.white,
-                    fontSize: 16.0,
+                  CustomLabelChip(
+                    backgroundColor: member.isExpired ? Colors.red : Colors.green,
+                    foregroundColor: Colors.white,
+                    label: member.isExpired ? "expired".tr : "active".tr,
                   ),
+                  const Spacer(),
+                  CustomText(member.point.toString(), color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                  CustomText("points".tr, color: Colors.white, fontSize: 16.0),
+                  const Spacer(),
+                  CustomText(member.credit.toStringAsFixed(1), color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                  CustomText("credits".tr, color: Colors.white, fontSize: 16.0),
                 ],
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                CustomLabelChip(
-                  backgroundColor: DateTime.now().millisecondsSinceEpoch > member.memberCard.expiredDate ? Colors.red : Colors.green,
-                  foregroundColor: Colors.white,
-                  label: DateTime.now().millisecondsSinceEpoch > member.memberCard.expiredDate ? "expired".tr : "active".tr,
-                ),
-                const Spacer(),
-                CustomText(member.point.toString(), color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                CustomText("points".tr, color: Colors.white, fontSize: 16.0),
-                const Spacer(),
-                CustomText(member.credit.toStringAsFixed(1), color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                CustomText("credits".tr, color: Colors.white, fontSize: 16.0),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ),
@@ -285,61 +250,60 @@ class CustomAdvertisementCard extends StatelessWidget {
 }
 
 class CustomProfileCard extends StatelessWidget {
-  final String image, memberCode, name;
+  final String backgroundImage, image, memberCode, name;
   final VoidCallback onTapEdit;
 
-  const CustomProfileCard({super.key, required this.image, required this.memberCode, required this.name, required this.onTapEdit});
+  const CustomProfileCard({
+    super.key,
+    required this.backgroundImage,
+    required this.image,
+    required this.memberCode,
+    required this.name,
+    required this.onTapEdit,
+  });
 
   @override
-  Widget build(BuildContext context) => Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(kBorderRadiusM),
-      color: Theme.of(context).colorScheme.primary,
-      image: DecorationImage(
-        fit: BoxFit.cover,
-        colorFilter: ColorFilter.mode(Colors.black.withAlpha((0.25 * 255).round()), BlendMode.darken),
-        image: AssetImage(AppStrings.tmpImgBackground),
-      ),
-      boxShadow: <BoxShadow>[
-        BoxShadow(
-          color: Theme.of(context).colorScheme.primary.withAlpha((0.5 * 255).round()),
-          blurRadius: kBlurRadius,
-          offset: Offset(kOffsetX, kOffsetY),
-        ),
-      ],
-    ),
-    margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
-    padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.l)),
-    child: Row(
-      spacing: ResponsiveHelper.getSpacing(context, SizeType.l),
-      children: <Widget>[
-        Stack(
+  Widget build(BuildContext context) => Padding(
+    padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+    child: CustomBackgroundImage(
+      isBorderRadius: true,
+      isShadow: true,
+      backgroundImage: backgroundImage,
+      child: Padding(
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.l)),
+        child: Row(
+          spacing: ResponsiveHelper.getSpacing(context, SizeType.l),
           children: <Widget>[
-            CustomAvatar(size: kProfileImgSizeL, networkImage: ""),
-            Positioned(
-              bottom: kPositionEmpty,
-              right: kPositionEmpty,
-              child: GestureDetector(
-                onTap: onTapEdit,
-                child: Container(
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.edit, color: Theme.of(context).colorScheme.primary, size: 20.0),
+            Stack(
+              children: <Widget>[
+                CustomAvatarImage(size: kProfileImgSizeL, networkImage: image),
+                Positioned(
+                  bottom: kPositionEmpty,
+                  right: kPositionEmpty,
+                  child: GestureDetector(
+                    onTap: onTapEdit,
+                    child: Container(
+                      decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.edit_rounded, color: Theme.of(context).colorScheme.primary, size: 20.0),
+                    ),
+                  ),
                 ),
+              ],
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  CustomText(name, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
+                  CustomText(memberCode, color: Colors.white, fontSize: 18.0),
+                ],
               ),
             ),
+            CustomText("change_background".tr, color: Colors.white, fontSize: 12.0, fontWeight: FontWeight.bold),
           ],
         ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              CustomText(name, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
-              CustomText(memberCode, color: Colors.white, fontSize: 18.0),
-            ],
-          ),
-        ),
-      ],
+      ),
     ),
   );
 }

@@ -53,7 +53,7 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
             subtitle: "${FormatterHelper.timestampToString(_voucher.startDate)} - ${FormatterHelper.timestampToString(_voucher.expiredDate)}",
             title: "valid_period".tr,
           ),
-          _buildListTile(subtitle: "${_voucher.discountValue} ${"off".tr}", title: "discount_amount".tr),
+          _buildListTile(subtitle: "${_voucher.discountValue.toStringAsFixed(1)} ${"off".tr}", title: "discount_amount".tr),
           _buildListTile(subtitle: _voucher.minimumSpend.toStringAsFixed(1), title: "min_spend".tr),
           _buildListTile(subtitle: _voucher.termsCondition, title: "more".tr),
         ],
