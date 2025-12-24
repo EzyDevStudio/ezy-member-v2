@@ -19,7 +19,7 @@ class CustomChoiceChip<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Wrap(
-    spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+    spacing: ResponsiveHelper.getSpacing(context, 16.0),
     alignment: alignment!,
     children: values.keys.map((value) {
       final bool isSelected = selectedValue == value;
@@ -27,7 +27,7 @@ class CustomChoiceChip<T> extends StatelessWidget {
       return ChoiceChip(
         selected: isSelected,
         side: BorderSide.none,
-        backgroundColor: Colors.grey.withAlpha((0.5 * 255).round()),
+        backgroundColor: Colors.grey.withValues(alpha: 0.5),
         checkmarkColor: Theme.of(context).colorScheme.onPrimary,
         selectedColor: Theme.of(context).colorScheme.primary,
         onSelected: (_) => onSelected(value),
@@ -56,13 +56,10 @@ class CustomLabelChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(chipRadius!), color: backgroundColor),
-    padding: EdgeInsets.symmetric(
-      horizontal: ResponsiveHelper.getSpacing(context, SizeType.s),
-      vertical: ResponsiveHelper.getSpacing(context, SizeType.xs),
-    ),
+    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 8.0), vertical: ResponsiveHelper.getSpacing(context, 4.0)),
     child: Row(
       mainAxisSize: MainAxisSize.min,
-      spacing: ResponsiveHelper.getSpacing(context, SizeType.xs),
+      spacing: ResponsiveHelper.getSpacing(context, 4.0),
       children: <Widget>[
         if (icon != null) Icon(icon, color: foregroundColor, size: foregroundSize! * ResponsiveHelper.getTextScaler(context)),
         CustomText(label, color: foregroundColor, fontSize: foregroundSize!),

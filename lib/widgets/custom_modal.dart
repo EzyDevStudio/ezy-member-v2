@@ -162,11 +162,11 @@ class _CustomCountryPickerDialogState extends State<CustomCountryPickerDialog> {
     child: Container(
       constraints: const BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusS), color: Colors.white),
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.l)),
+      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 24.0)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
-        spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+        spacing: ResponsiveHelper.getSpacing(context, 16.0),
         children: <Widget>[
           CustomSearchTextField(controller: _controller, onChanged: _onSearchChanged),
           Expanded(
@@ -211,7 +211,7 @@ class CustomTypePickerDialog<K, V> extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
-        spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+        spacing: ResponsiveHelper.getSpacing(context, 16.0),
         children: <Widget>[
           CustomText(title, fontSize: 24.0, fontWeight: FontWeight.bold, textAlign: TextAlign.center),
           ...options.entries.map(

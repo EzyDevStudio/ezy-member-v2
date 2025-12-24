@@ -19,10 +19,10 @@ class MessageHelper {
       borderRadius: kBorderRadiusS,
       animationDuration: const Duration(milliseconds: 300),
       duration: duration,
-      margin: EdgeInsets.all(ResponsiveHelper.getSpacing(Get.context!, SizeType.m)),
+      margin: EdgeInsets.all(ResponsiveHelper.getSpacing(Get.context!, 16.0)),
       padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.getSpacing(Get.context!, SizeType.l),
-        vertical: ResponsiveHelper.getSpacing(Get.context!, SizeType.m),
+        horizontal: ResponsiveHelper.getSpacing(Get.context!, 24.0),
+        vertical: ResponsiveHelper.getSpacing(Get.context!, 16.0),
       ),
       snackPosition: SnackPosition.BOTTOM,
       snackStyle: SnackStyle.FLOATING,

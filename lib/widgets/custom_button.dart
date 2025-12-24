@@ -19,8 +19,8 @@ class CustomFilledButton extends StatelessWidget {
     onPressed: onTap,
     child: Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.getSpacing(context, SizeType.m),
-        vertical: ResponsiveHelper.getSpacing(context, SizeType.s),
+        horizontal: ResponsiveHelper.getSpacing(context, 16.0),
+        vertical: ResponsiveHelper.getSpacing(context, 8.0),
       ),
       child: CustomText(label, color: Theme.of(context).colorScheme.onPrimary, fontSize: 20.0, fontWeight: FontWeight.w700),
     ),
@@ -50,7 +50,7 @@ class CustomImageTextButton extends StatelessWidget {
     borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusS)),
     onTap: onTap,
     child: Padding(
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.s)),
+      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 8.0)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -65,7 +65,7 @@ class CustomImageTextButton extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: ResponsiveHelper.getSpacing(context, SizeType.s)),
+          SizedBox(height: ResponsiveHelper.getSpacing(context, 8.0)),
           if (isLabelVisible!) CustomText(label, fontSize: 14.0),
           if (isLabelVisible! && content != null) CustomText(content!, fontSize: 14.0),
         ],

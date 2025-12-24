@@ -19,7 +19,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget _buildContent() => SliverFillRemaining(
     hasScrollBody: false,
     child: Padding(
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.l)),
+      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 24.0)),
       child: Wrap(
         alignment: WrapAlignment.spaceEvenly,
         crossAxisAlignment: WrapCrossAlignment.center,
@@ -30,7 +30,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             constraints: BoxConstraints(maxWidth: ResponsiveHelper.getWelcomeImgSize(context) + 100.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+              spacing: ResponsiveHelper.getSpacing(context, 16.0),
               children: <Widget>[
                 CustomText("welcome".tr, color: Theme.of(context).colorScheme.primary, fontSize: 18.0, fontWeight: FontWeight.w700),
                 CustomText("msg_welcome".tr, fontSize: 14.0, maxLines: null),
@@ -52,8 +52,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       onTap: onTap,
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(
-          horizontal: ResponsiveHelper.getSpacing(context, SizeType.l),
-          vertical: ResponsiveHelper.getSpacing(context, SizeType.xs),
+          horizontal: ResponsiveHelper.getSpacing(context, 24.0),
+          vertical: ResponsiveHelper.getSpacing(context, 4.0),
         ),
         subtitle: CustomText(subtitle, fontSize: 14.0, maxLines: null),
         title: CustomText(title, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.w700),

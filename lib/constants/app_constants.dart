@@ -21,6 +21,9 @@ const double kDialogHeight = 100.0;
 // Elevation
 const double kElevation = 4.0;
 
+// Offset
+const double kBackToTop = 150.0;
+
 // Phone
 const int kPhoneLength = 15;
 

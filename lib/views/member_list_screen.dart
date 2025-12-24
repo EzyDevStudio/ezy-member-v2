@@ -38,14 +38,14 @@ class _MemberListScreenState extends State<MemberListScreen> {
   Widget _buildContent() => Obx(() {
     if (_memberController.isLoading.value) {
       return Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
         child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
       );
     }
 
     if (_memberController.members.isEmpty) {
       return Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
         child: Center(child: CustomText("msg_no_available".trParams({"label": "member".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
       );
     }
@@ -61,10 +61,10 @@ class _MemberListScreenState extends State<MemberListScreen> {
       itemCount: _memberController.members.length,
       itemBuilder: (context, index) => Padding(
         padding: EdgeInsetsGeometry.only(
-          bottom: index == _memberController.members.length - 1 ? ResponsiveHelper.getSpacing(context, SizeType.m) : 0.0,
-          left: ResponsiveHelper.getSpacing(context, SizeType.m),
-          right: ResponsiveHelper.getSpacing(context, SizeType.m),
-          top: ResponsiveHelper.getSpacing(context, SizeType.m),
+          bottom: index == _memberController.members.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
+          left: ResponsiveHelper.getSpacing(context, 16.0),
+          right: ResponsiveHelper.getSpacing(context, 16.0),
+          top: ResponsiveHelper.getSpacing(context, 16.0),
         ),
         child: Center(
           child: ConstrainedBox(

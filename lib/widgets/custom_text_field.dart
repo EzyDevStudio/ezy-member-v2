@@ -50,10 +50,7 @@ class _CustomOutlinedTextFieldState extends State<CustomOutlinedTextField> {
   InputDecoration _decoration(BuildContext context, {Widget? prefix, Widget? suffix, String? hint}) => InputDecoration(
     filled: true,
     fillColor: Colors.white,
-    contentPadding: EdgeInsets.symmetric(
-      horizontal: ResponsiveHelper.getSpacing(context, SizeType.s),
-      vertical: ResponsiveHelper.getSpacing(context, SizeType.m),
-    ),
+    contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 8.0), vertical: ResponsiveHelper.getSpacing(context, 16.0)),
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(kBorderRadiusS), borderSide: BorderSide.none),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(kBorderRadiusS),
@@ -148,8 +145,8 @@ class _CustomSearchTextFieldState extends State<CustomSearchTextField> {
         filled: true,
         fillColor: Colors.white,
         contentPadding: EdgeInsets.symmetric(
-          horizontal: ResponsiveHelper.getSpacing(context, SizeType.m),
-          vertical: ResponsiveHelper.getSpacing(context, SizeType.s),
+          horizontal: ResponsiveHelper.getSpacing(context, 16.0),
+          vertical: ResponsiveHelper.getSpacing(context, 8.0),
         ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(kBorderRadiusS), borderSide: BorderSide.none),
         hintText: "search".tr,
@@ -212,8 +209,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
     _phoneDetail = widget.phone ?? PhoneDetail();
   }
 
-  UnderlineInputBorder _border(BuildContext context) =>
-      UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87.withAlpha((0.05 * 255).round())));
+  UnderlineInputBorder _border(BuildContext context) => UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87.withValues(alpha: 0.05)));
 
   UnderlineInputBorder _focusedBorder(BuildContext context) => UnderlineInputBorder(
     borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: kBorderWidth),
@@ -277,7 +273,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
   );
 
   Widget _idTypeField(BuildContext context) => Row(
-    spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+    spacing: ResponsiveHelper.getSpacing(context, 16.0),
     children: <Widget>[
       Expanded(
         flex: 1,
@@ -312,7 +308,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
   );
 
   Widget _phoneField(BuildContext context) => Row(
-    spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+    spacing: ResponsiveHelper.getSpacing(context, 16.0),
     children: <Widget>[
       Expanded(
         flex: 1,

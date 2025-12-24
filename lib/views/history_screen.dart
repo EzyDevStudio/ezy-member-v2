@@ -52,7 +52,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   );
 
   Widget _buildChoiceChip() => Container(
-    padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+    padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
     child: CustomChoiceChip<HistoryType>(
       values: _historyTypes,
       selectedValue: _selectedType,
@@ -64,7 +64,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget _buildContent() => Obx(() {
     if (_historyController.isLoading.value) {
       return Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
         child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
       );
     }
@@ -75,7 +75,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     if (filteredHistories.isEmpty) {
       return Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
         child: Center(child: CustomText("msg_no_available".trParams({"label": "history".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
       );
     }
@@ -124,7 +124,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget _buildHistoryHeader(BuildContext context, Map<String, dynamic> item) => Container(
     color: Theme.of(context).colorScheme.primaryContainer,
-    padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+    padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
     child: CustomText(item["header"], fontSize: 16.0, fontWeight: FontWeight.bold),
   );
 
@@ -137,8 +137,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
         if (index + 1 < items.length && items[index + 1]["isHeader"] == false)
           Divider(
             color: Colors.grey.shade200,
-            endIndent: ResponsiveHelper.getSpacing(context, SizeType.m),
-            indent: ResponsiveHelper.getSpacing(context, SizeType.m),
+            endIndent: ResponsiveHelper.getSpacing(context, 16.0),
+            indent: ResponsiveHelper.getSpacing(context, 16.0),
             height: 1.0,
           ),
       ],

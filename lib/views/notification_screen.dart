@@ -39,7 +39,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget _buildVoucherList() => Obx(() {
     if (_voucherController.isLoading.value) {
       return Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
         child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
       );
     }
@@ -49,25 +49,25 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final totalCount = todayVouchers.length + redeemableVouchers.length;
 
     return ListView.builder(
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
       itemCount: totalCount,
       itemBuilder: (context, index) {
         final bool isTodaySection = index < todayVouchers.length;
         final voucher = isTodaySection ? todayVouchers[index] : redeemableVouchers[index - todayVouchers.length];
 
         return Padding(
-          padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, SizeType.m)),
+          padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               if (index == 0 && todayVouchers.isNotEmpty)
                 Padding(
-                  padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, SizeType.m)),
+                  padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
                   child: CustomText("voucher_expires_today".tr, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               if (index == todayVouchers.length && redeemableVouchers.isNotEmpty)
                 Padding(
-                  padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, SizeType.m)),
+                  padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
                   child: CustomText("special_vouchers".tr, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               Center(
@@ -80,8 +80,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           onTap: () async =>
                               await Get.toNamed(AppRoutes.payment, arguments: {"scan_type": ScanType.voucher, "value": voucher.voucherCode}),
                         )
-                      : CustomSpecialVoucher(
+                      : CustomVoucher(
                           voucher: voucher,
+                          type: VoucherType.redeemable,
                           onTapRedeem: () => _voucherController.redeemVoucher(
                             voucher.batchCode,
                             voucher.companyID,

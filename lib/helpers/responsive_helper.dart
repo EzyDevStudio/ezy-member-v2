@@ -18,23 +18,8 @@ class ResponsiveHelper {
     return MediaQuery.of(context).size.width >= tabletBreakpoint;
   }
 
-  static double getSpacing(BuildContext context, SizeType type) {
-    double spacing = 0.0;
-
-    switch (type) {
-      case SizeType.xs:
-        isDesktop(context) ? spacing = 6.0 : spacing = 4.0;
-      case SizeType.s:
-        isDesktop(context) ? spacing = 12.0 : spacing = 8.0;
-      case SizeType.m:
-        isDesktop(context) ? spacing = 24.0 : spacing = 16.0;
-      case SizeType.l:
-        isDesktop(context) ? spacing = 32.0 : spacing = 24.0;
-      case SizeType.xl:
-        isDesktop(context) ? spacing = 40.0 : spacing = 32.0;
-    }
-
-    return spacing;
+  static double getSpacing(BuildContext context, double value) {
+    return value * (isDesktop(context) ? 2.0 : (isTablet(context) ? 1.5 : 1.0));
   }
 
   static double getTextScaler(BuildContext context) {

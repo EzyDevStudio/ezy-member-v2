@@ -5,22 +5,30 @@ import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/voucher_model.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
-import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-enum VoucherType { collectable, normal }
+enum VoucherType { collectable, normal, redeemable }
 
 class CustomVoucher extends StatelessWidget {
+  final Color? shadowColor;
   final VoucherModel voucher;
   final VoucherType type;
-  final VoidCallback? onTap;
-  final VoidCallback? onTapCollect;
+  final VoidCallback? onTap, onTapCollect, onTapRedeem;
 
-  const CustomVoucher({super.key, required this.voucher, required this.type, this.onTap, this.onTapCollect});
+  const CustomVoucher({
+    super.key,
+    this.shadowColor = Colors.black12,
+    required this.voucher,
+    required this.type,
+    this.onTap,
+    this.onTapCollect,
+    this.onTapRedeem,
+  });
 
   bool get isCollectable => type == VoucherType.collectable;
+  bool get isRedeemable => type == VoucherType.redeemable;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -34,7 +42,7 @@ class CustomVoucher extends StatelessWidget {
         curveRadius: kBorderRadiusS * 2,
         height: isCollectable ? ResponsiveHelper.getVoucherHeight(context) : kVoucherDefaultHeight,
         width: isCollectable ? ResponsiveHelper.getVoucherWidth(context) : null,
-        shadow: const Shadow(color: Colors.black12, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
+        shadow: Shadow(color: shadowColor!, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
         firstChild: _buildFirstChild(context),
         secondChild: _buildSecondChild(context),
       ),
@@ -48,7 +56,7 @@ class CustomVoucher extends StatelessWidget {
 
     Widget content = Container(
       color: bgColor,
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.xs)),
+      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 4.0)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -65,13 +73,13 @@ class CustomVoucher extends StatelessWidget {
       ),
     );
 
-    if (!isCollectable) return content;
+    if (type == VoucherType.normal) return content;
 
     return Badge(
       alignment: Alignment.topLeft,
       backgroundColor: Theme.of(context).colorScheme.errorContainer,
       padding: EdgeInsets.only(left: 10.0, right: 6.0),
-      offset: Offset(-6.0, ResponsiveHelper.getSpacing(context, SizeType.s)),
+      offset: Offset(-6.0, ResponsiveHelper.getSpacing(context, 8.0)),
       label: CustomText("x${voucher.quantity}", color: Theme.of(context).colorScheme.onErrorContainer, fontSize: 11.0),
       child: content,
     );
@@ -82,7 +90,7 @@ class CustomVoucher extends StatelessWidget {
 
     return Container(
       color: bgColor,
-      padding: EdgeInsets.all(isCollectable ? ResponsiveHelper.getSpacing(context, SizeType.s) : 16.0),
+      padding: EdgeInsets.all(isCollectable ? ResponsiveHelper.getSpacing(context, 8.0) : 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -100,13 +108,19 @@ class CustomVoucher extends StatelessWidget {
                   onTap: onTapCollect,
                   child: CustomText("collect".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 12.0),
                 ),
+              if (isRedeemable)
+                InkWell(
+                  onTap: onTapRedeem,
+                  child: CustomText("redeem".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 12.0),
+                ),
             ],
           ),
           CustomText("${voucher.discountValue.toStringAsFixed(1)} ${"off".tr}", fontSize: isCollectable ? 12.0 : 14.0),
           const Spacer(),
-          CustomText("${"min_spend".tr} ${voucher.minimumSpend}", fontSize: isCollectable ? 12.0 : 14.0),
+          if (isRedeemable) CustomText("${"redeem_with".tr} ${voucher.usePointRedeem} ${"points".tr}", fontSize: isCollectable ? 12.0 : 14.0),
+          if (!isRedeemable) CustomText("${"min_spend".tr} ${voucher.minimumSpend}", fontSize: isCollectable ? 12.0 : 14.0),
           Row(
-            spacing: ResponsiveHelper.getSpacing(context, SizeType.s),
+            spacing: ResponsiveHelper.getSpacing(context, 8.0),
             children: <Widget>[
               Expanded(
                 child: CustomText(
@@ -125,83 +139,4 @@ class CustomVoucher extends StatelessWidget {
       ),
     );
   }
-}
-
-class CustomSpecialVoucher extends StatelessWidget {
-  final VoucherModel voucher;
-  final VoidCallback onTapRedeem;
-
-  const CustomSpecialVoucher({super.key, required this.voucher, required this.onTapRedeem});
-
-  @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) => CouponCard(
-      curveAxis: Axis.horizontal,
-      clockwise: false,
-      borderRadius: kBorderRadiusM,
-      curvePosition: kVerVoucherDefaultHeight * 0.5,
-      curveRadius: kBorderRadiusS * 3,
-      height: kVerVoucherDefaultHeight,
-      shadow: const Shadow(color: Colors.black12, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
-      firstChild: Container(
-        color: Theme.of(context).colorScheme.tertiary,
-        padding: EdgeInsetsGeometry.all(kBorderRadiusM),
-        child: Column(
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusS)),
-                image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(voucher.companyLogo)),
-              ),
-              height: kProfileImgSizeM,
-              width: kProfileImgSizeM,
-            ),
-            const Spacer(),
-            CustomText(voucher.companyName, color: Theme.of(context).colorScheme.onPrimary, fontSize: 18.0, fontWeight: FontWeight.bold),
-            SizedBox(height: ResponsiveHelper.getSpacing(context, SizeType.xs)),
-            CustomText(
-              "${voucher.batchDescription} • ${voucher.discountValue.toStringAsFixed(1)} ${"off".tr}",
-              color: Theme.of(context).colorScheme.onPrimary,
-              fontSize: 14.0,
-            ),
-          ],
-        ),
-      ),
-      secondChild: Container(
-        color: Colors.white,
-        padding: EdgeInsetsGeometry.all(kBorderRadiusM),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: CustomText(
-                    "${"valid_till".tr}\n${FormatterHelper.timestampToString(voucher.expiredDate)}",
-                    fontSize: 14.0,
-                    maxLines: 2,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Expanded(
-                  child: CustomText(
-                    "${"redeem_with".tr}\n${voucher.usePointRedeem} ${"points".tr}",
-                    fontSize: 14.0,
-                    maxLines: 2,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-            CustomFilledButton(label: "redeem".tr, onTap: onTapRedeem),
-            InkWell(
-              onTap: () => Get.toNamed(AppRoutes.termsCondition, arguments: {"voucher": voucher}),
-              child: CustomText("tnc_long".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 12.0, textAlign: TextAlign.center),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
 }

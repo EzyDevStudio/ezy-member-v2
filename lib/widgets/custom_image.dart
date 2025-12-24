@@ -36,14 +36,14 @@ class CustomBackgroundImage extends StatelessWidget {
       image: backgroundImage.isNotEmpty
           ? DecorationImage(
               fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(Colors.black.withAlpha((0.25 * 255).round()), BlendMode.darken),
+              colorFilter: ColorFilter.mode(Colors.black.withValues(alpha: 0.25), BlendMode.darken),
               image: NetworkImage(backgroundImage),
             )
           : null,
       boxShadow: isShadow!
           ? <BoxShadow>[
               BoxShadow(
-                color: Theme.of(context).colorScheme.primary.withAlpha((0.5 * 255).round()),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
                 blurRadius: kBlurRadius,
                 offset: Offset(kOffsetX, kOffsetY),
               ),

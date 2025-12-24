@@ -229,7 +229,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       SliverToBoxAdapter(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: ResponsiveHelper.getSpacing(context, SizeType.s),
+          spacing: ResponsiveHelper.getSpacing(context, 8.0),
           children: <Widget>[
             CustomProfileCard(
               backgroundImage: _hive.isSignIn ? _hive.memberProfile.value!.backgroundImage : "",
@@ -252,7 +252,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   onPhoneChanged: (value) => setState(() => _phoneMember = value),
                 ),
                 Row(
-                  spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
+                  spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
                     Expanded(
                       child: CustomUnderlineTextField(
@@ -293,7 +293,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 CustomUnderlineTextField(controller: _memberControllers[fieldAddress3], label: "${"address_line".tr} 3"),
                 CustomUnderlineTextField(controller: _memberControllers[fieldAddress4], label: "${"address_line".tr} 4"),
                 Row(
-                  spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
+                  spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
                     Expanded(
                       child: CustomUnderlineTextField(
@@ -308,7 +308,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   ],
                 ),
                 Row(
-                  spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
+                  spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
                     Expanded(
                       child: CustomUnderlineTextField(controller: _memberControllers[fieldState], label: "state".tr),
@@ -339,9 +339,9 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             const SizedBox(),
             Padding(
               padding: EdgeInsets.only(
-                bottom: ResponsiveHelper.getSpacing(context, SizeType.m),
-                left: ResponsiveHelper.getSpacing(context, SizeType.m),
-                right: ResponsiveHelper.getSpacing(context, SizeType.m),
+                bottom: ResponsiveHelper.getSpacing(context, 16.0),
+                left: ResponsiveHelper.getSpacing(context, 16.0),
+                right: ResponsiveHelper.getSpacing(context, 16.0),
               ),
               child: CustomFilledButton(label: "save_changes".tr, onTap: () => _updateMemberProfile()),
             ),
@@ -356,7 +356,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       SliverToBoxAdapter(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: ResponsiveHelper.getSpacing(context, SizeType.s),
+          spacing: ResponsiveHelper.getSpacing(context, 8.0),
           children: <Widget>[
             Container(
               decoration: BoxDecoration(
@@ -364,16 +364,16 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 color: Theme.of(context).colorScheme.primaryContainer,
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                    color: Theme.of(context).colorScheme.secondary.withAlpha((0.25 * 255).round()),
+                    color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.25),
                     blurRadius: kBlurRadius,
                     offset: const Offset(kOffsetX, kOffsetY),
                   ),
                 ],
               ),
-              margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+              margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
               padding: EdgeInsets.symmetric(
-                horizontal: ResponsiveHelper.getSpacing(context, SizeType.l),
-                vertical: ResponsiveHelper.getSpacing(context, SizeType.m),
+                horizontal: ResponsiveHelper.getSpacing(context, 24.0),
+                vertical: ResponsiveHelper.getSpacing(context, 16.0),
               ),
               child: CheckboxListTile(
                 value: _isRequired,
@@ -417,7 +417,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 CustomUnderlineTextField(controller: _workingControllers[fieldAddress3], label: "${"address_line".tr} 3"),
                 CustomUnderlineTextField(controller: _workingControllers[fieldAddress4], label: "${"address_line".tr} 4"),
                 Row(
-                  spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
+                  spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
                     Expanded(
                       child: CustomUnderlineTextField(
@@ -433,7 +433,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   ],
                 ),
                 Row(
-                  spacing: ResponsiveHelper.getSpacing(context, SizeType.xl),
+                  spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
                     Expanded(
                       child: CustomUnderlineTextField(controller: _workingControllers[fieldState], isRequired: _isRequired, label: "state".tr),
@@ -491,9 +491,9 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             const SizedBox(),
             Padding(
               padding: EdgeInsets.only(
-                bottom: ResponsiveHelper.getSpacing(context, SizeType.m),
-                left: ResponsiveHelper.getSpacing(context, SizeType.m),
-                right: ResponsiveHelper.getSpacing(context, SizeType.m),
+                bottom: ResponsiveHelper.getSpacing(context, 16.0),
+                left: ResponsiveHelper.getSpacing(context, 16.0),
+                right: ResponsiveHelper.getSpacing(context, 16.0),
               ),
               child: CustomFilledButton(label: "save_changes".tr, onTap: () => _updateWorkingProfile()),
             ),

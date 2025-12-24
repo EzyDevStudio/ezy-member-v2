@@ -168,10 +168,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
       slivers: <Widget>[
         SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+            padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+              spacing: ResponsiveHelper.getSpacing(context, 16.0),
               children: <Widget>[
                 Image.asset("assets/images/sign_in.png", scale: kSquareRatio, height: ResponsiveHelper.getAuthImgSize(context)),
                 CustomText("msg_sign_in".tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
@@ -209,10 +209,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
     slivers: <Widget>[
       SliverToBoxAdapter(
         child: Padding(
-          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
+            spacing: ResponsiveHelper.getSpacing(context, 16.0),
             children: <Widget>[
               Image.asset("assets/images/sign_up.png", scale: kSquareRatio, height: ResponsiveHelper.getAuthImgSize(context)),
               CustomText("msg_sign_up".tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),

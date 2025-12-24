@@ -51,14 +51,14 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
   Widget _buildContent() => Obx(() {
     if (_voucherController.isLoading.value) {
       return Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
         child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
       );
     }
 
     if (_voucherController.vouchers.isEmpty) {
       return Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
         child: Center(child: CustomText("msg_no_available".trParams({"label": "vouchers".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
       );
     }
@@ -69,10 +69,10 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
       itemCount: vouchers.length,
       itemBuilder: (context, index) => Padding(
         padding: EdgeInsetsGeometry.only(
-          bottom: index == vouchers.length - 1 ? ResponsiveHelper.getSpacing(context, SizeType.m) : 0.0,
-          left: ResponsiveHelper.getSpacing(context, SizeType.m),
-          right: ResponsiveHelper.getSpacing(context, SizeType.m),
-          top: ResponsiveHelper.getSpacing(context, SizeType.m),
+          bottom: index == vouchers.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
+          left: ResponsiveHelper.getSpacing(context, 16.0),
+          right: ResponsiveHelper.getSpacing(context, 16.0),
+          top: ResponsiveHelper.getSpacing(context, 16.0),
         ),
         child: Center(
           child: ConstrainedBox(

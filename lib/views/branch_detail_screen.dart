@@ -11,7 +11,6 @@ import 'package:ezy_member_v2/models/branch_model.dart';
 import 'package:ezy_member_v2/models/member_model.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
-import 'package:ezy_member_v2/widgets/custom_card.dart';
 import 'package:ezy_member_v2/widgets/custom_chip.dart';
 import 'package:ezy_member_v2/widgets/custom_list_tile.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
@@ -31,16 +30,26 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
   final _hive = Get.find<MemberHiveController>();
   final _memberController = Get.put(MemberController(), tag: "branchDetail");
   final _timelineController = Get.put(TimelineController(), tag: "branchDetail");
+  final _scrollController = ScrollController();
 
   late BranchModel _branch;
 
   bool _isExpanded = false;
+  bool _showFab = false;
 
   @override
   void initState() {
     super.initState();
 
     _branch = Get.arguments["branch"];
+
+    _scrollController.addListener(() {
+      if (_scrollController.offset > kBackToTop && !_showFab) {
+        setState(() => _showFab = true);
+      } else if (_scrollController.offset <= kBackToTop && _showFab) {
+        setState(() => _showFab = false);
+      }
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
   }
@@ -53,7 +62,6 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
 
   void _shareContent(BuildContext context) async {
     final box = context.findRenderObject() as RenderBox?;
-
     final result = await SharePlus.instance.share(
       ShareParams(
         text:
@@ -69,158 +77,161 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
   Future<void> _redirectGoogleMap(String fullAddress) async {
     MessageHelper.showDialog(type: DialogType.loading, title: "redirecting".tr, message: "msg_google_maps_redirecting".tr);
 
-    Coordinate? current = await LocationHelper.getCurrentCoordinate();
-    Coordinate? target = await LocationHelper.getCoordinate(fullAddress);
+    Coordinate? c = await LocationHelper.getCurrentCoordinate();
+    Coordinate? t = await LocationHelper.getCoordinate(fullAddress);
 
-    if (current == null || target == null) return;
+    if (c == null || t == null) return;
 
-    await LocationHelper.navigateToGoogleMap(
-      targetLat: target.latitude,
-      targetLong: target.longitude,
-      originLat: current.latitude,
-      originLong: current.longitude,
-    );
+    await LocationHelper.navigateToGoogleMap(targetLat: t.latitude, targetLong: t.longitude, originLat: c.latitude, originLong: c.longitude);
 
     if (mounted) Navigator.pop(context);
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildBranchInfo(), _buildTimeline()]));
+  void dispose() {
+    _scrollController.dispose();
 
-  Widget _buildAppBar() {
-    return SliverAppBar(
-      floating: false,
-      pinned: true,
-      expandedHeight: 300.0,
-      actions: [IconButton(onPressed: () => _shareContent(context), icon: Icon(Icons.share_rounded))],
-      flexibleSpace: FlexibleSpaceBar(background: CustomBackgroundImage(backgroundImage: _branch.company.categories[0].categoryImage)),
-      // flexibleSpace: FlexibleSpaceBar(
-      //   background: Container(
-      //     decoration: BoxDecoration(
-      //       color: Theme.of(context).colorScheme.primary,
-      //       image: DecorationImage(
-      //         fit: BoxFit.cover,
-      //         colorFilter: ColorFilter.mode(Colors.black.withAlpha((0.25 * 255).round()), BlendMode.darken),
-      //         image: AssetImage("assets/images/cat_groceries.png"),
-      //       ),
-      //     ),
-      //   ),
-      // ),
-      bottom: PreferredSize(preferredSize: Size.fromHeight(200.0), child: _buildBenefits()),
-    );
+    super.dispose();
   }
 
-  Widget _buildBranchHeader() => Row(
-    spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
-    children: <Widget>[
-      CustomAvatarImage(size: kProfileImgSizeM, networkImage: _branch.aboutUs.companyLogo),
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    body: CustomScrollView(controller: _scrollController, slivers: <Widget>[_buildAppBar(), _buildBenefits(), _buildBranchInfo(), _buildTimeline()]),
+    floatingActionButton: _showFab
+        ? FloatingActionButton(
+            onPressed: () => _scrollController.animateTo(0.0, duration: const Duration(milliseconds: 400), curve: Curves.easeOut),
+            child: const Icon(Icons.keyboard_arrow_up_rounded),
+          )
+        : null,
+  );
+
+  Widget _buildAppBar() => SliverAppBar(
+    floating: true,
+    pinned: true,
+    snap: false,
+    actions: <IconButton>[IconButton(onPressed: () => _shareContent(context), icon: Icon(Icons.share_rounded))],
+    bottom: _buildAppBarBottom(),
+    flexibleSpace: FlexibleSpaceBar(background: CustomBackgroundImage(backgroundImage: _branch.company.categories[0].categoryImage)),
+  );
+
+  PreferredSize _buildAppBarBottom() => PreferredSize(
+    preferredSize: Size.fromHeight(kProfileImgSizeM + ResponsiveHelper.getSpacing(context, 32.0)),
+    child: Padding(
+      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+      child: SafeArea(
+        child: Row(
+          spacing: ResponsiveHelper.getSpacing(context, 16.0),
           children: <Widget>[
-            CustomText(_branch.branchName, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
-            CustomText(_branch.contactNumber, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+            CustomAvatarImage(size: kProfileImgSizeM, networkImage: _branch.aboutUs.companyLogo),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CustomText(_branch.branchName, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
+                  CustomText(_branch.contactNumber, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                ],
+              ),
+            ),
+            InkWell(
+              onTap: () => _redirectGoogleMap(_branch.fullAddress),
+              child: Icon(Icons.map_rounded, color: Colors.white, size: 40.0),
+            ),
           ],
         ),
       ),
-    ],
+    ),
   );
 
   Widget _buildBenefits() => Obx(() {
     MemberModel member = _memberController.members.firstWhere((m) => m.companyID == _branch.company.companyID, orElse: () => MemberModel.empty());
 
-    return Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusM)), color: Colors.white),
-      margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.l)),
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: ResponsiveHelper.getSpacing(context, SizeType.m),
-        children: <Widget>[
-          CustomText("member_benefits".tr, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold),
-          SizedBox(
-            height: ResponsiveHelper.isDesktop(context) ? 150.0 : 100.0,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: CustomImageTextButton(
-                    assetName: "assets/icons/my_points.png",
-                    label: member.isMember ? "my_points".tr : "earn_points".tr,
-                    content: member.isMember ? member.point.toString() : null,
-                    onTap: member.isMember
-                        ? () async {
-                            await Get.toNamed(
-                              AppRoutes.payment,
-                              arguments: {"scan_type": ScanType.point, "value": _hive.memberProfile.value!.memberCode},
-                            );
-                          }
-                        : null,
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0), vertical: ResponsiveHelper.getSpacing(context, 24.0)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: ResponsiveHelper.getSpacing(context, 16.0),
+          children: <Widget>[
+            CustomText("member_benefits".tr, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold),
+            SizedBox(
+              height: ResponsiveHelper.isDesktop(context) ? 150.0 : 100.0,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: CustomImageTextButton(
+                      assetName: "assets/icons/my_points.png",
+                      label: member.isMember ? "my_points".tr : "earn_points".tr,
+                      content: member.isMember ? member.point.toString() : null,
+                      onTap: member.isMember
+                          ? () async {
+                              await Get.toNamed(
+                                AppRoutes.payment,
+                                arguments: {"scan_type": ScanType.point, "value": _hive.memberProfile.value!.memberCode},
+                              );
+                            }
+                          : null,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: CustomImageTextButton(
-                    assetName: "assets/icons/my_vouchers.png",
-                    label: member.isMember ? "my_vouchers".tr : "collect_vouchers".tr,
-                    content: member.isMember ? (member.normalVoucherCount + member.specialVoucherCount).toString() : null,
-                    onTap: member.isMember && _hive.memberProfile.value != null
-                        ? () async {
-                            await Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _branch.company.companyID});
-                          }
-                        : null,
+                  Expanded(
+                    child: CustomImageTextButton(
+                      assetName: "assets/icons/my_vouchers.png",
+                      label: member.isMember ? "my_vouchers".tr : "collect_vouchers".tr,
+                      content: member.isMember ? (member.normalVoucherCount + member.specialVoucherCount).toString() : null,
+                      onTap: member.isMember && _hive.memberProfile.value != null
+                          ? () async {
+                              await Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _branch.company.companyID});
+                            }
+                          : null,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: CustomImageTextButton(
-                    assetName: "assets/icons/my_credits.png",
-                    label: member.isMember ? "my_credits".tr : "redeem_by_credits".tr,
-                    content: member.isMember ? member.credit.toStringAsFixed(1) : null,
-                    onTap: member.isMember
-                        ? () async {
-                            await Get.toNamed(
-                              AppRoutes.payment,
-                              arguments: {"scan_type": ScanType.credit, "value": _hive.memberProfile.value!.memberCode},
-                            );
-                          }
-                        : null,
+                  Expanded(
+                    child: CustomImageTextButton(
+                      assetName: "assets/icons/my_credits.png",
+                      label: member.isMember ? "my_credits".tr : "redeem_by_credits".tr,
+                      content: member.isMember ? member.credit.toStringAsFixed(1) : null,
+                      onTap: member.isMember
+                          ? () async {
+                              await Get.toNamed(
+                                AppRoutes.payment,
+                                arguments: {"scan_type": ScanType.credit, "value": _hive.memberProfile.value!.memberCode},
+                              );
+                            }
+                          : null,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          if (!member.isMember) CustomFilledButton(label: "join_now".tr, onTap: () {}),
-        ],
+            if (!member.isMember) CustomFilledButton(label: "join_now".tr, onTap: () {}),
+          ],
+        ),
       ),
     );
   });
 
   Widget _buildBranchInfo() => SliverToBoxAdapter(
     child: Material(
-      color: Theme.of(context).colorScheme.primaryContainer,
       elevation: 1.0,
       child: ExpansionTile(
-        tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        collapsedBackgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
         onExpansionChanged: (isExpanded) => setState(() => _isExpanded = isExpanded),
         title: CustomText("about_us".tr, fontSize: 18.0, fontWeight: FontWeight.bold),
         trailing: CustomText(_isExpanded ? "less".tr : "more".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 16.0),
         children: <Widget>[
-          CustomInfoListTile(
-            icon: Icons.location_on_rounded,
-            title: _branch.fullAddress,
-            subtitle: "msg_google_maps_tap".tr,
-            onTap: () => _redirectGoogleMap(_branch.fullAddress),
-          ),
+          CustomInfoListTile(icon: Icons.location_on_rounded, title: "address".tr, subtitle: _branch.fullAddress),
           CustomInfoListTile(
             icon: Icons.category_rounded,
             title: "categories".tr,
             subWidget: Padding(
-              padding: EdgeInsets.only(top: ResponsiveHelper.getSpacing(context, SizeType.xs)),
+              padding: EdgeInsets.only(top: ResponsiveHelper.getSpacing(context, 4.0)),
               child: Wrap(
-                runSpacing: ResponsiveHelper.getSpacing(context, SizeType.s),
-                spacing: ResponsiveHelper.getSpacing(context, SizeType.s),
+                runSpacing: ResponsiveHelper.getSpacing(context, 8.0),
+                spacing: ResponsiveHelper.getSpacing(context, 8.0),
                 children: _branch.company.categories.map((category) {
                   return CustomLabelChip(
-                    backgroundColor: Theme.of(context).colorScheme.primary.withAlpha((0.2 * 255).round()),
+                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                     foregroundColor: Theme.of(context).colorScheme.primary,
                     foregroundSize: 12.0,
                     label: category.categoryTitle,
@@ -246,29 +257,29 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
 
     if (_timelineController.timelines.isEmpty) return SliverToBoxAdapter();
 
+    final timelines = List.from(_timelineController.timelines)..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
     return SliverToBoxAdapter(
-      child: Container(
-        margin: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, SizeType.l)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: ResponsiveHelper.getSpacing(context, SizeType.m),
-                vertical: ResponsiveHelper.getSpacing(context, SizeType.l),
-              ),
-              child: CustomText("what_new".tr, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+              left: ResponsiveHelper.getSpacing(context, 16.0),
+              right: ResponsiveHelper.getSpacing(context, 16.0),
+              top: ResponsiveHelper.getSpacing(context, 24.0),
             ),
-            ListView.separated(
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              itemCount: _timelineController.timelines.length,
-              physics: NeverScrollableScrollPhysics(),
-              separatorBuilder: (_, _) => Divider(color: Colors.grey.withAlpha((0.7 * 255).round()), height: 30.0, thickness: 5.0),
-              itemBuilder: (context, index) => CustomTimeline(branch: _branch, timeline: _timelineController.timelines[index]),
-            ),
-          ],
-        ),
+            child: CustomText("what_new".tr, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
+          ),
+          ListView.separated(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            itemCount: timelines.length,
+            physics: NeverScrollableScrollPhysics(),
+            separatorBuilder: (_, _) => Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
+            itemBuilder: (context, index) => CustomTimeline(branch: _branch, timeline: timelines[index]),
+          ),
+        ],
       ),
     );
   });

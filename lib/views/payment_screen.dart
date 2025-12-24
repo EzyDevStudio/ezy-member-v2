@@ -78,10 +78,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
       child: Container(
         constraints: BoxConstraints(maxHeight: ResponsiveHelper.mobileBreakpoint, maxWidth: ResponsiveHelper.mobileBreakpoint),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusM), color: Colors.white),
-        margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.xl)),
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, SizeType.m)),
+        margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 32.0)),
+        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
         child: Column(
-          spacing: ResponsiveHelper.getSpacing(context, SizeType.s),
+          spacing: ResponsiveHelper.getSpacing(context, 8.0),
           children: <Widget>[
             SizedBox(height: 50.0, child: Image.asset("assets/images/splash_logo.png", fit: BoxFit.scaleDown)),
             const Spacer(),
@@ -108,7 +108,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       codeType: CodeType.code39(),
       backgroundColor: Colors.white,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusS)),
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, SizeType.xl)),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 32.0)),
       data: value,
     ),
   );

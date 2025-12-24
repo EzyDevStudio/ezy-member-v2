@@ -37,14 +37,14 @@ class CustomHistoryListTile extends StatelessWidget {
 
     return ListTile(
       contentPadding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.getSpacing(context, SizeType.m),
-        vertical: ResponsiveHelper.getSpacing(context, SizeType.s),
+        horizontal: ResponsiveHelper.getSpacing(context, 16.0),
+        vertical: ResponsiveHelper.getSpacing(context, 8.0),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.getSpacing(context, SizeType.xs)),
+            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.getSpacing(context, 4.0)),
             child: CustomText(title, fontSize: 16.0),
           ),
           if (location.isNotEmpty) CustomText(location, color: Colors.black54, fontSize: 12.0),

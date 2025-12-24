@@ -38,17 +38,17 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
 
   Widget _buildContent() => SliverPadding(
     padding: EdgeInsets.only(
-      bottom: ResponsiveHelper.getSpacing(context, SizeType.m),
-      left: ResponsiveHelper.getSpacing(context, SizeType.m),
-      right: ResponsiveHelper.getSpacing(context, SizeType.m),
-      top: ResponsiveHelper.getSpacing(context, SizeType.l),
+      bottom: ResponsiveHelper.getSpacing(context, 16.0),
+      left: ResponsiveHelper.getSpacing(context, 16.0),
+      right: ResponsiveHelper.getSpacing(context, 16.0),
+      top: ResponsiveHelper.getSpacing(context, 24.0),
     ),
     sliver: SliverToBoxAdapter(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           CustomText(_voucher.batchDescription, fontSize: 24.0, fontWeight: FontWeight.bold),
-          SizedBox(height: ResponsiveHelper.getSpacing(context, SizeType.m)),
+          SizedBox(height: ResponsiveHelper.getSpacing(context, 16.0)),
           _buildListTile(
             subtitle: "${FormatterHelper.timestampToString(_voucher.startDate)} - ${FormatterHelper.timestampToString(_voucher.expiredDate)}",
             title: "valid_period".tr,
