@@ -4,6 +4,7 @@ import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
+import 'package:ezy_member_v2/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,16 +18,37 @@ class MemberListScreen extends StatefulWidget {
 class _MemberListScreenState extends State<MemberListScreen> {
   final _hive = Get.find<MemberHiveController>();
   final _memberController = Get.put(MemberController(), tag: "memberList");
+  final _searchController = TextEditingController();
+
+  List<dynamic> _filteredMembers = [];
 
   @override
   void initState() {
     super.initState();
+
+    _searchController.addListener(_onSearchChanged);
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
   }
 
   Future<void> _onRefresh() async {
     _memberController.loadMembers(_hive.memberProfile.value!.memberCode, getBranch: true);
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.toLowerCase();
+
+    setState(
+      () =>
+          _filteredMembers = _memberController.members.where((member) => member.branch.subCompany.companyName.toLowerCase().contains(query)).toList(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -50,32 +72,46 @@ class _MemberListScreenState extends State<MemberListScreen> {
       );
     }
 
-    _memberController.members.sort((a, b) {
+    final members = List.from(_memberController.members);
+
+    members.sort((a, b) {
       final d1 = a.branch.distanceKm ?? double.infinity;
       final d2 = b.branch.distanceKm ?? double.infinity;
 
       return d1.compareTo(d2);
     });
 
-    return ListView.builder(
-      itemCount: _memberController.members.length,
-      itemBuilder: (context, index) => Padding(
-        padding: EdgeInsetsGeometry.only(
-          bottom: index == _memberController.members.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
-          left: ResponsiveHelper.getSpacing(context, 16.0),
-          right: ResponsiveHelper.getSpacing(context, 16.0),
-          top: ResponsiveHelper.getSpacing(context, 16.0),
+    final displayMembers = _searchController.text.isEmpty ? members : _filteredMembers;
+
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+          child: CustomSearchTextField(controller: _searchController, onChanged: (String value) => _onSearchChanged()),
         ),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.7),
-            child: CustomMemberCard(
-              member: _memberController.members[index],
-              onTap: () async => await Get.toNamed(AppRoutes.branchDetail, arguments: {"branch": _memberController.members[index].branch}),
+        Expanded(
+          child: ListView.builder(
+            itemCount: displayMembers.length,
+            itemBuilder: (context, index) => Padding(
+              padding: EdgeInsetsGeometry.only(
+                bottom: index == displayMembers.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
+                left: ResponsiveHelper.getSpacing(context, 16.0),
+                right: ResponsiveHelper.getSpacing(context, 16.0),
+                top: ResponsiveHelper.getSpacing(context, 16.0),
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.7),
+                  child: CustomMemberCard(
+                    member: displayMembers[index],
+                    onTap: () async => await Get.toNamed(AppRoutes.branchDetail, arguments: {"branch": displayMembers[index].branch}),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
-      ),
+      ],
     );
   });
 }

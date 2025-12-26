@@ -37,6 +37,7 @@ dependencies:
   coupon_uikit: ^0.2.1
   cupertino_icons: ^1.0.8
   dio: ^5.9.0
+  encrypt: ^5.0.3
   flutter_local_notifications: ^19.5.0
   flutter_localization: ^0.3.3
   geocoding: ^4.0.0 # web app doesn't allow

@@ -243,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisSpacing: ResponsiveHelper.getSpacing(context, 16.0),
-            mainAxisExtent: 100.0,
+            mainAxisExtent: ResponsiveHelper.getQuickAccessHeight(context),
             mainAxisSpacing: ResponsiveHelper.getSpacing(context, 16.0),
             crossAxisCount: ResponsiveHelper.getQuickAccessCount(context),
           ),
@@ -276,7 +276,6 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
   Widget _buildVouchers() => Obx(() {
-    _voucherController.vouchers.clear();
     if (_voucherController.vouchers.isEmpty) {
       return SliverToBoxAdapter(
         child: Container(
@@ -301,7 +300,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Container(
-            color: Colors.grey.withValues(alpha: 0.7),
+            color: Colors.grey.withValues(alpha: 0.5),
+            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.getSpacing(context, 8.0)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[

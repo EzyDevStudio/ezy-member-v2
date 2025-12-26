@@ -4,6 +4,7 @@ import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/voucher_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
+import 'package:ezy_member_v2/widgets/custom_text_field.dart';
 import 'package:ezy_member_v2/widgets/custom_voucher.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,9 +19,12 @@ class VoucherListScreen extends StatefulWidget {
 class _VoucherListScreenState extends State<VoucherListScreen> {
   final _hive = Get.find<MemberHiveController>();
   final _voucherController = Get.put(VoucherController(), tag: "voucherList");
+  final _searchController = TextEditingController();
 
   late int? _checkStart;
   late String? _companyID;
+
+  List<dynamic> _filteredVouchers = [];
 
   @override
   void initState() {
@@ -31,6 +35,8 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
     _checkStart = args["check_start"];
     _companyID = args["company_id"];
 
+    _searchController.addListener(_onSearchChanged);
+
     WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
   }
 
@@ -40,6 +46,23 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
     } else if (_checkStart != null && _companyID != null) {
       _voucherController.loadVouchers(_hive.memberProfile.value!.memberCode, checkStart: _checkStart!, companyID: _companyID);
     }
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.toLowerCase();
+
+    setState(
+      () => _filteredVouchers = _voucherController.vouchers
+          .where((voucher) => voucher.batchDescription.toLowerCase().contains(query) || voucher.companyName.toLowerCase().contains(query))
+          .toList(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -64,28 +87,46 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
     }
 
     final vouchers = List.from(_voucherController.vouchers)..sort((a, b) => a.expiredDate.compareTo(b.expiredDate));
+    final displayVouchers = _searchController.text.isEmpty ? vouchers : _filteredVouchers;
 
-    return ListView.builder(
-      itemCount: vouchers.length,
-      itemBuilder: (context, index) => Padding(
-        padding: EdgeInsetsGeometry.only(
-          bottom: index == vouchers.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
-          left: ResponsiveHelper.getSpacing(context, 16.0),
-          right: ResponsiveHelper.getSpacing(context, 16.0),
-          top: ResponsiveHelper.getSpacing(context, 16.0),
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+          child: CustomSearchTextField(controller: _searchController, onChanged: (String value) => _onSearchChanged()),
         ),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
-            child: CustomVoucher(
-              voucher: vouchers[index],
-              type: VoucherType.normal,
-              onTap: () async =>
-                  await Get.toNamed(AppRoutes.payment, arguments: {"scan_type": ScanType.voucher, "value": vouchers[index].voucherCode}),
+        Expanded(
+          child: ListView.builder(
+            itemCount: displayVouchers.length,
+            itemBuilder: (context, index) => Padding(
+              padding: EdgeInsetsGeometry.only(
+                bottom: index == displayVouchers.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
+                left: ResponsiveHelper.getSpacing(context, 16.0),
+                right: ResponsiveHelper.getSpacing(context, 16.0),
+                top: ResponsiveHelper.getSpacing(context, 16.0),
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+                  child: CustomVoucher(
+                    voucher: displayVouchers[index],
+                    type: VoucherType.normal,
+                    onTap: () async => await Get.toNamed(
+                      AppRoutes.payment,
+                      arguments: {
+                        "benefit_type": BenefitType.voucher,
+                        "scan_type": ScanType.qrCode,
+                        "company_id": displayVouchers[index].companyID,
+                        "value": displayVouchers[index].voucherCode,
+                      },
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
-      ),
+      ],
     );
   });
 }

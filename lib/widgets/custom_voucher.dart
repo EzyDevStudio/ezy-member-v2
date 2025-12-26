@@ -58,9 +58,10 @@ class CustomVoucher extends StatelessWidget {
       color: bgColor,
       padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 4.0)),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context) * (isCollectable ? 1 : 1.2), networkImage: voucher.companyLogo),
+          CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context) * (isCollectable ? 1 : 1.1), networkImage: voucher.companyLogo),
           CustomText(
             voucher.companyName,
             color: Theme.of(context).colorScheme.onPrimary,

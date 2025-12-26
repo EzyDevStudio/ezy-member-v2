@@ -50,6 +50,10 @@ class ResponsiveHelper {
     return isDesktop(context) ? 5 : (isTablet(context) ? 4 : 3);
   }
 
+  static double getQuickAccessHeight(BuildContext context) {
+    return isDesktop(context) ? 150.0 : 100.0;
+  }
+
   static double getNearbyHeight(BuildContext context) {
     return isDesktop(context) ? 300.0 : 200.0;
   }

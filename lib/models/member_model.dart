@@ -7,6 +7,7 @@ const String fieldIsMember = "is_member";
 const String fieldIsExpired = "is_expired";
 const String fieldCredit = "credit";
 const String fieldPoint = "point";
+const String fieldReferralCode = "referral_code";
 
 class MemberModel {
   static const String keyMember = "members";
@@ -16,6 +17,7 @@ class MemberModel {
   final bool isExpired;
   final double credit;
   final int point;
+  final String referralCode;
   final int normalVoucherCount;
   final int specialVoucherCount;
   MemberCardModel memberCard;
@@ -27,6 +29,7 @@ class MemberModel {
     this.isExpired = true,
     this.credit = 0.0,
     this.point = 0,
+    this.referralCode = "",
     this.normalVoucherCount = 0,
     this.specialVoucherCount = 0,
     MemberCardModel? memberCard,
@@ -42,6 +45,7 @@ class MemberModel {
     isExpired: data[fieldIsExpired] ?? false,
     credit: (data[fieldCredit] ?? 0).toDouble(),
     point: data[fieldPoint] ?? 0,
+    referralCode: data[fieldReferralCode] ?? "",
     normalVoucherCount: data[VoucherModel.keyNormalVoucher] ?? 0,
     specialVoucherCount: data[VoucherModel.keySpecialVoucher] ?? 0,
     memberCard: data[MemberCardModel.keyMemberCard] != null
@@ -52,7 +56,7 @@ class MemberModel {
 
   @override
   String toString() =>
-      "MemberDetailModel(companyID: $companyID, isMember: $isMember, isExpired: $isExpired, credit: $credit, point: $point, normalVoucherCount: $normalVoucherCount, specialVoucherCount: $specialVoucherCount)"
+      "MemberDetailModel(companyID: $companyID, isMember: $isMember, isExpired: $isExpired, credit: $credit, point: $point, referralCode: $referralCode, normalVoucherCount: $normalVoucherCount, specialVoucherCount: $specialVoucherCount)"
       "\nmemberCard: ${memberCard.toString()}"
       "\nbranch: ${branch.toString()})\n";
 }

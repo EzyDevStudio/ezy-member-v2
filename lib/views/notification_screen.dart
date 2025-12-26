@@ -57,28 +57,35 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
         return Padding(
           padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              if (index == 0 && todayVouchers.isNotEmpty)
-                Padding(
-                  padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
-                  child: CustomText("voucher_expires_today".tr, fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              if (index == todayVouchers.length && redeemableVouchers.isNotEmpty)
-                Padding(
-                  padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
-                  child: CustomText("special_vouchers".tr, fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
-                  child: isTodaySection
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  if (index == 0 && todayVouchers.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
+                      child: CustomText("voucher_expires_today".tr, fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  if (index == todayVouchers.length && redeemableVouchers.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
+                      child: CustomText("redeemable_vouchers".tr, fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  isTodaySection
                       ? CustomVoucher(
                           voucher: voucher,
                           type: VoucherType.normal,
-                          onTap: () async =>
-                              await Get.toNamed(AppRoutes.payment, arguments: {"scan_type": ScanType.voucher, "value": voucher.voucherCode}),
+                          onTap: () async => await Get.toNamed(
+                            AppRoutes.payment,
+                            arguments: {
+                              "benefit_type": BenefitType.voucher,
+                              "scan_type": ScanType.qrCode,
+                              "company_id": voucher.companyID,
+                              "value": voucher.voucherCode,
+                            },
+                          ),
                         )
                       : CustomVoucher(
                           voucher: voucher,
@@ -90,9 +97,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             _hive.memberProfile.value!.token,
                           ),
                         ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },

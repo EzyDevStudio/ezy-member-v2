@@ -1,5 +1,6 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_routes.dart';
+import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
@@ -16,6 +17,7 @@ import 'package:ezy_member_v2/widgets/custom_list_tile.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -61,12 +63,17 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
   }
 
   void _shareContent(BuildContext context) async {
+    MemberModel member = _memberController.members.firstWhere((m) => m.companyID == _branch.company.companyID, orElse: () => MemberModel.empty());
+
     final box = context.findRenderObject() as RenderBox?;
     final result = await SharePlus.instance.share(
       ShareParams(
-        text:
-            "Hey! Join [COMPANY-NAME] as a member using my code [REFERRAL-CODE] and enjoy all the exclusive benefits. https://ezymember.com/COMPANY-NAME/REFERRAL-CODE",
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        text: "msg_referral_program".trParams({
+          "company": _branch.subCompany.companyName,
+          "member": member.referralCode,
+          "url": "${AppStrings.serverUrl}/${_branch.subCompany.companyName}/${member.referralCode}",
+        }),
       ),
     );
 
@@ -96,7 +103,13 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: CustomScrollView(controller: _scrollController, slivers: <Widget>[_buildAppBar(), _buildBenefits(), _buildBranchInfo(), _buildTimeline()]),
+    body: RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: CustomScrollView(
+        controller: _scrollController,
+        slivers: <Widget>[_buildAppBar(), _buildBenefits(), _buildBranchInfo(), _buildTimeline()],
+      ),
+    ),
     floatingActionButton: _showFab
         ? FloatingActionButton(
             onPressed: () => _scrollController.animateTo(0.0, duration: const Duration(milliseconds: 400), curve: Curves.easeOut),
@@ -109,7 +122,13 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
     floating: true,
     pinned: true,
     snap: false,
-    actions: <IconButton>[IconButton(onPressed: () => _shareContent(context), icon: Icon(Icons.share_rounded))],
+    actions: [
+      Obx(() {
+        if (_memberController.members.isEmpty) return const SizedBox.shrink();
+
+        return IconButton(onPressed: () => _shareContent(context), icon: Icon(Icons.share_rounded));
+      }),
+    ],
     bottom: _buildAppBarBottom(),
     flexibleSpace: FlexibleSpaceBar(background: CustomBackgroundImage(backgroundImage: _branch.company.categories[0].categoryImage)),
   );
@@ -167,7 +186,11 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
                           ? () async {
                               await Get.toNamed(
                                 AppRoutes.payment,
-                                arguments: {"scan_type": ScanType.point, "value": _hive.memberProfile.value!.memberCode},
+                                arguments: {
+                                  "benefit_type": BenefitType.point,
+                                  "scan_type": ScanType.barcode,
+                                  "company_id": _branch.company.companyID,
+                                },
                               );
                             }
                           : null,
@@ -194,7 +217,11 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
                           ? () async {
                               await Get.toNamed(
                                 AppRoutes.payment,
-                                arguments: {"scan_type": ScanType.credit, "value": _hive.memberProfile.value!.memberCode},
+                                arguments: {
+                                  "benefit_type": BenefitType.credit,
+                                  "scan_type": ScanType.barcode,
+                                  "company_id": _branch.company.companyID,
+                                },
                               );
                             }
                           : null,
@@ -211,40 +238,54 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
   });
 
   Widget _buildBranchInfo() => SliverToBoxAdapter(
-    child: Material(
-      elevation: 1.0,
-      child: ExpansionTile(
-        collapsedBackgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-        onExpansionChanged: (isExpanded) => setState(() => _isExpanded = isExpanded),
-        title: CustomText("about_us".tr, fontSize: 18.0, fontWeight: FontWeight.bold),
-        trailing: CustomText(_isExpanded ? "less".tr : "more".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 16.0),
-        children: <Widget>[
-          CustomInfoListTile(icon: Icons.location_on_rounded, title: "address".tr, subtitle: _branch.fullAddress),
-          CustomInfoListTile(
-            icon: Icons.category_rounded,
-            title: "categories".tr,
-            subWidget: Padding(
-              padding: EdgeInsets.only(top: ResponsiveHelper.getSpacing(context, 4.0)),
-              child: Wrap(
-                runSpacing: ResponsiveHelper.getSpacing(context, 8.0),
-                spacing: ResponsiveHelper.getSpacing(context, 8.0),
-                children: _branch.company.categories.map((category) {
-                  return CustomLabelChip(
-                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                    foregroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundSize: 12.0,
-                    label: category.categoryTitle,
-                  );
-                }).toList(),
+    child: Column(
+      children: <Widget>[
+        Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
+        Material(
+          elevation: 1.0,
+          child: ExpansionTile(
+            childrenPadding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
+            tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+            onExpansionChanged: (isExpanded) => setState(() => _isExpanded = isExpanded),
+            title: CustomText("about_us".tr, fontSize: 18.0, fontWeight: FontWeight.bold),
+            trailing: CustomText(_isExpanded ? "less".tr : "more".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 16.0),
+            children: <Widget>[
+              CustomInfoListTile(
+                icon: Icons.location_on_rounded,
+                trailing: Icons.content_copy_rounded,
+                title: "address".tr,
+                subtitle: _branch.fullAddress,
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: _branch.fullAddress));
+                  MessageHelper.show("msg_address_copied".tr, icon: Icons.content_copy_rounded);
+                },
               ),
-            ),
+              CustomInfoListTile(
+                icon: Icons.category_rounded,
+                title: "categories".tr,
+                subWidget: Padding(
+                  padding: EdgeInsets.only(top: ResponsiveHelper.getSpacing(context, 4.0)),
+                  child: Wrap(
+                    runSpacing: ResponsiveHelper.getSpacing(context, 8.0),
+                    spacing: ResponsiveHelper.getSpacing(context, 8.0),
+                    children: _branch.company.categories.map((category) {
+                      return CustomLabelChip(
+                        backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                        foregroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundSize: 12.0,
+                        label: category.categoryTitle,
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+              CustomInfoListTile(icon: Icons.account_box_rounded, title: "about_us".tr, subtitle: _branch.branchDescription),
+              CustomInfoListTile(icon: Icons.email_rounded, title: "email".tr, subtitle: _branch.subCompany.companyEmail),
+              CustomInfoListTile(icon: Icons.phone_rounded, title: "phone".tr, subtitle: _branch.contactNumber),
+            ],
           ),
-          CustomInfoListTile(icon: Icons.account_box_rounded, title: "about_us".tr, subtitle: _branch.branchDescription),
-          CustomInfoListTile(icon: Icons.email_rounded, title: "email".tr, subtitle: _branch.subCompany.companyEmail),
-          CustomInfoListTile(icon: Icons.phone_rounded, title: "phone".tr, subtitle: _branch.contactNumber),
-        ],
-      ),
+        ),
+      ],
     ),
   );
 
@@ -263,6 +304,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
           Padding(
             padding: EdgeInsets.only(
               left: ResponsiveHelper.getSpacing(context, 16.0),
