@@ -16,6 +16,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 // Settle AssetImage, NetworkImage, Image.asset, Image.network
 // custom text field to autocomplete - postcode
+// Ask about the "status, "expired_date" of company subscription
+// Ask location if user reject, and web app doesn't work
+// Upload avatar or background image to server -- also permission (camera, gallery)
+// Multilingual
+
+//
 
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device

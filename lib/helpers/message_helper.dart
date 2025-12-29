@@ -122,4 +122,79 @@ class MessageHelper {
       });
     }
   }
+
+  static Future<bool?> showConfirmationDialog({
+    required Color backgroundColor,
+    required IconData icon,
+    required String message,
+    required String title,
+    String? cancelText,
+    String? confirmText,
+  }) async {
+    return Get.dialog<bool>(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusM)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(kBorderRadiusM)),
+                  color: backgroundColor,
+                ),
+                height: kDialogHeight,
+                padding: const EdgeInsets.all(kBorderRadiusM),
+                child: FittedBox(
+                  fit: BoxFit.fitHeight,
+                  child: Icon(icon, color: Colors.white),
+                ),
+              ),
+              Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(kBorderRadiusM)),
+                  color: Colors.white,
+                ),
+                padding: const EdgeInsets.all(kBorderRadiusM),
+                child: Column(
+                  spacing: kBorderRadiusM,
+                  children: <Widget>[
+                    CustomText(title, fontSize: 24.0, fontWeight: FontWeight.bold, textAlign: TextAlign.center),
+                    CustomText(message, fontSize: 18.0, maxLines: null, textAlign: TextAlign.center),
+                    Row(
+                      spacing: kBorderRadiusM,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextButton(
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, foregroundColor: Colors.black87),
+                            onPressed: () => Get.back(result: false),
+                            child: CustomText(cancelText ?? "cancel".tr, fontSize: 18.0),
+                          ),
+                        ),
+                        Expanded(
+                          child: TextButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Get.theme.colorScheme.primary,
+                              foregroundColor: Get.theme.colorScheme.onPrimary,
+                              padding: EdgeInsets.all(ResponsiveHelper.getSpacing(Get.context!, 16.0)),
+                            ),
+                            onPressed: () => Get.back(result: true),
+                            child: CustomText(confirmText ?? "confirm".tr, color: Get.theme.colorScheme.onPrimary, fontSize: 18.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: true,
+    );
+  }
 }

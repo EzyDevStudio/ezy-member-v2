@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/models/profile_model.dart';
@@ -65,6 +68,44 @@ class ProfileController extends GetxController {
         break;
       case 402:
         _showError("msg_email_exists".tr);
+        break;
+      case 520:
+        _showError("msg_token_invalid".tr);
+        break;
+      default:
+        _showError("msg_system_error".tr);
+        break;
+    }
+  }
+
+  Future<void> uploadMedia(File file, int isAvatar, String memberCode, String memberToken) async {
+    _showLoading("msg_profile_updating".tr);
+
+    final Map<String, dynamic> data = {"is_avatar": isAvatar, "member_code": memberCode};
+    final response = await _api.postFile(
+      file: file,
+      data: data,
+      endPoint: "upload-media",
+      memberToken: memberToken,
+      module: "ProfileController - uploadMedia",
+    );
+
+    _hideLoading();
+
+    if (response == null || response.data["filename"] == null) {
+      _showError("msg_system_error".tr);
+      return;
+    }
+
+    switch (response.data[ApiService.keyStatusCode]) {
+      case 200:
+        final hive = Get.find<MemberHiveController>();
+
+        if (isAvatar == 1) hive.updateImage(response.data["filename"]);
+        if (isAvatar == 0) hive.updateBackgroundImage(response.data["filename"]);
+
+        _showSuccess("msg_profile_success".tr);
+
         break;
       case 520:
         _showError("msg_token_invalid".tr);

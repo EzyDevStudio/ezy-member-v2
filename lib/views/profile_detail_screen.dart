@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/profile_controller.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
+import 'package:ezy_member_v2/helpers/media_helper.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/phone_detail.dart';
@@ -14,6 +17,7 @@ import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 enum ProfileType { member, working }
 
@@ -98,6 +102,23 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       _workingControllers[fieldRegistrationSchemeID].text = AppStrings().idTypes[_selectedIDType] ?? AppStrings().idTypes.values.first;
       setState(() {});
     }
+  }
+
+  void _uploadMedia(int isAvatar) async {
+    final pickedSource = await CustomTypePickerDialog.show<ImageSource, String>(
+      context: context,
+      title: "select_source".tr,
+      options: AppStrings().imageSrc,
+      onDisplay: (option) => option,
+    );
+
+    if (pickedSource == null) return;
+
+    File? pickedFile = await MediaHelper.processImage(pickedSource.key);
+
+    if (pickedFile == null) return;
+
+    _profileController.uploadMedia(pickedFile, isAvatar, _hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token);
   }
 
   Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
@@ -231,12 +252,15 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: ResponsiveHelper.getSpacing(context, 8.0),
           children: <Widget>[
-            CustomProfileCard(
-              backgroundImage: _hive.isSignIn ? _hive.memberProfile.value!.backgroundImage : "",
-              image: _hive.isSignIn ? _hive.memberProfile.value!.image : "",
-              memberCode: _memberProfile.memberCode,
-              name: _memberProfile.name,
-              onTapEdit: () {},
+            Obx(
+              () => CustomProfileCard(
+                backgroundImage: _hive.isSignIn ? _hive.memberProfile.value!.backgroundImage : "",
+                image: _hive.isSignIn ? _hive.memberProfile.value!.image : "",
+                memberCode: _memberProfile.memberCode,
+                name: _memberProfile.name,
+                onTapEdit: () => _uploadMedia(1),
+                onTapEditBg: () => _uploadMedia(0),
+              ),
             ),
             CustomSectionCard(
               title: "basic_information".tr,

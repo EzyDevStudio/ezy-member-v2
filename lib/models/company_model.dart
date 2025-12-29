@@ -47,7 +47,10 @@ class CompanyModel {
         : [],
   );
 
+  String getCategoryTitles() => categories.map((c) => c.categoryTitle).join(", ");
+
   @override
   String toString() =>
-      "CompanyModel(id: $id, companyID: $companyID, companyName: $companyName, databaseName: $databaseName, branchQuantity: $branchQuantity, counterQuantity: $counterQuantity, expiredDate: $expiredDate)\n";
+      "CompanyModel(id: $id, companyID: $companyID, companyName: $companyName, databaseName: $databaseName, branchQuantity: $branchQuantity, counterQuantity: $counterQuantity, expiredDate: $expiredDate"
+      "\ncategories: ${categories.toString()})\n";
 }

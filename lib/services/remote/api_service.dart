@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:ezy_member_v2/constants/app_strings.dart';
@@ -37,6 +38,38 @@ class ApiService {
         url,
         data: data,
         options: Options(headers: {"Authorization": "Bearer $memberToken", "Content-Type": "application/json"}),
+      );
+
+      return response;
+    } on DioException catch (e) {
+      _showLog(e, "Dio Error", module, url);
+      return null;
+    } catch (e) {
+      _showLog(e, "Unknown Error", module, url);
+      return null;
+    }
+  }
+
+  Future<Response?> postFile<T>({
+    required File file,
+    required Map<String, dynamic> data,
+    required String endPoint,
+    required String memberToken,
+    required String module,
+  }) async {
+    final url = "$_baseUrl/$endPoint";
+
+    try {
+      String fileName = file.path.split("/").last;
+      FormData formData = FormData();
+
+      data.forEach((key, value) => formData.fields.add(MapEntry(key, value.toString())));
+      formData.files.add(MapEntry("media", await MultipartFile.fromFile(file.path, filename: fileName)));
+
+      final response = await _dio.post(
+        url,
+        data: formData,
+        options: Options(headers: {"Authorization": "Bearer $memberToken", "Content-Type": "multipart/form-data"}),
       );
 
       return response;

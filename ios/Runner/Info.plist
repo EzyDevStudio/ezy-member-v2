@@ -31,6 +31,10 @@
     <string>We need your location to show nearby points.</string>
     <key>NSUserNotificationUsageDescription</key>
     <string>We need your permission to send notifications.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>This app needs camera access to take photos.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>This app needs photo library access to select photos.</string>
 
     <key>UIBackgroundModes</key>
     <array>

@@ -1,21 +1,17 @@
+import 'package:ezy_member_v2/helpers/message_helper.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionHelper {
   // Check if device GPS/location service is turned on
-  static Future<bool> isLocationServiceEnabled() async => await Permission.location.serviceStatus.isEnabled;
-
+  static Future<bool> isDeviceGPSEnabled() async => await Permission.location.serviceStatus.isEnabled;
   static Future<bool> isLocationGranted() async => await Permission.location.status.isGranted;
-  static Future<bool> isNotificationGranted() async => await Permission.notification.status.isGranted;
 
-  static Future<bool> checkAndRequestLocation() async {
-    if (!await isLocationServiceEnabled()) return false;
+  static Future<bool> checkAndRequestLocation({bool openSettingsIfDenied = true}) async {
+    if (!await isDeviceGPSEnabled()) return false;
     if (await isLocationGranted()) return true;
 
-    // If permission is not granted then request location permission
-    return await requestLocationPermission();
-  }
-
-  static Future<bool> requestLocationPermission({bool openSettingsIfDenied = true}) async {
     var result = await Permission.location.request();
 
     if (result.isGranted) {
@@ -28,13 +24,11 @@ class PermissionHelper {
     }
   }
 
-  static Future<bool> checkAndRequestNotification() async {
+  static Future<bool> isNotificationGranted() async => await Permission.notification.status.isGranted;
+
+  static Future<bool> checkAndRequestNotification({bool openSettingsIfDenied = true}) async {
     if (await isNotificationGranted()) return true;
 
-    return await requestNotificationPermission();
-  }
-
-  static Future<bool> requestNotificationPermission({bool openSettingsIfDenied = true}) async {
     var result = await Permission.notification.request();
 
     if (result.isGranted) {
@@ -45,5 +39,58 @@ class PermissionHelper {
     } else {
       return false;
     }
+  }
+
+  static Future<bool> isCameraGranted() async => await Permission.camera.status.isGranted;
+
+  static Future<bool> checkAndRequestCamera({bool openSettingsIfDenied = true}) async {
+    if (await isCameraGranted()) return true;
+
+    var result = await Permission.camera.request();
+
+    if (result.isGranted) {
+      return true;
+    } else if (result.isPermanentlyDenied && openSettingsIfDenied) {
+      _showDialog("take_photos".tr, "camera".tr);
+      return false;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> isGalleryGranted() async {
+    if (await Permission.photos.isRestricted || await Permission.photos.isDenied) return false;
+    if (await Permission.storage.isDenied) return false;
+    return true;
+  }
+
+  static Future<bool> checkAndRequestGallery({bool openSettingsIfDenied = true}) async {
+    if (await isGalleryGranted()) return true;
+
+    Permission permission = Permission.photos; // iOS
+    if (await Permission.storage.isDenied) permission = Permission.storage; // Android
+
+    var result = await permission.request();
+
+    if (result.isGranted) {
+      return true;
+    } else if (result.isPermanentlyDenied && openSettingsIfDenied) {
+      _showDialog("select_photos".tr, "gallery".tr);
+      return false;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<void> _showDialog(String action, String permission) async {
+    bool? result = await MessageHelper.showConfirmationDialog(
+      backgroundColor: Colors.blue,
+      icon: Icons.info_rounded,
+      message: "msg_need_permission".trParams({"action": action, "permission": permission}),
+      title: "need_permission".trParams({"permission": permission}),
+      confirmText: "go_now".tr,
+    );
+
+    if (result != null && result) await openAppSettings();
   }
 }

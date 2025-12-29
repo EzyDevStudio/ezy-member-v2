@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _voucherController = Get.put(VoucherController(), tag: "home");
   final _scrollController = ScrollController();
 
-  late StreamSubscription<bool> _subscription;
+  // late StreamSubscription<bool> _subscription;
 
   bool _showFab = false;
 
@@ -61,18 +61,18 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
 
-    _subscription = ConnectionService.instance.stream.listen((connected) {
-      if (!connected) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          MessageHelper.show(
-            "msg_connection_off".tr,
-            backgroundColor: Theme.of(context).colorScheme.error,
-            duration: Duration(seconds: 10),
-            icon: Icons.wifi_off_rounded,
-          );
-        });
-      }
-    });
+    // _subscription = ConnectionService.instance.stream.listen((connected) {
+    //   if (!connected) {
+    //     WidgetsBinding.instance.addPostFrameCallback((_) {
+    //       MessageHelper.show(
+    //         "msg_connection_off".tr,
+    //         backgroundColor: Theme.of(context).colorScheme.error,
+    //         duration: Duration(seconds: 10),
+    //         icon: Icons.wifi_off_rounded,
+    //       );
+    //     });
+    //   }
+    // });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
   }
@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
-    _subscription.cancel();
+    // _subscription.cancel();
 
     super.dispose();
   }
@@ -365,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 Expanded(child: CustomText("shops_nearby".tr, fontSize: 16.0, fontWeight: FontWeight.w600)),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () async => await Get.toNamed(AppRoutes.branchList),
                   child: CustomText("view_all".tr, color: Colors.blue, fontSize: 14.0, fontWeight: FontWeight.bold),
                 ),
               ],

@@ -71,6 +71,7 @@ class CustomConfirmationDialog extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).colorScheme.primary,
                           foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
                         ),
                         onPressed: () => Navigator.pop(context, true),
                         child: CustomText(confirmText ?? "confirm".tr, color: Theme.of(context).colorScheme.onPrimary, fontSize: 18.0),

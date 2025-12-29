@@ -107,7 +107,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 constraints: BoxConstraints(maxHeight: ResponsiveHelper.mobileBreakpoint, maxWidth: ResponsiveHelper.mobileBreakpoint),
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusM), color: Colors.white),
                 height: size,
-                width: size ,
+                width: size,
                 margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 32.0)),
                 padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
                 child: Column(

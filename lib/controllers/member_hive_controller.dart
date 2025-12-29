@@ -31,4 +31,18 @@ class MemberHiveController extends GetxController {
     await _storage.clearMemberProfile();
     memberProfile.value = null;
   }
+
+  Future<void> updateImage(String image) async {
+    if (memberProfile.value == null) return;
+    final updatedProfile = memberProfile.value!.copyWith(image: image);
+    await _storage.saveMemberProfile(updatedProfile);
+    memberProfile.value = updatedProfile;
+  }
+
+  Future<void> updateBackgroundImage(String image) async {
+    if (memberProfile.value == null) return;
+    final updatedProfile = memberProfile.value!.copyWith(backgroundImage: image);
+    await _storage.saveMemberProfile(updatedProfile);
+    memberProfile.value = updatedProfile;
+  }
 }

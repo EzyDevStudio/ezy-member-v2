@@ -180,7 +180,7 @@ class CustomNearbyCard extends StatelessWidget {
                     children: <Widget>[
                       CustomText(branch.branchName, fontSize: 16.0, fontWeight: FontWeight.w700),
                       CustomText(branch.fullAddress, fontSize: 14.0),
-                      CustomText(branch.company.categories.map((c) => c.categoryTitle).join(", "), color: Colors.black54, fontSize: 12.0),
+                      CustomText(branch.company.getCategoryTitles(), color: Colors.black54, fontSize: 12.0),
                     ],
                   ),
                 ),
@@ -248,7 +248,7 @@ class CustomAdvertisementCard extends StatelessWidget {
 
 class CustomProfileCard extends StatelessWidget {
   final String backgroundImage, image, memberCode, name;
-  final VoidCallback onTapEdit;
+  final VoidCallback onTapEdit, onTapEditBg;
 
   const CustomProfileCard({
     super.key,
@@ -257,6 +257,7 @@ class CustomProfileCard extends StatelessWidget {
     required this.memberCode,
     required this.name,
     required this.onTapEdit,
+    required this.onTapEditBg,
   });
 
   @override
@@ -296,7 +297,10 @@ class CustomProfileCard extends StatelessWidget {
                     CustomText(name, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
                     CustomText(memberCode, color: Colors.white, fontSize: 18.0),
                     const Spacer(),
-                    CustomText("change_background".tr, color: Colors.white, fontSize: 12.0, fontWeight: FontWeight.bold),
+                    GestureDetector(
+                      onTap: onTapEditBg,
+                      child: CustomText("change_background".tr, color: Colors.white, fontSize: 12.0, fontWeight: FontWeight.bold),
+                    ),
                   ],
                 ),
               ),
@@ -439,6 +443,58 @@ class CustomSectionCard extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, spacing: ResponsiveHelper.getSpacing(context, 8.0), children: children),
           ),
         ],
+      ),
+    ),
+  );
+}
+
+class CustomShopCard extends StatelessWidget {
+  final BranchModel branch;
+
+  const CustomShopCard({super.key, required this.branch});
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+    child: AspectRatio(
+      aspectRatio: kCardRatio,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(kBorderRadiusM),
+          color: Colors.white,
+          boxShadow: <BoxShadow>[BoxShadow(color: Colors.black12, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY))],
+        ),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0), vertical: ResponsiveHelper.getSpacing(context, 8.0)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          spacing: ResponsiveHelper.getSpacing(context, 8.0),
+          children: <Widget>[
+            Row(
+              spacing: ResponsiveHelper.getSpacing(context, 16.0),
+              children: <Widget>[
+                CustomAvatarImage(size: kProfileImgSizeM, networkImage: branch.aboutUs.companyLogo),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      CustomText(branch.branchName, fontSize: 16.0, fontWeight: FontWeight.w700),
+                      CustomText(branch.contactNumber, fontSize: 14.0),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: ResponsiveHelper.getSpacing(context, 4.0),
+              children: <Widget>[
+                CustomText(branch.subCompany.companyName, fontSize: 14.0, maxLines: 2, fontWeight: FontWeight.bold),
+                CustomText(branch.fullAddress, fontSize: 13.0, maxLines: 2),
+                CustomText(branch.company.getCategoryTitles(), color: Colors.black54, fontSize: 12.0, maxLines: 2),
+              ],
+            ),
+          ],
+        ),
       ),
     ),
   );
