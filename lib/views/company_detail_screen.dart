@@ -6,19 +6,16 @@ import 'package:ezy_member_v2/controllers/company_controller.dart';
 import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/timeline_controller.dart';
-import 'package:ezy_member_v2/helpers/location_helper.dart';
-import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/company_model.dart';
 import 'package:ezy_member_v2/models/member_model.dart';
-import 'package:ezy_member_v2/widgets/custom_image.dart';
+import 'package:ezy_member_v2/widgets/custom_app_bar.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_chip.dart';
 import 'package:ezy_member_v2/widgets/custom_list_tile.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -84,19 +81,6 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
     } else if (result.status == ShareResultStatus.dismissed) {}
   }
 
-  Future<void> _redirectGoogleMap(String fullAddress) async {
-    MessageHelper.showDialog(type: DialogType.loading, title: "redirecting".tr, message: "msg_google_maps_redirecting".tr);
-
-    Coordinate? c = await LocationHelper.getCurrentCoordinate();
-    Coordinate? t = await LocationHelper.getCoordinate(fullAddress);
-
-    if (c == null || t == null) return;
-
-    await LocationHelper.navigateToGoogleMap(targetLat: t.latitude, targetLong: t.longitude, originLat: c.latitude, originLong: c.longitude);
-
-    if (mounted) Navigator.pop(context);
-  }
-
   @override
   void dispose() {
     _scrollController.dispose();
@@ -125,10 +109,9 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
         : null,
   );
 
-  Widget _buildAppBar() => SliverAppBar(
-    floating: true,
-    pinned: true,
-    snap: false,
+  Widget _buildAppBar() => CustomAppBar(
+    avatarImage: _company.aboutUs.companyLogo,
+    backgroundImage: _company.categories.isNotEmpty ? _company.categories.first.categoryImage : "",
     actions: [
       Obx(() {
         if (_memberController.members.isEmpty) return const SizedBox.shrink();
@@ -136,33 +119,14 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
         return IconButton(onPressed: () => _shareContent(context), icon: Icon(Icons.share_rounded));
       }),
     ],
-    bottom: _buildAppBarBottom(),
-    flexibleSpace: FlexibleSpaceBar(
-      background: CustomBackgroundImage(backgroundImage: _company.categories.isNotEmpty ? _company.categories.first.categoryImage : ""),
-    ),
-  );
-
-  PreferredSize _buildAppBarBottom() => PreferredSize(
-    preferredSize: Size.fromHeight(kProfileImgSizeM + ResponsiveHelper.getSpacing(context, 32.0)),
-    child: Padding(
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-      child: SafeArea(
-        child: Row(
-          spacing: ResponsiveHelper.getSpacing(context, 16.0),
-          children: <Widget>[
-            CustomAvatarImage(size: kProfileImgSizeM, networkImage: _company.aboutUs.companyLogo),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CustomText(_company.companyName, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
-                  CustomText(_company.companyNumber, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
-                ],
-              ),
-            ),
-          ],
-        ),
+    child: Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          CustomText(_company.companyName, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
+          CustomText(_company.companyNumber, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+        ],
       ),
     ),
   );
@@ -188,12 +152,10 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                       label: member.isMember ? "my_points".tr : "earn_points".tr,
                       content: member.isMember ? member.point.toString() : null,
                       onTap: member.isMember
-                          ? () async {
-                              await Get.toNamed(
-                                AppRoutes.payment,
-                                arguments: {"benefit_type": BenefitType.point, "scan_type": ScanType.barcode, "company_id": _company.companyID},
-                              );
-                            }
+                          ? () => Get.toNamed(
+                              AppRoutes.payment,
+                              arguments: {"benefit_type": BenefitType.point, "scan_type": ScanType.barcode, "company_id": _company.companyID},
+                            )
                           : null,
                     ),
                   ),
@@ -203,9 +165,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                       label: member.isMember ? "my_vouchers".tr : "collect_vouchers".tr,
                       content: member.isMember ? (member.normalVoucherCount + member.specialVoucherCount).toString() : null,
                       onTap: member.isMember && _hive.memberProfile.value != null
-                          ? () async {
-                              await Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _company.companyID});
-                            }
+                          ? () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _company.companyID})
                           : null,
                     ),
                   ),
@@ -215,19 +175,17 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                       label: member.isMember ? "my_credits".tr : "redeem_by_credits".tr,
                       content: member.isMember ? member.credit.toStringAsFixed(1) : null,
                       onTap: member.isMember
-                          ? () async {
-                              await Get.toNamed(
-                                AppRoutes.payment,
-                                arguments: {"benefit_type": BenefitType.credit, "scan_type": ScanType.barcode, "company_id": _company.companyID},
-                              );
-                            }
+                          ? () => Get.toNamed(
+                              AppRoutes.payment,
+                              arguments: {"benefit_type": BenefitType.credit, "scan_type": ScanType.barcode, "company_id": _company.companyID},
+                            )
                           : null,
                     ),
                   ),
                 ],
               ),
             ),
-            if (!member.isMember) CustomFilledButton(label: "join_now".tr, onTap: () {}),
+            if (!member.isMember && !_company.isExpired) CustomFilledButton(label: "join_now".tr, onTap: () {}),
           ],
         ),
       ),
@@ -235,72 +193,48 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
   });
 
   Widget _buildCompanyInfo() => SliverToBoxAdapter(
-    child: Column(
-      children: <Widget>[
-        Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
-        Material(
-          elevation: 1.0,
-          child: ExpansionTile(
-            childrenPadding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
-            tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-            title: CustomText("about_us".tr, fontSize: 18.0, fontWeight: FontWeight.bold),
-            children: <Widget>[
-              CustomInfoListTile(
-                icon: Icons.category_rounded,
-                title: "categories".tr,
-                subWidget: Padding(
-                  padding: EdgeInsets.only(top: ResponsiveHelper.getSpacing(context, 4.0)),
-                  child: Wrap(
-                    runSpacing: ResponsiveHelper.getSpacing(context, 8.0),
-                    spacing: ResponsiveHelper.getSpacing(context, 8.0),
-                    children: _company.getCategoryTitles().split(", ").map((category) {
-                      return CustomLabelChip(
-                        backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                        foregroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundSize: 12.0,
-                        label: category,
-                      );
-                    }).toList(),
-                  ),
+    child: Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: ResponsiveHelper.getSpacing(context, 5.0)),
+        ),
+      ),
+      child: Material(
+        elevation: 1.0,
+        child: ExpansionTile(
+          childrenPadding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
+          tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+          title: CustomText("about_us".tr, fontSize: 18.0, fontWeight: FontWeight.bold),
+          children: <Widget>[
+            CustomInfoListTile(
+              icon: Icons.category_rounded,
+              title: "categories".tr,
+              subWidget: Padding(
+                padding: EdgeInsets.only(top: ResponsiveHelper.getSpacing(context, 4.0)),
+                child: Wrap(
+                  runSpacing: ResponsiveHelper.getSpacing(context, 8.0),
+                  spacing: ResponsiveHelper.getSpacing(context, 8.0),
+                  children: _company.getCategoryTitles().split(", ").map((category) {
+                    return CustomLabelChip(
+                      backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                      foregroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundSize: 12.0,
+                      label: category,
+                    );
+                  }).toList(),
                 ),
               ),
-              CustomInfoListTile(icon: Icons.account_box_rounded, title: "about_us".tr, subtitle: _company.aboutUs.companyDescription2),
-              CustomInfoListTile(icon: Icons.email_rounded, title: "email".tr, subtitle: _company.companyEmail),
-              CustomInfoListTile(icon: Icons.phone_rounded, title: "phone".tr, subtitle: _company.companyNumber),
-            ],
-          ),
+            ),
+            CustomInfoListTile(icon: Icons.account_box_rounded, title: "about_us".tr, subtitle: _company.aboutUs.companyDescription2),
+            CustomInfoListTile(icon: Icons.email_rounded, title: "email".tr, subtitle: _company.companyEmail),
+            CustomInfoListTile(icon: Icons.phone_rounded, title: "phone".tr, subtitle: _company.companyNumber),
+          ],
         ),
-      ],
+      ),
     ),
   );
 
-  Widget _buildBranchesInfo() => SliverToBoxAdapter(
-    child: Column(
-      children: <Widget>[
-        Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
-        Material(
-          elevation: 1.0,
-          child: ExpansionTile(
-            childrenPadding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
-            tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-            title: CustomText("${"Branches".tr} (${_company.branches.length})", fontSize: 18.0, fontWeight: FontWeight.bold),
-            children: _company.branches.map((branch) {
-              return CustomInfoListTile(
-                trailing: Icons.content_copy_rounded,
-                title: branch.branchName,
-                subtitle: "${branch.fullAddress}\n(${branch.contactNumber})",
-                onTapCopy: () {
-                  Clipboard.setData(ClipboardData(text: branch.fullAddress));
-                  MessageHelper.show("msg_address_copied".tr, icon: Icons.content_copy_rounded);
-                },
-                onTap: () => _redirectGoogleMap(branch.fullAddress),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
-    ),
-  );
+  Widget _buildBranchesInfo() => SliverToBoxAdapter(child: CustomBranchExpansion(company: _company));
 
   Widget _buildTimeline() => Obx(() {
     if (_timelineController.isLoading.value) {
@@ -315,8 +249,12 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
-          Padding(
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: ResponsiveHelper.getSpacing(context, 5.0)),
+              ),
+            ),
             padding: EdgeInsets.only(
               left: ResponsiveHelper.getSpacing(context, 16.0),
               right: ResponsiveHelper.getSpacing(context, 16.0),

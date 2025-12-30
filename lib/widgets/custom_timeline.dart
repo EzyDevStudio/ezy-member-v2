@@ -45,7 +45,7 @@ class CustomTimeline extends StatelessWidget {
           child: CustomText(timeline.timelineCaption, fontSize: 16.0, maxLines: null),
         ),
         GestureDetector(
-          onTap: () async => await Get.toNamed(AppRoutes.mediaViewer, arguments: {"media_url": timeline.timelineImage}),
+          onTap: () => Get.toNamed(AppRoutes.mediaViewer, arguments: {"media_url": timeline.timelineImage}),
           child: Image.network(timeline.timelineImage, fit: BoxFit.cover, height: kTimelineHeight, width: double.infinity),
         ),
       ],

@@ -1,9 +1,13 @@
 import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
+import 'package:ezy_member_v2/helpers/location_helper.dart';
+import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/models/company_model.dart';
 import 'package:ezy_member_v2/models/history_model.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class CustomHistoryListTile extends StatelessWidget {
@@ -90,6 +94,41 @@ class CustomInfoListTile extends StatelessWidget {
             )
           : null,
       onTap: onTap,
+    ),
+  );
+}
+
+class CustomBranchExpansion extends StatelessWidget {
+  final CompanyModel company;
+
+  const CustomBranchExpansion({super.key, required this.company});
+
+  @override
+  Widget build(BuildContext context) => Container(
+    decoration: BoxDecoration(
+      border: Border(
+        top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: ResponsiveHelper.getSpacing(context, 5.0)),
+      ),
+    ),
+    child: Material(
+      elevation: 1.0,
+      child: ExpansionTile(
+        childrenPadding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
+        tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+        title: CustomText("${"Branches".tr} (${company.branches.length})", fontSize: 18.0, fontWeight: FontWeight.bold),
+        children: company.branches.map((branch) {
+          return CustomInfoListTile(
+            trailing: Icons.content_copy_rounded,
+            title: branch.branchName,
+            subtitle: "${branch.fullAddress}\n(${branch.contactNumber})",
+            onTapCopy: () {
+              Clipboard.setData(ClipboardData(text: branch.fullAddress));
+              MessageHelper.show("msg_address_copied".tr, icon: Icons.content_copy_rounded);
+            },
+            onTap: () => LocationHelper.redirectGoogleMap(branch.fullAddress),
+          );
+        }).toList(),
+      ),
     ),
   );
 }

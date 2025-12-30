@@ -15,10 +15,10 @@ class HistoryController extends GetxController {
   var vouchers = <VoucherModel>[].obs;
   var histories = <HistoryModel>[].obs;
 
-  Future<void> loadHistories(String memberCode) async {
+  Future<void> loadHistories(String memberCode, {String? companyID}) async {
     isLoading.value = true;
 
-    final Map<String, dynamic> data = {"member_code": memberCode};
+    final Map<String, dynamic> data = {"member_code": memberCode, "company_id": companyID};
     final response = await _api.get(endPoint: "get-all-history", module: "HistoryController - loadHistories", data: data);
 
     if (response == null) {

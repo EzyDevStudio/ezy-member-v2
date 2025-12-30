@@ -1,24 +1,15 @@
 import 'dart:developer';
 import 'dart:math' hide log;
 
+import 'package:ezy_member_v2/helpers/message_helper.dart';
+import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LocationHelper {
-  static List<Coordinate> filterByCoordinate({
-    required double originLat,
-    required double originLong,
-    required List<Coordinate> coordinates,
-    required double radiusKm,
-  }) {
-    return coordinates.where((coordinate) {
-      double distance = calculateDistance(originLat, originLong, coordinate.latitude, coordinate.longitude);
-      return distance <= radiusKm;
-    }).toList();
-  }
-
-  static double calculateDistance(double originLat, double originLong, double targetLat, targetLong) {
+  static double _calculateDistance(double originLat, double originLong, double targetLat, targetLong) {
     const double earthRadius = 6371.00; // in terms of km
     double diffLat = _degreesToRadians(targetLat - originLat);
     double diffLong = _degreesToRadians(targetLong - originLong);
@@ -33,6 +24,34 @@ class LocationHelper {
   }
 
   static double _degreesToRadians(double degrees) => degrees * pi / 180;
+
+  static Future<bool> _navigateToGoogleMap({required double targetLat, required double targetLong, double? originLat, double? originLong}) async {
+    String? url;
+
+    if (originLat != null && originLong != null) {
+      url = "https://www.google.com/maps/dir/?api=1&origin=$originLat,$originLong&destination=$targetLat,$targetLong&travelmode=driving";
+    } else {
+      url = "https://www.google.com/maps/dir/?api=1&destination=$targetLat,$targetLong&travelmode=driving";
+    }
+
+    final Uri uri = Uri.parse(url);
+
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) return false;
+
+    return true;
+  }
+
+  static List<Coordinate> filterByCoordinate({
+    required double originLat,
+    required double originLong,
+    required List<Coordinate> coordinates,
+    required double radiusKm,
+  }) {
+    return coordinates.where((coordinate) {
+      double distance = _calculateDistance(originLat, originLong, coordinate.latitude, coordinate.longitude);
+      return distance <= radiusKm;
+    }).toList();
+  }
 
   static Future<Coordinate?> getCoordinate(String address) async {
     try {
@@ -66,20 +85,17 @@ class LocationHelper {
     }
   }
 
-  static Future<bool> navigateToGoogleMap({required double targetLat, required double targetLong, double? originLat, double? originLong}) async {
-    String? url;
+  static Future<void> redirectGoogleMap(String fullAddress) async {
+    MessageHelper.showDialog(type: DialogType.loading, title: "redirecting".tr, message: "msg_google_maps_redirecting".tr);
 
-    if (originLat != null && originLong != null) {
-      url = "https://www.google.com/maps/dir/?api=1&origin=$originLat,$originLong&destination=$targetLat,$targetLong&travelmode=driving";
-    } else {
-      url = "https://www.google.com/maps/dir/?api=1&destination=$targetLat,$targetLong&travelmode=driving";
-    }
+    Coordinate? c = await LocationHelper.getCurrentCoordinate();
+    Coordinate? t = await LocationHelper.getCoordinate(fullAddress);
 
-    final Uri uri = Uri.parse(url);
+    if (c == null || t == null) return;
 
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) return false;
+    await LocationHelper._navigateToGoogleMap(targetLat: t.latitude, targetLong: t.longitude, originLat: c.latitude, originLong: c.longitude);
 
-    return true;
+    if (Get.isDialogOpen == true) Navigator.of(Get.overlayContext!).pop();
   }
 }
 

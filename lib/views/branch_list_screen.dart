@@ -100,7 +100,7 @@ class _BranchListScreenState extends State<BranchListScreen> {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
                   child: GestureDetector(
-                    onTap: () async => await Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": displayBranches[index].companyID}),
+                    onTap: () => Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": displayBranches[index].companyID}),
                     child: CustomShopCard(branch: displayBranches[index]),
                   ),
                 ),

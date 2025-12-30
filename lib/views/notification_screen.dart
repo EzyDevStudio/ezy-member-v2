@@ -77,7 +77,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ? CustomVoucher(
                           voucher: voucher,
                           type: VoucherType.normal,
-                          onTap: () async => await Get.toNamed(
+                          onTap: () => Get.toNamed(
                             AppRoutes.payment,
                             arguments: {
                               "benefit_type": BenefitType.voucher,

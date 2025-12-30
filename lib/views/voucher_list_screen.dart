@@ -111,7 +111,7 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
                   child: CustomVoucher(
                     voucher: displayVouchers[index],
                     type: VoucherType.normal,
-                    onTap: () async => await Get.toNamed(
+                    onTap: () => Get.toNamed(
                       AppRoutes.payment,
                       arguments: {
                         "benefit_type": BenefitType.voucher,

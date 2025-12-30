@@ -3,7 +3,6 @@ import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class CustomFilledButton extends StatelessWidget {
   final Color? backgroundColor;
@@ -74,9 +73,10 @@ class CustomImageTextButton extends StatelessWidget {
 }
 
 class CustomSegmentedButton extends StatefulWidget {
+  final String firstLabel, secondLabel;
   final Function(ScanType) onSelectionChanged;
 
-  const CustomSegmentedButton({super.key, required this.onSelectionChanged});
+  const CustomSegmentedButton({super.key, required this.firstLabel, required this.secondLabel, required this.onSelectionChanged});
 
   @override
   State<CustomSegmentedButton> createState() => _CustomSegmentedButtonState();
@@ -102,7 +102,10 @@ class _CustomSegmentedButtonState extends State<CustomSegmentedButton> {
       margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
       padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 4.0)),
       child: Row(
-        children: <Widget>[_buildSegmentedButton(context, ScanType.barcode, "earn".tr), _buildSegmentedButton(context, ScanType.qrCode, "redeem".tr)],
+        children: <Widget>[
+          _buildSegmentedButton(context, ScanType.barcode, widget.firstLabel),
+          _buildSegmentedButton(context, ScanType.qrCode, widget.secondLabel),
+        ],
       ),
     ),
   );

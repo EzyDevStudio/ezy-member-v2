@@ -12,7 +12,6 @@ import 'package:ezy_member_v2/controllers/timeline_controller.dart';
 import 'package:ezy_member_v2/controllers/voucher_controller.dart';
 import 'package:ezy_member_v2/helpers/permission_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
-import 'package:ezy_member_v2/models/branch_model.dart';
 import 'package:ezy_member_v2/services/local/notification_service.dart';
 import 'package:ezy_member_v2/translations/translations.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
@@ -104,6 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (result == true) {
       _hive.signOut();
+      _memberController.members.clear();
     }
   }
 
@@ -251,21 +251,17 @@ class _HomeScreenState extends State<HomeScreen> {
               count: _voucherController.redeemedCount.value,
               assetName: "assets/icons/my_vouchers.png",
               label: "my_vouchers".tr,
-              onTap: () async => await Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
+              onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
             ),
             CustomImageTextButton(
               isCountVisible: true,
               count: _memberController.members.length,
               assetName: "assets/icons/my_members.png",
               label: "my_cards".tr,
-              onTap: () async => await Get.toNamed(AppRoutes.memberList),
+              onTap: () => Get.toNamed(AppRoutes.memberList),
             ),
-            CustomImageTextButton(
-              assetName: "assets/icons/history.png",
-              label: "history".tr,
-              onTap: () async => await Get.toNamed(AppRoutes.history),
-            ),
-            CustomImageTextButton(assetName: "assets/icons/referral_program.png", label: "referral_program".tr, onTap: () {}),
+            CustomImageTextButton(assetName: "assets/icons/history.png", label: "history".tr, onTap: () => Get.toNamed(AppRoutes.history)),
+            // CustomImageTextButton(assetName: "assets/icons/referral_program.png", label: "referral_program".tr, onTap: () {}),
             CustomImageTextButton(assetName: "assets/icons/invoice.png", label: "e_invoice".tr, onTap: () {}),
           ],
         ),
@@ -363,7 +359,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 Expanded(child: CustomText("shops_nearby".tr, fontSize: 16.0, fontWeight: FontWeight.w600)),
                 GestureDetector(
-                  onTap: () async => await Get.toNamed(AppRoutes.branchList),
+                  onTap: () => Get.toNamed(AppRoutes.branchList),
                   child: CustomText("view_all".tr, color: Colors.blue, fontSize: 14.0, fontWeight: FontWeight.bold),
                 ),
               ],
@@ -399,8 +395,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     right: index == _branchController.branches.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
                   ),
                   child: GestureDetector(
-                    onTap: () async =>
-                        await Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": _branchController.branches[index].companyID}),
+                    onTap: () => Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": _branchController.branches[index].companyID}),
                     child: CustomNearbyCard(branch: _branchController.branches[index], members: _memberController.members),
                   ),
                 ),
@@ -416,25 +411,20 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_branchController.branches.isEmpty || _timelineController.timelines.isEmpty) return SliverToBoxAdapter();
 
     return SliverToBoxAdapter(
-      child: Column(
-        children: <Widget>[
-          Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
-          ListView.separated(
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            itemCount: _timelineController.timelines.length,
-            physics: NeverScrollableScrollPhysics(),
-            separatorBuilder: (_, _) => Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
-            itemBuilder: (context, index) {
-              BranchModel branch = _branchController.branches.firstWhere(
-                (b) => b.companyID == _timelineController.timelines[index].companyID,
-                orElse: () => BranchModel.empty(),
-              );
-
-              return CustomTimeline(timeline: _timelineController.timelines[index]);
-            },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: ResponsiveHelper.getSpacing(context, 5.0)),
           ),
-        ],
+        ),
+        child: ListView.separated(
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          itemCount: _timelineController.timelines.length,
+          physics: NeverScrollableScrollPhysics(),
+          separatorBuilder: (_, _) => Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
+          itemBuilder: (context, index) => CustomTimeline(timeline: _timelineController.timelines[index]),
+        ),
       ),
     );
   });

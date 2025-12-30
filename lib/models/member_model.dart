@@ -42,7 +42,7 @@ class MemberModel {
   factory MemberModel.fromJson(Map<String, dynamic> data) => MemberModel(
     companyID: data[fieldCompanyID] ?? "",
     isMember: data[fieldIsMember] ?? false,
-    isExpired: data[fieldIsExpired] ?? false,
+    isExpired: data[fieldIsExpired] ?? true,
     credit: (data[fieldCredit] ?? 0).toDouble(),
     point: data[fieldPoint] ?? 0,
     referralCode: data[fieldReferralCode] ?? "",

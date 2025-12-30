@@ -126,6 +126,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
       if (_benefit != BenefitType.voucher)
         CustomSegmentedButton(
+          firstLabel: _benefit == BenefitType.point ? "earn".tr : "top_up".tr,
+          secondLabel: "redeem".tr,
           onSelectionChanged: (ScanType selectedScanType) {
             setState(() => _scan = selectedScanType);
             if (_scan == ScanType.qrCode) _onRefresh();

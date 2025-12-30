@@ -10,6 +10,7 @@ const String fieldBranchQuantity = "branch_quantity";
 const String fieldCounterQuantity = "counter_quantity";
 const String fieldAccessKey = "access_key";
 const String fieldExpiredDate = "expired_date";
+const String fieldIsExpired = "is_expired";
 const String fieldCompanyKey = "company_key";
 const String fieldCompanyEmail = "company_email";
 const String fieldCompanyNumber = "contact_number";
@@ -25,6 +26,7 @@ class CompanyModel {
   final String branchQuantity;
   final String counterQuantity;
   final int expiredDate;
+  final bool isExpired;
   final String companyKey;
   final String companyEmail;
   final String companyNumber;
@@ -41,6 +43,7 @@ class CompanyModel {
     this.branchQuantity = "",
     this.counterQuantity = "",
     this.expiredDate = 0,
+    this.isExpired = true,
     this.companyKey = "",
     this.companyEmail = "",
     this.companyNumber = "",
@@ -60,6 +63,7 @@ class CompanyModel {
     branchQuantity: data[fieldBranchQuantity] ?? "",
     counterQuantity: data[fieldCounterQuantity] ?? "",
     expiredDate: data[fieldExpiredDate] != null ? DateTime.tryParse(data[fieldExpiredDate])?.millisecondsSinceEpoch ?? 0 : 0,
+    isExpired: data[fieldIsExpired] ?? true,
     companyKey: data[fieldCompanyKey] ?? "",
     companyEmail: data[fieldCompanyEmail] ?? "",
     companyNumber: data[fieldCompanyNumber] ?? "",
@@ -79,7 +83,7 @@ class CompanyModel {
 
   @override
   String toString() =>
-      "CompanyModel(id: $id, companyID: $companyID, companyName: $companyName, databaseName: $databaseName, branchQuantity: $branchQuantity, counterQuantity: $counterQuantity, expiredDate: $expiredDate, companyKey: $companyKey, companyEmail: $companyEmail, companyNumber: $companyNumber, companyNumber2: $companyNumber2"
+      "CompanyModel(id: $id, companyID: $companyID, companyName: $companyName, databaseName: $databaseName, branchQuantity: $branchQuantity, counterQuantity: $counterQuantity, expiredDate: $expiredDate, isExpired: $isExpired, companyKey: $companyKey, companyEmail: $companyEmail, companyNumber: $companyNumber, companyNumber2: $companyNumber2"
       "\naboutUs: ${aboutUs.toString()}"
       "\nbranches: ${branches.toString()}"
       "\ncategories: ${categories.toString()})\n";
