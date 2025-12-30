@@ -9,11 +9,16 @@ class MemberController extends GetxController {
   var isLoading = false.obs;
   var members = <MemberModel>[].obs;
 
-  Future<void> loadMembers(String memberCode, {bool getBranch = false}) async {
+  Future<void> loadMembers(String memberCode, {bool getBranch = false, String? companyID}) async {
     isLoading.value = true;
 
     final Coordinate? c = getBranch ? await LocationHelper.getCurrentCoordinate() : null;
-    final Map<String, dynamic> data = {"member_code": memberCode, if (c != null) "latitude": c.latitude, if (c != null) "longitude": c.longitude};
+    final Map<String, dynamic> data = {
+      "member_code": memberCode,
+      if (c != null) "latitude": c.latitude,
+      if (c != null) "longitude": c.longitude,
+      if (companyID != null) "company_id": companyID,
+    };
     final response = await _api.get(endPoint: "get-member-detail", module: "MemberController - loadMembers", data: data);
 
     if (response == null || response.data[MemberModel.keyMember] == null) {

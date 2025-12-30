@@ -6,6 +6,8 @@ const String fieldArea = "area";
 const String fieldVisibility = "visibility";
 const String fieldCompanyID = "company_id";
 const String fieldCreatedAt = "created_at";
+const String fieldCompanyName = "company_name";
+const String fieldCompanyLogo = "company_logo";
 
 class TimelineModel {
   static const String keyTimeline = "timelines";
@@ -18,6 +20,8 @@ class TimelineModel {
   final int visibility;
   final String companyID;
   final int createdAt;
+  final String companyName;
+  final String companyLogo;
 
   TimelineModel({
     this.id = 0,
@@ -28,6 +32,8 @@ class TimelineModel {
     this.visibility = 0,
     this.companyID = "",
     this.createdAt = 0,
+    this.companyName = "",
+    this.companyLogo = "",
   });
 
   TimelineModel.empty() : this();
@@ -41,9 +47,11 @@ class TimelineModel {
     visibility: data[fieldVisibility] ?? 0,
     companyID: data[fieldCompanyID] ?? "",
     createdAt: data[fieldCreatedAt] != null ? DateTime.tryParse(data[fieldCreatedAt])?.millisecondsSinceEpoch ?? 0 : 0,
+    companyName: data[fieldCompanyName] ?? "",
+    companyLogo: data[fieldCompanyLogo] ?? "",
   );
 
   @override
   String toString() =>
-      "TimelineModel(id: $id, timelineID: $timelineID, timelineCaption: $timelineCaption, timelineImage: $timelineImage, area: $area, visibility: $visibility, companyID: $companyID, createdAt: $createdAt)\n";
+      "TimelineModel(id: $id, timelineID: $timelineID, timelineCaption: $timelineCaption, timelineImage: $timelineImage, area: $area, visibility: $visibility, companyID: $companyID, createdAt: $createdAt, companyName: $companyName, companyLogo: $companyLogo)\n";
 }

@@ -38,9 +38,9 @@ class CustomMemberCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    CustomText(member.branch.subCompany.companyName, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                    CustomText(member.branch.companyName, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
                     const Spacer(),
-                    CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context) * 1.2, networkImage: member.branch.aboutUs.companyLogo),
+                    CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context) * 1.2, networkImage: member.branch.companyLogo),
                     const Spacer(),
                     CustomText(member.memberCard.memberCardNumber, color: Colors.white, fontSize: 22.0),
                     const Spacer(),
@@ -85,7 +85,7 @@ class CustomNearbyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final member = members.firstWhere((m) => m.companyID == branch.company.companyID, orElse: () => MemberModel.empty());
+      final member = members.firstWhere((m) => m.companyID == branch.companyID, orElse: () => MemberModel.empty());
 
       return InkWell(
         child: AspectRatio(
@@ -106,7 +106,7 @@ class CustomNearbyCard extends StatelessWidget {
                         borderRadius: BorderRadius.vertical(top: Radius.circular(kBorderRadiusM)),
                         child: SizedBox.expand(
                           child: Image.network(
-                            branch.aboutUs.companyLogo,
+                            branch.companyLogo,
                             fit: BoxFit.cover,
                             errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
                               return Center(
@@ -180,7 +180,7 @@ class CustomNearbyCard extends StatelessWidget {
                     children: <Widget>[
                       CustomText(branch.branchName, fontSize: 16.0, fontWeight: FontWeight.w700),
                       CustomText(branch.fullAddress, fontSize: 14.0),
-                      CustomText(branch.company.getCategoryTitles(), color: Colors.black54, fontSize: 12.0),
+                      CustomText(branch.categories, color: Colors.black54, fontSize: 12.0),
                     ],
                   ),
                 ),
@@ -472,7 +472,7 @@ class CustomShopCard extends StatelessWidget {
             Row(
               spacing: ResponsiveHelper.getSpacing(context, 16.0),
               children: <Widget>[
-                CustomAvatarImage(size: kProfileImgSizeM, networkImage: branch.aboutUs.companyLogo),
+                CustomAvatarImage(size: kProfileImgSizeM, networkImage: branch.companyLogo),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -488,9 +488,9 @@ class CustomShopCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: ResponsiveHelper.getSpacing(context, 4.0),
               children: <Widget>[
-                CustomText(branch.subCompany.companyName, fontSize: 14.0, maxLines: 2, fontWeight: FontWeight.bold),
+                CustomText(branch.companyName, fontSize: 14.0, maxLines: 2, fontWeight: FontWeight.bold),
                 CustomText(branch.fullAddress, fontSize: 13.0, maxLines: 2),
-                CustomText(branch.company.getCategoryTitles(), color: Colors.black54, fontSize: 12.0, maxLines: 2),
+                CustomText(branch.categories, color: Colors.black54, fontSize: 12.0, maxLines: 2),
               ],
             ),
           ],

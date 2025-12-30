@@ -41,10 +41,9 @@ class _BranchListScreenState extends State<BranchListScreen> {
           .where(
             (branch) =>
                 branch.branchName.toLowerCase().contains(query) ||
-                branch.aboutUs.companyDescription.toLowerCase().contains(query) ||
-                branch.company.companyName.toLowerCase().contains(query) ||
-                branch.company.getCategoryTitles().toLowerCase().contains(query) ||
-                branch.subCompany.companyName.toLowerCase().contains(query),
+                branch.companyName.toLowerCase().contains(query) ||
+                branch.fullAddress.toLowerCase().contains(query) ||
+                branch.categories.toLowerCase().contains(query),
           )
           .toList(),
     );
@@ -79,6 +78,7 @@ class _BranchListScreenState extends State<BranchListScreen> {
     }
 
     final displayBranches = _searchController.text.isEmpty ? _branchController.branches : _filteredBranches;
+    displayBranches.sort((a, b) => a.branchName.compareTo(b.branchName));
 
     return Column(
       children: <Widget>[
@@ -100,7 +100,7 @@ class _BranchListScreenState extends State<BranchListScreen> {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
                   child: GestureDetector(
-                    onTap: () async => await Get.toNamed(AppRoutes.branchDetail, arguments: {"branch": displayBranches[index]}),
+                    onTap: () async => await Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": displayBranches[index].companyID}),
                     child: CustomShopCard(branch: displayBranches[index]),
                   ),
                 ),

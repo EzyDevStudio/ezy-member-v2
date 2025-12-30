@@ -10,11 +10,9 @@ import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/promotion_controller.dart';
 import 'package:ezy_member_v2/controllers/timeline_controller.dart';
 import 'package:ezy_member_v2/controllers/voucher_controller.dart';
-import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/permission_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/branch_model.dart';
-import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/local/notification_service.dart';
 import 'package:ezy_member_v2/translations/translations.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
@@ -401,7 +399,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     right: index == _branchController.branches.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
                   ),
                   child: GestureDetector(
-                    onTap: () async => await Get.toNamed(AppRoutes.branchDetail, arguments: {"branch": _branchController.branches[index]}),
+                    onTap: () async =>
+                        await Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": _branchController.branches[index].companyID}),
                     child: CustomNearbyCard(branch: _branchController.branches[index], members: _memberController.members),
                   ),
                 ),
@@ -416,8 +415,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildTimeline() => Obx(() {
     if (_branchController.branches.isEmpty || _timelineController.timelines.isEmpty) return SliverToBoxAdapter();
 
-    final timelines = List.from(_timelineController.timelines)..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
     return SliverToBoxAdapter(
       child: Column(
         children: <Widget>[
@@ -425,16 +422,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ListView.separated(
             shrinkWrap: true,
             padding: EdgeInsets.zero,
-            itemCount: timelines.length,
+            itemCount: _timelineController.timelines.length,
             physics: NeverScrollableScrollPhysics(),
             separatorBuilder: (_, _) => Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
             itemBuilder: (context, index) {
               BranchModel branch = _branchController.branches.firstWhere(
-                (b) => b.company.companyID == timelines[index].companyID,
+                (b) => b.companyID == _timelineController.timelines[index].companyID,
                 orElse: () => BranchModel.empty(),
               );
 
-              return CustomTimeline(branch: branch, timeline: timelines[index]);
+              return CustomTimeline(timeline: _timelineController.timelines[index]);
             },
           ),
         ],

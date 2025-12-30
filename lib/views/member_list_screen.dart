@@ -40,7 +40,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
 
     setState(
       () =>
-          _filteredMembers = _memberController.members.where((member) => member.branch.subCompany.companyName.toLowerCase().contains(query)).toList(),
+          _filteredMembers = _memberController.members.where((member) => member.branch.companyName.toLowerCase().contains(query)).toList(),
     );
   }
 
@@ -104,7 +104,8 @@ class _MemberListScreenState extends State<MemberListScreen> {
                   constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.7),
                   child: CustomMemberCard(
                     member: displayMembers[index],
-                    onTap: () async => await Get.toNamed(AppRoutes.branchDetail, arguments: {"branch": displayMembers[index].branch}),
+                    onTap: () async => await Get.toNamed(AppRoutes.companyDetail, arguments: {"branch": displayMembers[index].branch}),
+                    // Card Image, Card Name, Card Number, Validity, Available Branch, Point, Credit, Voucher, Referral Code, History
                   ),
                 ),
               ),

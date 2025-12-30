@@ -1,7 +1,3 @@
-import 'package:ezy_member_v2/models/about_us_model.dart';
-import 'package:ezy_member_v2/models/company_model.dart';
-import 'package:ezy_member_v2/models/sub_company_model.dart';
-
 const String fieldID = "id";
 const String fieldBranchCode = "branch_code";
 const String fieldBranchName = "branch_name";
@@ -20,6 +16,9 @@ const String fieldLatitude = "latitude";
 const String fieldLongitude = "longitude";
 const String fieldDistanceKm = "distance_km";
 const String fieldCompanyID = "company_id";
+const String fieldCompanyName = "company_name";
+const String fieldCompanyLogo = "company_logo";
+const String fieldCategories = "categories";
 
 class BranchModel {
   static const String keyBranch = "branches";
@@ -41,9 +40,10 @@ class BranchModel {
   final double? latitude;
   final double? longitude;
   final double? distanceKm;
-  final AboutUsModel aboutUs;
-  final CompanyModel company;
-  final SubCompanyModel subCompany;
+  final String companyID;
+  final String companyName;
+  final String companyLogo;
+  final String categories;
 
   BranchModel({
     this.id = 0,
@@ -63,12 +63,11 @@ class BranchModel {
     this.latitude,
     this.longitude,
     this.distanceKm,
-    AboutUsModel? aboutUs,
-    CompanyModel? company,
-    SubCompanyModel? subCompany,
-  }) : aboutUs = aboutUs ?? AboutUsModel.empty(),
-       company = company ?? CompanyModel.empty(),
-       subCompany = subCompany ?? SubCompanyModel.empty();
+    this.companyID = "",
+    this.companyName = "",
+    this.companyLogo = "",
+    this.categories = "",
+  });
 
   BranchModel.empty() : this();
 
@@ -90,23 +89,15 @@ class BranchModel {
     latitude: data[fieldLatitude] != null ? double.tryParse(data[fieldLatitude].toString()) : null,
     longitude: data[fieldLongitude] != null ? double.tryParse(data[fieldLongitude].toString()) : null,
     distanceKm: data[fieldDistanceKm] != null ? double.tryParse(data[fieldDistanceKm].toString()) : null,
-    aboutUs: data[AboutUsModel.keyAboutUs] != null
-        ? AboutUsModel.fromJson(Map<String, dynamic>.from(data[AboutUsModel.keyAboutUs]))
-        : AboutUsModel.empty(),
-    company: data[CompanyModel.keyCompany] != null
-        ? CompanyModel.fromJson(Map<String, dynamic>.from(data[CompanyModel.keyCompany]))
-        : CompanyModel.empty(),
-    subCompany: data[SubCompanyModel.keySubCompanies] != null
-        ? SubCompanyModel.fromJson(Map<String, dynamic>.from(data[SubCompanyModel.keySubCompanies]))
-        : SubCompanyModel.empty(),
+    companyID: data[fieldCompanyID] ?? "",
+    companyName: data[fieldCompanyName] ?? "",
+    companyLogo: data[fieldCompanyLogo] ?? "",
+    categories: data[fieldCategories] ?? "",
   );
 
   String get fullAddress => [address1, address2, address3, address4, postcode, city, state].where((e) => e.isNotEmpty).join(", ");
 
   @override
   String toString() =>
-      "BranchModel(id: $id, branchCode: $branchCode, branchName: $branchName, branchDescription: $branchDescription, contactNumber: $contactNumber, contactNumber2: $contactNumber2, companyKey: $companyKey, address1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, latitude: $latitude, longitude: $longitude, distanceKm: $distanceKm"
-      "\naboutUs: ${aboutUs.toString()}"
-      "\ncompany: ${company.toString()}"
-      "\nsubCompany: ${subCompany.toString()})\n";
+      "BranchModel(id: $id, branchCode: $branchCode, branchName: $branchName, branchDescription: $branchDescription, contactNumber: $contactNumber, contactNumber2: $contactNumber2, companyKey: $companyKey, address1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, latitude: $latitude, longitude: $longitude, distanceKm: $distanceKm, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo, categories: $categories)\n";
 }
