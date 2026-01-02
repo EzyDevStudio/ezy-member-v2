@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_routes.dart';
+import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/controllers/advertisement_controller.dart';
 import 'package:ezy_member_v2/controllers/branch_controller.dart';
 import 'package:ezy_member_v2/controllers/settings_controller.dart';
@@ -23,6 +24,7 @@ import 'package:ezy_member_v2/widgets/custom_timeline.dart';
 import 'package:ezy_member_v2/widgets/custom_voucher.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qr_bar_code/code/code.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -117,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    backgroundColor: Theme.of(context).colorScheme.surface,
     body: Obx(
       () => RefreshIndicator(
         onRefresh: _onRefresh,
@@ -132,12 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     ),
-    floatingActionButton: _showFab
-        ? FloatingActionButton(
-            onPressed: () => _scrollController.animateTo(0.0, duration: const Duration(milliseconds: 400), curve: Curves.easeOut),
-            child: const Icon(Icons.keyboard_arrow_up_rounded),
-          )
-        : null,
+    floatingActionButton: _showFab ? _buildFAB() : null,
   );
 
   Widget _buildAppBar() => SliverAppBar(
@@ -235,36 +233,64 @@ class _HomeScreenState extends State<HomeScreen> {
     () => SliverToBoxAdapter(
       child: Container(
         color: Colors.white,
-        child: GridView(
-          shrinkWrap: true,
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0), vertical: ResponsiveHelper.getSpacing(context, 24.0)),
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisSpacing: ResponsiveHelper.getSpacing(context, 16.0),
-            mainAxisExtent: ResponsiveHelper.getQuickAccessHeight(context),
-            mainAxisSpacing: ResponsiveHelper.getSpacing(context, 16.0),
-            crossAxisCount: ResponsiveHelper.getQuickAccessCount(context),
-          ),
+        child: Column(
           children: <Widget>[
-            CustomImageTextButton(
-              isCountVisible: true,
-              count: _voucherController.redeemedCount.value,
-              assetName: "assets/icons/my_vouchers.png",
-              label: "my_vouchers".tr,
-              onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
+            GridView(
+              shrinkWrap: true,
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.getSpacing(context, 16.0),
+                vertical: ResponsiveHelper.getSpacing(context, 24.0),
+              ),
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisSpacing: ResponsiveHelper.getSpacing(context, 16.0),
+                mainAxisExtent: ResponsiveHelper.getQuickAccessHeight(context),
+                mainAxisSpacing: ResponsiveHelper.getSpacing(context, 16.0),
+                crossAxisCount: ResponsiveHelper.getQuickAccessCount(context),
+              ),
+              children: <Widget>[
+                CustomImageTextButton(
+                  isCountVisible: true,
+                  count: _voucherController.redeemedCount.value,
+                  assetName: "assets/icons/my_vouchers.png",
+                  label: "my_vouchers".tr,
+                  onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
+                ),
+                CustomImageTextButton(
+                  isCountVisible: true,
+                  count: _memberController.members.length,
+                  assetName: "assets/icons/my_members.png",
+                  label: "my_cards".tr,
+                  onTap: () => Get.toNamed(AppRoutes.memberList),
+                ),
+                CustomImageTextButton(
+                  assetName: "assets/icons/invoice.png",
+                  label: "e_invoice".tr,
+                  onTap: () {
+                    Get.toNamed(AppRoutes.mediaViewer, arguments: {"media_url": _hive.personalInvoice});
+                    // show new invoice page with two tab
+                  },
+                ),
+              ],
             ),
-            CustomImageTextButton(
-              isCountVisible: true,
-              count: _memberController.members.length,
-              assetName: "assets/icons/my_members.png",
-              label: "my_cards".tr,
-              onTap: () => Get.toNamed(AppRoutes.memberList),
-            ),
-            CustomImageTextButton(assetName: "assets/icons/history.png", label: "history".tr, onTap: () => Get.toNamed(AppRoutes.history)),
-            // CustomImageTextButton(assetName: "assets/icons/referral_program.png", label: "referral_program".tr, onTap: () {}),
-            CustomImageTextButton(assetName: "assets/icons/invoice.png", label: "e_invoice".tr, onTap: () {}),
+            _buildBarcode(),
           ],
         ),
+      ),
+    ),
+  );
+
+  Widget _buildBarcode() => InkWell(
+    onTap: () => Get.toNamed(AppRoutes.scan),
+    child: Padding(
+      padding: EdgeInsets.only(
+        bottom: ResponsiveHelper.getSpacing(context, 24.0),
+        left: ResponsiveHelper.getSpacing(context, 16.0),
+        right: ResponsiveHelper.getSpacing(context, 16.0),
+      ),
+      child: AspectRatio(
+        aspectRatio: 4 / 1,
+        child: Code(drawText: false, codeType: CodeType.code39(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
       ),
     ),
   );
@@ -428,6 +454,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   });
+
+  Widget _buildFAB() => FloatingActionButton(
+    onPressed: () => _scrollController.animateTo(0.0, duration: const Duration(milliseconds: 400), curve: Curves.easeOut),
+    child: Icon(Icons.keyboard_arrow_up_rounded),
+  );
 
   List<Widget> _buildPromotions() => [
     Obx(() {

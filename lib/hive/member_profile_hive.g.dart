@@ -21,13 +21,15 @@ class MemberProfileHiveAdapter extends TypeAdapter<MemberProfileHive> {
       token: fields[3] as String,
       image: fields[4] as String,
       backgroundImage: fields[5] as String,
+      personalInvoice: fields[6] as String,
+      workingInvoice: fields[7] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, MemberProfileHive obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -39,7 +41,11 @@ class MemberProfileHiveAdapter extends TypeAdapter<MemberProfileHive> {
       ..writeByte(4)
       ..write(obj.image)
       ..writeByte(5)
-      ..write(obj.backgroundImage);
+      ..write(obj.backgroundImage)
+      ..writeByte(6)
+      ..write(obj.personalInvoice)
+      ..writeByte(7)
+      ..write(obj.workingInvoice);
   }
 
   @override

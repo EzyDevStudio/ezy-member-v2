@@ -10,6 +10,8 @@ class MemberHiveController extends GetxController {
   bool get isSignIn => memberProfile.value?.memberCode.isNotEmpty == true;
   String get backgroundImage => memberProfile.value != null ? memberProfile.value!.backgroundImage : "";
   String get image => memberProfile.value != null ? memberProfile.value!.image : "";
+  String get personalInvoice => memberProfile.value != null ? memberProfile.value!.personalInvoice : "";
+  String get workingInvoice => memberProfile.value != null ? memberProfile.value!.workingInvoice : "";
 
   @override
   void onInit() {
@@ -42,6 +44,20 @@ class MemberHiveController extends GetxController {
   Future<void> updateBackgroundImage(String image) async {
     if (memberProfile.value == null) return;
     final updatedProfile = memberProfile.value!.copyWith(backgroundImage: image);
+    await _storage.saveMemberProfile(updatedProfile);
+    memberProfile.value = updatedProfile;
+  }
+
+  Future<void> updatePersonalInvoiceImage(String image) async {
+    if (memberProfile.value == null) return;
+    final updatedProfile = memberProfile.value!.copyWith(personalInvoice: image);
+    await _storage.saveMemberProfile(updatedProfile);
+    memberProfile.value = updatedProfile;
+  }
+
+  Future<void> updateCompanyInvoiceImage(String image) async {
+    if (memberProfile.value == null) return;
+    final updatedProfile = memberProfile.value!.copyWith(workingInvoice: image);
     await _storage.saveMemberProfile(updatedProfile);
     memberProfile.value = updatedProfile;
   }

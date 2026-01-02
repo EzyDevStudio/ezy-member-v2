@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-enum ProfileType { member, working }
+enum ProfileType { member, working, settings }
 
 class ProfileDetailScreen extends StatefulWidget {
   const ProfileDetailScreen({super.key});
@@ -52,7 +52,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     _memberControllers = ProfileDetailControllers(_memberProfile);
     _workingControllers = ProfileDetailControllers(_workingProfile);
 
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: ProfileType.values.length, vsync: this);
     // Listen to tab change, then retrieve data, "0" for personal and "1" for working
     _tabController.addListener(() {
       if (_tabController.index == 0) {
@@ -104,7 +104,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     }
   }
 
-  void _uploadMedia(int isAvatar) async {
+  void _uploadMedia(int imgType) async {
     final pickedSource = await CustomTypePickerDialog.show<ImageSource, String>(
       context: context,
       title: "select_source".tr,
@@ -118,7 +118,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
 
     if (pickedFile == null) return;
 
-    _profileController.uploadMedia(pickedFile, isAvatar, _hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token);
+    _profileController.uploadMedia(pickedFile, imgType, _hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token);
   }
 
   Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
@@ -221,7 +221,10 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   @override
   Widget build(BuildContext context) => DefaultTabController(
     length: ProfileType.values.length,
-    child: Scaffold(body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()])),
+    child: Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()]),
+    ),
   );
 
   Widget _buildAppBar() => SliverAppBar(
@@ -236,13 +239,14 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       tabs: <Tab>[
         Tab(text: "member".tr),
         Tab(text: "working".tr),
+        Tab(text: "settings".tr),
       ],
     ),
     title: Text("profile".tr),
   );
 
   Widget _buildContent() => SliverFillRemaining(
-    child: TabBarView(controller: _tabController, children: <Widget>[_buildMemberProfile(), _buildWorkingProfile()]),
+    child: TabBarView(controller: _tabController, children: <Widget>[_buildMemberProfile(), _buildWorkingProfile(), _buildSettings()]),
   );
 
   Widget _buildMemberProfile() => CustomScrollView(
@@ -388,7 +392,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 color: Theme.of(context).colorScheme.primaryContainer,
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                    color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.25),
+                    color: Theme.of(context).colorScheme.surfaceContainerHigh,
                     blurRadius: kBlurRadius,
                     offset: const Offset(kOffsetX, kOffsetY),
                   ),
@@ -525,5 +529,42 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
         ),
       ),
     ],
+  );
+
+  Widget _buildSettings() => CustomScrollView(
+    slivers: <Widget>[
+      SliverToBoxAdapter(
+        child: Container(
+          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: ResponsiveHelper.getSpacing(context, 24.0),
+            children: <Widget>[
+              _buildSettingsItem("Change Avatar".tr, () => _uploadMedia(0)),
+              _buildSettingsItem("Change App Background".tr, () => _uploadMedia(1)),
+              _buildSettingsItem("Upload Personal E-Invoice".tr, () => _uploadMedia(2)),
+              _buildSettingsItem("Upload Working E-Invoice".tr, () => _uploadMedia(3)),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
+
+  Widget _buildSettingsItem(String label, VoidCallback onTap) => Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(kBorderRadiusM),
+      color: Theme.of(context).colorScheme.primaryContainer,
+      boxShadow: <BoxShadow>[
+        BoxShadow(color: Theme.of(context).colorScheme.surfaceContainerHigh, blurRadius: kBlurRadius, offset: const Offset(kOffsetX, kOffsetY)),
+      ],
+    ),
+    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 24.0), vertical: ResponsiveHelper.getSpacing(context, 16.0)),
+    child: ListTile(
+      contentPadding: EdgeInsets.zero,
+      onTap: onTap,
+      title: CustomText(label, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 18.0, fontWeight: FontWeight.bold),
+      trailing: Icon(Icons.arrow_forward_ios_rounded, color: Theme.of(context).colorScheme.onPrimaryContainer),
+    ),
   );
 }

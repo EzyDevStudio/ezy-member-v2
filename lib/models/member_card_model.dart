@@ -7,6 +7,7 @@ const String fieldCardDesc = "card_desc";
 const String fieldCardMagnification = "card_magnification";
 const String fieldCardImage = "card_image";
 const String fieldIsDefault = "isDefault";
+const String fieldCreatedAt = "created_at";
 
 class MemberCardModel {
   static const String keyMemberCard = "member_card";
@@ -20,6 +21,7 @@ class MemberCardModel {
   final double cardMagnification;
   final String cardImage;
   final bool isDefault;
+  final int createdAt;
 
   MemberCardModel({
     this.id = 0,
@@ -31,6 +33,7 @@ class MemberCardModel {
     this.cardMagnification = 1.0,
     this.cardImage = "",
     this.isDefault = false,
+    this.createdAt = 0,
   });
 
   MemberCardModel.empty() : this();
@@ -45,9 +48,10 @@ class MemberCardModel {
     cardMagnification: (data[fieldCardMagnification] ?? 0).toDouble(),
     cardImage: data[fieldCardImage] ?? "",
     isDefault: data[fieldIsDefault] != null ? (data[fieldIsDefault] == 1 ? true : false) : false,
+    createdAt: data[fieldCreatedAt] != null ? DateTime.tryParse(data[fieldCreatedAt])?.millisecondsSinceEpoch ?? 0 : 0,
   );
 
   @override
   String toString() =>
-      "MemberCardModel(id: $id, memberCode: $memberCode, cardCode: $cardCode, memberCardNumber: $memberCardNumber, expiredDate: $expiredDate, cardDesc: $cardDesc, cardMagnification: $cardMagnification, cardImage: $cardImage, isDefault: $isDefault)\n";
+      "MemberCardModel(id: $id, memberCode: $memberCode, cardCode: $cardCode, memberCardNumber: $memberCardNumber, expiredDate: $expiredDate, cardDesc: $cardDesc, cardMagnification: $cardMagnification, cardImage: $cardImage, isDefault: $isDefault, createdAt: $createdAt)\n";
 }

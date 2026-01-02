@@ -1,5 +1,4 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
-import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
@@ -67,65 +66,6 @@ class CustomImageTextButton extends StatelessWidget {
           if (isLabelVisible!) CustomText(label, fontSize: 14.0),
           if (isLabelVisible! && content != null) CustomText(content!, fontSize: 14.0),
         ],
-      ),
-    ),
-  );
-}
-
-class CustomSegmentedButton extends StatefulWidget {
-  final String firstLabel, secondLabel;
-  final Function(ScanType) onSelectionChanged;
-
-  const CustomSegmentedButton({super.key, required this.firstLabel, required this.secondLabel, required this.onSelectionChanged});
-
-  @override
-  State<CustomSegmentedButton> createState() => _CustomSegmentedButtonState();
-}
-
-class _CustomSegmentedButtonState extends State<CustomSegmentedButton> {
-  late ScanType _scan;
-
-  double borderRadius = 50.0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _scan = ScanType.barcode;
-  }
-
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Container(
-      constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(borderRadius), color: Colors.white.withValues(alpha: 0.25)),
-      margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 4.0)),
-      child: Row(
-        children: <Widget>[
-          _buildSegmentedButton(context, ScanType.barcode, widget.firstLabel),
-          _buildSegmentedButton(context, ScanType.qrCode, widget.secondLabel),
-        ],
-      ),
-    ),
-  );
-
-  Widget _buildSegmentedButton(BuildContext context, ScanType type, String label) => Expanded(
-    child: GestureDetector(
-      onTap: () {
-        setState(() => _scan = type);
-        widget.onSelectionChanged(_scan);
-      },
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(borderRadius), color: _scan == type ? Colors.white : Colors.transparent),
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-        child: CustomText(
-          label,
-          color: _scan == type ? Theme.of(context).colorScheme.primary : Colors.white,
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          textAlign: TextAlign.center,
-        ),
       ),
     ),
   );

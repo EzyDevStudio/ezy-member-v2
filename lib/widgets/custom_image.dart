@@ -42,11 +42,7 @@ class CustomBackgroundImage extends StatelessWidget {
           : null,
       boxShadow: isShadow!
           ? <BoxShadow>[
-              BoxShadow(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-                blurRadius: kBlurRadius,
-                offset: Offset(kOffsetX, kOffsetY),
-              ),
+              BoxShadow(color: Theme.of(context).colorScheme.surfaceContainerHigh, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
             ]
           : null,
     ),

@@ -96,6 +96,7 @@ class CustomVoucher extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
+            spacing: ResponsiveHelper.getSpacing(context, 8.0),
             children: <Widget>[
               Expanded(
                 child: CustomText(

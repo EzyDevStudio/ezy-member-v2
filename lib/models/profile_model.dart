@@ -23,6 +23,7 @@ const String fieldEmail = "email";
 const String fieldPassword = "password";
 const String fieldImage = "image";
 const String fieldBackgroundImage = "background_image";
+const String fieldPersonalInvoiceImage = "personal_invoice_image";
 const String fieldGender = "gender";
 const String fieldDOB = "date_of_birth";
 const String fieldAccountCode = "account_code";
@@ -32,6 +33,7 @@ const String fieldToken = "token";
 // WorkingProfile fields
 const String fieldCompanyName = "company_name";
 const String fieldCompanyEmail = "company_email";
+const String fieldCompanyInvoiceImage = "company_invoice_image";
 const String fieldROC = "roc";
 const String fieldMSICCode = "msic_code";
 const String fieldRegistrationSchemeID = "registration_scheme_id";
@@ -105,6 +107,7 @@ class MemberProfileModel extends ProfileModel {
   final String password;
   final String image;
   final String backgroundImage;
+  final String personalInvoiceImage;
   final String gender;
   final int dob;
   final String accountCode;
@@ -132,6 +135,7 @@ class MemberProfileModel extends ProfileModel {
     this.password = "",
     this.image = "",
     this.backgroundImage = "",
+    this.personalInvoiceImage = "",
     this.gender = "",
     this.dob = 0,
     this.accountCode = "",
@@ -165,6 +169,7 @@ class MemberProfileModel extends ProfileModel {
       password: data[fieldPassword] ?? "",
       image: data[fieldImage] ?? "",
       backgroundImage: data[fieldBackgroundImage] ?? "",
+      personalInvoiceImage: data[fieldPersonalInvoiceImage] ?? "",
       gender: data[fieldGender] ?? "",
       dob: data[fieldDOB] != null ? DateTime.tryParse(data[fieldDOB])?.millisecondsSinceEpoch ?? 0 : 0,
       accountCode: data[fieldAccountCode] ?? "",
@@ -231,7 +236,7 @@ class MemberProfileModel extends ProfileModel {
   String toString() =>
       "MemberProfileModel(\n"
       "${super.toString()}"
-      "\tname: $name, email: $email, password: $password, image: $image, backgroundImage: $backgroundImage, gender: $gender, dob: $dob\n"
+      "\tname: $name, email: $email, password: $password, image: $image, backgroundImage: $backgroundImage, personalInvoiceImage: $personalInvoiceImage, gender: $gender, dob: $dob\n"
       "\taccountCode: $accountCode, status: $status, token: $token\n"
       ")";
 }
@@ -241,6 +246,7 @@ class WorkingProfileModel extends ProfileModel {
 
   final String companyName;
   final String companyEmail;
+  final String companyInvoiceImage;
   final String roc;
   final String msicCode;
   final String registrationSchemeID;
@@ -264,6 +270,7 @@ class WorkingProfileModel extends ProfileModel {
     super.ttxRegistrationNo,
     this.companyName = "",
     this.companyEmail = "",
+    this.companyInvoiceImage = "",
     this.roc = "",
     this.msicCode = "",
     this.registrationSchemeID = "",
@@ -293,6 +300,7 @@ class WorkingProfileModel extends ProfileModel {
       ttxRegistrationNo: base.ttxRegistrationNo,
       companyName: data[fieldCompanyName] ?? "",
       companyEmail: data[fieldCompanyEmail] ?? "",
+      companyInvoiceImage: data[fieldCompanyInvoiceImage] ?? "",
       roc: data[fieldROC] ?? "",
       msicCode: data[fieldMSICCode] ?? "",
       registrationSchemeID: data[fieldRegistrationSchemeID] ?? "",
@@ -348,7 +356,7 @@ class WorkingProfileModel extends ProfileModel {
   String toString() =>
       "WorkingProfileModel(\n"
       "${super.toString()}"
-      "\tcompanyName: $companyName, companyEmail: $companyEmail, roc: $roc, msicCode: $msicCode\n"
+      "\tcompanyName: $companyName, companyEmail: $companyEmail, companyInvoiceImage: $companyInvoiceImage, roc: $roc, msicCode: $msicCode\n"
       "\tregistrationSchemeID: $registrationSchemeID, registrationSchemeNo: $registrationSchemeNo\n"
       ")";
 }

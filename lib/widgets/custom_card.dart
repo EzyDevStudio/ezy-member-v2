@@ -42,7 +42,11 @@ class CustomMemberCard extends StatelessWidget {
                     const Spacer(),
                     CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context) * 1.2, networkImage: member.branch.companyLogo),
                     const Spacer(),
-                    CustomText(member.memberCard.memberCardNumber, color: Colors.white, fontSize: 22.0),
+                    CustomText(
+                      member.memberCard.memberCardNumber.replaceAllMapped(RegExp(r".{4}"), (m) => "${m.group(0)} "),
+                      color: Colors.white,
+                      fontSize: 22.0,
+                    ),
                     const Spacer(),
                     CustomText(
                       "${member.memberCard.cardDesc} · ${FormatterHelper.timestampToString(member.memberCard.expiredDate)}",
@@ -94,7 +98,9 @@ class CustomNearbyCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(kBorderRadiusM),
               color: Colors.white,
-              boxShadow: <BoxShadow>[BoxShadow(color: Colors.black12, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY))],
+              boxShadow: <BoxShadow>[
+                BoxShadow(color: Theme.of(context).colorScheme.surfaceContainerHigh, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
+              ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,14 +416,11 @@ class CustomSectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(kBorderRadiusM),
+      borderRadius: BorderRadius.circular(kBorderRadiusS),
       color: Colors.white,
       boxShadow: <BoxShadow>[
-        BoxShadow(
-          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.25),
-          blurRadius: kBlurRadius,
-          offset: Offset(kOffsetX, kOffsetY),
-        ),
+        BoxShadow(color: Theme.of(context).colorScheme.surfaceContainerHigh, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
+        BoxShadow(color: Theme.of(context).colorScheme.surfaceDim, blurRadius: kBlurRadius, offset: Offset(-kOffsetX, -kOffsetY)),
       ],
     ),
     margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0), vertical: ResponsiveHelper.getSpacing(context, 8.0)),
@@ -427,12 +430,13 @@ class CustomSectionCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
-            color: Theme.of(context).colorScheme.primaryContainer,
-            padding: EdgeInsets.symmetric(
-              horizontal: ResponsiveHelper.getSpacing(context, 24.0),
-              vertical: ResponsiveHelper.getSpacing(context, 16.0),
+            color: Colors.white,
+            padding: EdgeInsets.only(
+              left: ResponsiveHelper.getSpacing(context, 16.0),
+              right: ResponsiveHelper.getSpacing(context, 16.0),
+              top: ResponsiveHelper.getSpacing(context, 16.0),
             ),
-            child: CustomText(title, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 18.0, fontWeight: FontWeight.bold),
+            child: CustomText(title, color: Colors.black54, fontSize: 18.0),
           ),
           Container(
             color: Colors.white,
@@ -461,7 +465,9 @@ class CustomShopCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(kBorderRadiusM),
           color: Colors.white,
-          boxShadow: <BoxShadow>[BoxShadow(color: Colors.black12, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY))],
+          boxShadow: <BoxShadow>[
+            BoxShadow(color: Theme.of(context).colorScheme.surfaceContainerHigh, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
+          ],
         ),
         padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0), vertical: ResponsiveHelper.getSpacing(context, 8.0)),
         child: Column(

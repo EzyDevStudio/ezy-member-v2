@@ -6,28 +6,25 @@ import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/pin_controller.dart';
 import 'package:ezy_member_v2/helpers/cipher_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
-import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:qr_bar_code/code/code.dart';
 
-class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key});
+class ScanScreen extends StatefulWidget {
+  const ScanScreen({super.key});
 
   @override
-  State<PaymentScreen> createState() => _PaymentScreenState();
+  State<ScanScreen> createState() => _ScanScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class _ScanScreenState extends State<ScanScreen> {
   final _hive = Get.find<MemberHiveController>();
   final _pinController = Get.put(PinController(), tag: "payment");
 
-  late BenefitType _benefit;
-  late ScanType _scan;
-  late String _companyID;
-  late String? _value;
+  late ScanType _type;
+  late String? _companyID, _value;
 
   int _remainingSeconds = 120;
   Timer? _timer;
@@ -40,16 +37,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     final args = Get.arguments ?? {};
 
-    _benefit = args["benefit_type"] ?? BenefitType.point;
-    _scan = args["scan_type"] ?? ScanType.barcode;
+    _type = args["scan_type"] ?? ScanType.earn;
     _companyID = args["company_id"];
     _value = args["value"];
 
-    if (_scan == ScanType.qrCode) WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
+    if (_type == ScanType.redeem) WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
   }
 
   Future<void> _onRefresh() async {
-    _pinController.generatePin(_companyID, _hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token, _value);
+    if (_companyID != null) _pinController.generatePin(_companyID!, _hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token, _value);
   }
 
   void _startTimer(DateTime expiredDate) {
@@ -115,8 +111,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   children: <Widget>[
                     SizedBox(height: 50.0, child: Image.asset("assets/images/splash_logo.png", fit: BoxFit.scaleDown)),
                     const Spacer(),
-                    if (_scan == ScanType.barcode) ..._buildBarcodeSection(),
-                    if (_scan != ScanType.barcode) ..._buildQRCodeSection(),
+                    if (_type == ScanType.earn) ..._buildBarcodeSection(),
+                    if (_type == ScanType.redeem) ..._buildQRCodeSection(),
                   ],
                 ),
               ),
@@ -124,15 +120,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
           },
         ),
       ),
-      if (_benefit != BenefitType.voucher)
-        CustomSegmentedButton(
-          firstLabel: _benefit == BenefitType.point ? "earn".tr : "top_up".tr,
-          secondLabel: "redeem".tr,
-          onSelectionChanged: (ScanType selectedScanType) {
-            setState(() => _scan = selectedScanType);
-            if (_scan == ScanType.qrCode) _onRefresh();
-          },
-        ),
     ],
   );
 

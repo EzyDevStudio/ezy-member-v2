@@ -51,6 +51,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: Text("my_cards".tr)),
+    backgroundColor: Theme.of(context).colorScheme.surface,
     body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
   );
 

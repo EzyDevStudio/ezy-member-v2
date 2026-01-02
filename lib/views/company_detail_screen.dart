@@ -6,6 +6,7 @@ import 'package:ezy_member_v2/controllers/company_controller.dart';
 import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/timeline_controller.dart';
+import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/company_model.dart';
 import 'package:ezy_member_v2/models/member_model.dart';
@@ -17,6 +18,7 @@ import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qr_bar_code/code/code.dart';
 import 'package:share_plus/share_plus.dart';
 
 class CompanyDetailScreen extends StatefulWidget {
@@ -81,6 +83,20 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
     } else if (result.status == ShareResultStatus.dismissed) {}
   }
 
+  void _joinMember() async {
+    if (_hive.memberProfile.value == null) {
+      MessageHelper.show("msg_no_account".tr, icon: Icons.info_rounded);
+      return;
+    }
+
+    if (_company.memberFee > 0) {
+      // payment page
+      return;
+    } else {
+      // Controller
+    }
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -90,6 +106,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    backgroundColor: Theme.of(context).colorScheme.surface,
     body: RefreshIndicator(
       onRefresh: _onRefresh,
       child: Obx(() {
@@ -101,24 +118,12 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
         );
       }),
     ),
-    floatingActionButton: _showFab
-        ? FloatingActionButton(
-            onPressed: () => _scrollController.animateTo(0.0, duration: const Duration(milliseconds: 400), curve: Curves.easeOut),
-            child: const Icon(Icons.keyboard_arrow_up_rounded),
-          )
-        : null,
+    floatingActionButton: _showFab ? _buildFAB() : null,
   );
 
   Widget _buildAppBar() => CustomAppBar(
     avatarImage: _company.aboutUs.companyLogo,
     backgroundImage: _company.categories.isNotEmpty ? _company.categories.first.categoryImage : "",
-    actions: [
-      Obx(() {
-        if (_memberController.members.isEmpty) return const SizedBox.shrink();
-
-        return IconButton(onPressed: () => _shareContent(context), icon: Icon(Icons.share_rounded));
-      }),
-    ],
     child: Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,10 +157,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                       label: member.isMember ? "my_points".tr : "earn_points".tr,
                       content: member.isMember ? member.point.toString() : null,
                       onTap: member.isMember
-                          ? () => Get.toNamed(
-                              AppRoutes.payment,
-                              arguments: {"benefit_type": BenefitType.point, "scan_type": ScanType.barcode, "company_id": _company.companyID},
-                            )
+                          ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _company.companyID})
                           : null,
                     ),
                   ),
@@ -175,22 +177,33 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                       label: member.isMember ? "my_credits".tr : "redeem_by_credits".tr,
                       content: member.isMember ? member.credit.toStringAsFixed(1) : null,
                       onTap: member.isMember
-                          ? () => Get.toNamed(
-                              AppRoutes.payment,
-                              arguments: {"benefit_type": BenefitType.credit, "scan_type": ScanType.barcode, "company_id": _company.companyID},
-                            )
+                          ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _company.companyID})
                           : null,
                     ),
                   ),
                 ],
               ),
             ),
-            if (!member.isMember && !_company.isExpired) CustomFilledButton(label: "join_now".tr, onTap: () {}),
+            if (member.isMember) _buildBarcode(),
+            if (!member.isMember && !_company.isExpired) CustomFilledButton(label: "join_now".tr, onTap: _joinMember),
+            if (member.isMember && !_company.isExpired)
+              CustomFilledButton(backgroundColor: Colors.green, label: "Share".tr, onTap: () => _shareContent(context)),
           ],
         ),
       ),
     );
   });
+
+  Widget _buildBarcode() => InkWell(
+    onTap: () => Get.toNamed(AppRoutes.scan),
+    child: Padding(
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0)),
+      child: AspectRatio(
+        aspectRatio: 4 / 1,
+        child: Code(drawText: false, codeType: CodeType.code39(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
+      ),
+    ),
+  );
 
   Widget _buildCompanyInfo() => SliverToBoxAdapter(
     child: Container(
@@ -239,6 +252,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
   Widget _buildTimeline() => Obx(() {
     if (_timelineController.isLoading.value) {
       return SliverFillRemaining(
+        hasScrollBody: false,
         child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
       );
     }
@@ -274,4 +288,9 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
       ),
     );
   });
+
+  Widget _buildFAB() => FloatingActionButton(
+    onPressed: () => _scrollController.animateTo(0.0, duration: const Duration(milliseconds: 400), curve: Curves.easeOut),
+    child: Icon(Icons.keyboard_arrow_up_rounded),
+  );
 }

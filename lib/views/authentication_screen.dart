@@ -137,7 +137,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
   @override
   Widget build(BuildContext context) => DefaultTabController(
     length: TabType.values.length,
-    child: Scaffold(body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()])),
+    child: Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()]),
+    ),
   );
 
   Widget _buildAppBar() => SliverAppBar(

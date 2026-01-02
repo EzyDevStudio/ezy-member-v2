@@ -59,16 +59,35 @@ class PermissionHelper {
   }
 
   static Future<bool> isGalleryGranted() async {
-    if (await Permission.photos.isRestricted || await Permission.photos.isDenied) return false;
-    if (await Permission.storage.isDenied) return false;
-    return true;
+    if (GetPlatform.isAndroid) {
+      return await Permission.photos.status.isGranted;
+
+      // if (AndroidSDK >= 33) {
+      //   await Permission.photos.status.isGranted;
+      // } else {
+      //   await Permission.storage.status.isGranted;
+      // }
+    } else {
+      return await Permission.photos.status.isGranted;
+    }
   }
 
   static Future<bool> checkAndRequestGallery({bool openSettingsIfDenied = true}) async {
     if (await isGalleryGranted()) return true;
 
-    Permission permission = Permission.photos; // iOS
-    if (await Permission.storage.isDenied) permission = Permission.storage; // Android
+    Permission permission;
+
+    if (GetPlatform.isAndroid) {
+      permission = Permission.photos;
+
+      // if (AndroidSDK >= 33) {
+      //   permission = Permission.photos;
+      // } else {
+      //   permission = Permission.storage;
+      // }
+    } else {
+      permission = Permission.photos;
+    }
 
     var result = await permission.request();
 

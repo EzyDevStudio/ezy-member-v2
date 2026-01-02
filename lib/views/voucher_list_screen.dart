@@ -68,6 +68,7 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: Text("my_vouchers".tr)),
+    backgroundColor: Theme.of(context).colorScheme.surface,
     body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
   );
 
@@ -112,10 +113,9 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
                     voucher: displayVouchers[index],
                     type: VoucherType.normal,
                     onTap: () => Get.toNamed(
-                      AppRoutes.payment,
+                      AppRoutes.scan,
                       arguments: {
-                        "benefit_type": BenefitType.voucher,
-                        "scan_type": ScanType.qrCode,
+                        "scan_type": ScanType.redeem,
                         "company_id": displayVouchers[index].companyID,
                         "value": displayVouchers[index].voucherCode,
                       },

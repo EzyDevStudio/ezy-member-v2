@@ -18,6 +18,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 // custom text field to autocomplete - postcode
 // Multilingual
 
+// Company Join as member // new payment page
+// MyInvois new page two tab
+// member page filter option
+
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
 void main() async {

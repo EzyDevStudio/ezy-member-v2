@@ -23,6 +23,7 @@ class _MediaViewerScreenState extends State<MediaViewerScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(),
+    backgroundColor: Theme.of(context).colorScheme.surface,
     body: Center(
       child: InteractiveViewer(maxScale: 5.0, child: Image.network(_mediaUrl, fit: BoxFit.contain)),
     ),

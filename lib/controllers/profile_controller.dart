@@ -78,10 +78,10 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<void> uploadMedia(File file, int isAvatar, String memberCode, String memberToken) async {
+  Future<void> uploadMedia(File file, int imgType, String memberCode, String memberToken) async {
     _showLoading("msg_profile_updating".tr);
 
-    final Map<String, dynamic> data = {"is_avatar": isAvatar, "member_code": memberCode};
+    final Map<String, dynamic> data = {"image_type": imgType, "member_code": memberCode};
     final response = await _api.postFile(
       file: file,
       data: data,
@@ -101,8 +101,10 @@ class ProfileController extends GetxController {
       case 200:
         final hive = Get.find<MemberHiveController>();
 
-        if (isAvatar == 1) hive.updateImage(response.data["filename"]);
-        if (isAvatar == 0) hive.updateBackgroundImage(response.data["filename"]);
+        if (imgType == 0) hive.updateImage(response.data["filename"]);
+        if (imgType == 1) hive.updateBackgroundImage(response.data["filename"]);
+        if (imgType == 2) hive.updatePersonalInvoiceImage(response.data["filename"]);
+        if (imgType == 3) hive.updateCompanyInvoiceImage(response.data["filename"]);
 
         _showSuccess("msg_profile_success".tr);
 

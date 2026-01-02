@@ -33,6 +33,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: Text("notifications".tr)),
+    backgroundColor: Theme.of(context).colorScheme.surface,
     body: RefreshIndicator(onRefresh: _onRefresh, child: _buildVoucherList()),
   );
 
@@ -78,13 +79,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           voucher: voucher,
                           type: VoucherType.normal,
                           onTap: () => Get.toNamed(
-                            AppRoutes.payment,
-                            arguments: {
-                              "benefit_type": BenefitType.voucher,
-                              "scan_type": ScanType.qrCode,
-                              "company_id": voucher.companyID,
-                              "value": voucher.voucherCode,
-                            },
+                            AppRoutes.scan,
+                            arguments: {"scan_type": ScanType.redeem, "company_id": voucher.companyID, "value": voucher.voucherCode},
                           ),
                         )
                       : CustomVoucher(

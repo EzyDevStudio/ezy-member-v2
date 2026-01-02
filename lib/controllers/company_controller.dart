@@ -27,4 +27,8 @@ class CompanyController extends GetxController {
 
     isLoading.value = false;
   }
+
+  Future<void> registerMember(String companyID, String memberCode) async {
+
+  }
 }

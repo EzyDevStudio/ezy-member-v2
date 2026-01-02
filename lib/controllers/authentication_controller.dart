@@ -76,6 +76,8 @@ class AuthenticationController extends GetxController {
             token: profile.token,
             image: profile.image,
             backgroundImage: profile.backgroundImage,
+            personalInvoice: profile.personalInvoiceImage,
+            workingInvoice: response.data["working_e_invoice"],
           ),
         );
 
