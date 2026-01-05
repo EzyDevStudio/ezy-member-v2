@@ -112,6 +112,6 @@ class VoucherController extends GetxController {
   }
 
   void _showSuccess(String message) {
-    MessageHelper.show(message, backgroundColor: Colors.green, icon: Icons.check_circle_outline_rounded);
+    MessageHelper.show(message, backgroundColor: Colors.green, icon: Icons.check_circle_rounded);
   }
 }

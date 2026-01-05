@@ -21,7 +21,7 @@ class ScanScreen extends StatefulWidget {
 
 class _ScanScreenState extends State<ScanScreen> {
   final _hive = Get.find<MemberHiveController>();
-  final _pinController = Get.put(PinController(), tag: "payment");
+  final _pinController = Get.put(PinController(), tag: "scan");
 
   late ScanType _type;
   late String? _companyID, _value;
@@ -84,95 +84,83 @@ class _ScanScreenState extends State<ScanScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.primary,
-    appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.primary, title: Text("pay".tr)),
+    backgroundColor: Theme.of(context).colorScheme.surface,
+    appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.primary, title: Text(_type == ScanType.earn ? "earn".tr : "redeem".tr)),
     body: _buildContent(),
   );
 
   Widget _buildContent() => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
-      Expanded(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final size = constraints.maxWidth < constraints.maxHeight ? constraints.maxWidth : constraints.maxHeight;
+      SizedBox(height: 50.0, child: Image.asset("assets/images/splash_logo.png", fit: BoxFit.scaleDown)),
+      LayoutBuilder(
+        builder: (context, constraints) {
+          final size = constraints.maxWidth < constraints.maxHeight ? constraints.maxWidth : constraints.maxHeight;
 
-            return Center(
-              child: Container(
-                constraints: BoxConstraints(maxHeight: ResponsiveHelper.mobileBreakpoint, maxWidth: ResponsiveHelper.mobileBreakpoint),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusM), color: Colors.white),
-                height: size,
-                width: size,
-                margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 32.0)),
-                padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-                child: Column(
-                  spacing: ResponsiveHelper.getSpacing(context, 8.0),
-                  children: <Widget>[
-                    SizedBox(height: 50.0, child: Image.asset("assets/images/splash_logo.png", fit: BoxFit.scaleDown)),
-                    const Spacer(),
-                    if (_type == ScanType.earn) ..._buildBarcodeSection(),
-                    if (_type == ScanType.redeem) ..._buildQRCodeSection(),
-                  ],
-                ),
+          return Center(
+            child: Container(
+              constraints: BoxConstraints(maxHeight: ResponsiveHelper.mobileBreakpoint, maxWidth: ResponsiveHelper.mobileBreakpoint),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(kBorderRadiusS),
+                color: Colors.white,
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 10)],
               ),
-            );
-          },
-        ),
+              height: size,
+              width: size,
+              margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 32.0)),
+              padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 32.0)),
+              child: Center(child: _type == ScanType.earn ? _buildEarnSection() : _buildRedeemSection()),
+            ),
+          );
+        },
       ),
+      CustomText(
+        _hive.memberProfile.value!.memberCode,
+        color: Theme.of(context).colorScheme.primary,
+        fontSize: 24.0,
+        fontWeight: FontWeight.bold,
+        textAlign: TextAlign.center,
+      ),
+      if (_type == ScanType.redeem)
+        CustomText(_formatTime(_remainingSeconds), color: Theme.of(context).colorScheme.error, fontSize: 22.0, textAlign: TextAlign.center),
     ],
   );
 
-  List<Widget> _buildBarcodeSection() => [
-    _buildBarcode(),
-    const Spacer(),
-    CustomText(_hive.memberProfile.value!.memberCode, color: Theme.of(context).colorScheme.primary, fontSize: 24.0, fontWeight: FontWeight.bold),
-  ];
+  Widget _buildRedeemSection() => Obx(() {
+    if (_pinController.isLoading.value) {
+      return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary));
+    }
 
-  List<Widget> _buildQRCodeSection() => [
-    Obx(() {
-      if (_pinController.isLoading.value) {
-        return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary));
-      }
+    if (_pinController.pin.value != null) {
+      _startTimer(_pinController.pin.value!.expiredDate.toLocal());
+    }
 
-      if (_pinController.pin.value != null) {
-        _startTimer(_pinController.pin.value!.expiredDate.toLocal());
-      }
+    return FutureBuilder<String>(
+      future: CipherHelper().encryption(_pinController.pin.value.toString()),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary));
+        }
 
-      return FutureBuilder<String>(
-        future: CipherHelper().encryption(_pinController.pin.value.toString()),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary));
-          }
+        final encryptedValue = snapshot.data!;
 
-          final encryptedValue = snapshot.data!;
+        return _buildQRCode(encryptedValue);
+      },
+    );
+  });
 
-          return _buildQRCode(encryptedValue);
-        },
-      );
-    }),
-    const Spacer(),
-    CustomText(_formatTime(_remainingSeconds), color: Theme.of(context).colorScheme.error, fontSize: 22.0),
-  ];
-
-  Widget _buildBarcode() => AspectRatio(
-    aspectRatio: 4 / 1,
-    child: Code(
-      drawText: false,
-      codeType: CodeType.code39(),
-      backgroundColor: Colors.white,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusS)),
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 32.0)),
-      data: _hive.memberProfile.value!.memberCode,
-    ),
+  Widget _buildEarnSection() => Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    spacing: ResponsiveHelper.getSpacing(context, 32.0),
+    children: <Widget>[
+      AspectRatio(
+        aspectRatio: 3 / 1,
+        child: Code(drawText: false, codeType: CodeType.code39(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
+      ),
+      _buildQRCode(_hive.memberProfile.value!.memberCode),
+    ],
   );
 
-  Widget _buildQRCode(String value) => Code(
-    drawText: false,
-    codeType: CodeType.qrCode(),
-    backgroundColor: Colors.white,
-    decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusS)),
-    data: value,
-  );
+  Widget _buildQRCode(String value) => Code(drawText: false, codeType: CodeType.qrCode(), backgroundColor: Colors.white, data: value);
 }

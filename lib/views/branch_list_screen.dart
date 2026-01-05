@@ -58,8 +58,8 @@ class _BranchListScreenState extends State<BranchListScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text("shops".tr)),
     backgroundColor: Theme.of(context).colorScheme.surface,
+    appBar: AppBar(title: Text("shops".tr)),
     body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
   );
 

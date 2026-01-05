@@ -67,8 +67,8 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text("my_vouchers".tr)),
     backgroundColor: Theme.of(context).colorScheme.surface,
+    appBar: AppBar(title: Text("my_vouchers".tr)),
     body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
   );
 

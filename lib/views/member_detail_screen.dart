@@ -8,6 +8,7 @@ import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/models/member_model.dart';
+import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_chip.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_list_tile.dart';
@@ -33,6 +34,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
   late String _companyID;
 
   bool _showFab = false;
+  DateTime? _endDate, _startDate;
   HistoryType _selectedType = HistoryType.all;
 
   @override
@@ -57,6 +59,141 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
     _memberController.loadMembers(_hive.memberProfile.value!.memberCode, companyID: _companyID);
   }
 
+  void _showFilterModal() {
+    DateTime endDate = _endDate ?? DateTime.now();
+    DateTime startDate = _startDate ?? DateTime.now();
+    HistoryType selectedType = _selectedType;
+
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(kBorderRadiusM))),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Padding(
+          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            spacing: ResponsiveHelper.getSpacing(context, 16.0),
+            children: <Widget>[
+              CustomText("history_type".tr, fontSize: 18.0),
+              CustomChoiceChip(
+                backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                textColor: Theme.of(context).colorScheme.onSecondaryContainer,
+                values: AppStrings().historyTypes,
+                selectedValue: selectedType,
+                onSelected: (type) => setModalState(() => selectedType = type),
+                alignment: WrapAlignment.start,
+              ),
+              CustomText("custom_date_range".tr, fontSize: 18.0),
+              Row(
+                spacing: ResponsiveHelper.getSpacing(context, 16.0),
+                children: <Widget>[
+                  Expanded(
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kBorderRadiusS)),
+                      ),
+                      onPressed: () async {
+                        final pickedDate = await _selectDate(context, startDate);
+                        setModalState(() => startDate = pickedDate);
+                      },
+                      child: CustomText(
+                        FormatterHelper.dateTimeToString(startDate),
+                        color: Theme.of(context).colorScheme.onSecondaryContainer,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                  CustomText("-", fontSize: 16.0),
+                  Expanded(
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kBorderRadiusS)),
+                      ),
+                      onPressed: () async {
+                        final pickedDate = await _selectDate(context, endDate);
+                        setModalState(() => endDate = pickedDate);
+                      },
+                      child: CustomText(
+                        FormatterHelper.dateTimeToString(endDate),
+                        color: Theme.of(context).colorScheme.onSecondaryContainer,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                spacing: ResponsiveHelper.getSpacing(context, 16.0),
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kBorderRadiusS)),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _endDate = null;
+                          _startDate = null;
+                          _selectedType = HistoryType.all;
+                        });
+
+                        Get.back();
+                      },
+                      child: CustomText("clear".tr.toLowerCase(), color: Theme.of(context).colorScheme.onSecondaryContainer, fontSize: 16.0),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: CustomFilledButton(
+                      label: "apply".tr,
+                      onTap: () {
+                        setState(() {
+                          _endDate = endDate;
+                          _startDate = startDate;
+                          _selectedType = selectedType;
+                        });
+
+                        Get.back();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<DateTime> _selectDate(BuildContext context, DateTime date) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      firstDate: DateTime(1900),
+      initialDate: date,
+      lastDate: DateTime.now(),
+      builder: (context, child) => Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.light(
+            primary: Theme.of(context).colorScheme.primary,
+            onPrimary: Theme.of(context).colorScheme.onPrimary,
+            surface: Theme.of(context).colorScheme.surface,
+            onSurface: Theme.of(context).colorScheme.onSurface,
+          ),
+          textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.primary)),
+        ),
+        child: child!,
+      ),
+    );
+
+    return pickedDate ?? date;
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -66,8 +203,8 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(),
     backgroundColor: Theme.of(context).colorScheme.surface,
+    appBar: AppBar(),
     body: RefreshIndicator(
       onRefresh: _onRefresh,
       child: Obx(() {
@@ -204,9 +341,18 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
   Widget _buildHistory() => Obx(() {
     if (_historyController.histories.isEmpty) return SizedBox.shrink();
 
-    final filteredHistories = _selectedType == HistoryType.all
-        ? _historyController.histories
-        : _historyController.histories.where((h) => h.type == _selectedType).toList();
+    _endDate ??= DateTime.fromMillisecondsSinceEpoch(_historyController.histories.first.transactionDate);
+    _startDate ??= DateTime.fromMillisecondsSinceEpoch(_historyController.histories.last.transactionDate);
+
+    final filteredHistories = _historyController.histories.where((h) {
+      final historyDate = DateTime.fromMillisecondsSinceEpoch(h.transactionDate);
+      final matchesType = _selectedType == HistoryType.all || h.type == _selectedType;
+      final matchesDate =
+          (_startDate == null || historyDate.isAfter(_startDate!.subtract(Duration(days: 1)))) &&
+          (_endDate == null || historyDate.isBefore(_endDate!.add(Duration(days: 1))));
+
+      return matchesType && matchesDate;
+    }).toList();
 
     return Column(
       children: <Widget>[
@@ -245,11 +391,8 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
       spacing: ResponsiveHelper.getSpacing(context, 16.0),
       children: <Widget>[
         Expanded(child: CustomText("history".tr, fontSize: 18.0, fontWeight: FontWeight.bold)),
-        PopupMenuButton<HistoryType>(
-          onSelected: (value) => setState(() => _selectedType = value),
-          itemBuilder: (context) => AppStrings().historyTypes.entries
-              .map((entry) => PopupMenuItem<HistoryType>(value: entry.key, child: CustomText(entry.value, fontSize: 14.0)))
-              .toList(),
+        InkWell(
+          onTap: () => _showFilterModal(),
           child: Row(
             spacing: ResponsiveHelper.getSpacing(context, 4.0),
             children: <Widget>[

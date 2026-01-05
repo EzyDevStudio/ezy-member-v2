@@ -4,6 +4,7 @@ import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomChoiceChip<T> extends StatelessWidget {
+  final Color? backgroundColor, textColor;
   final Map<T, String> values;
   final T selectedValue;
   final ValueChanged<T> onSelected;
@@ -11,6 +12,8 @@ class CustomChoiceChip<T> extends StatelessWidget {
 
   const CustomChoiceChip({
     super.key,
+    this.backgroundColor,
+    this.textColor,
     required this.values,
     required this.selectedValue,
     required this.onSelected,
@@ -27,11 +30,15 @@ class CustomChoiceChip<T> extends StatelessWidget {
       return ChoiceChip(
         selected: isSelected,
         side: BorderSide.none,
-        backgroundColor: Colors.grey.withValues(alpha: 0.5),
-        checkmarkColor: Theme.of(context).colorScheme.onPrimary,
-        selectedColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.grey.withValues(alpha: 0.3),
+        checkmarkColor: textColor ?? Theme.of(context).colorScheme.onPrimary,
+        selectedColor: backgroundColor ?? Theme.of(context).colorScheme.primary,
         onSelected: (_) => onSelected(value),
-        label: CustomText(values[value]!, color: isSelected ? Theme.of(context).colorScheme.onPrimary : Colors.black87, fontSize: 16.0),
+        label: CustomText(
+          values[value]!,
+          color: isSelected ? (textColor ?? Theme.of(context).colorScheme.onPrimary) : Colors.black54,
+          fontSize: 16.0,
+        ),
       );
     }).toList(),
   );

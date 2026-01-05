@@ -90,10 +90,11 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
     }
 
     if (_company.memberFee > 0) {
-      // payment page
-      return;
+      Get.toNamed(AppRoutes.payment, arguments: {"company_id": _companyID});
     } else {
-      // Controller
+      final result = await _companyController.registerMember(_companyID, _hive.memberProfile.value!.memberCode);
+
+      if (result) _memberController.loadMembers(_hive.memberProfile.value!.memberCode, companyID: _companyID);
     }
   }
 
@@ -146,46 +147,48 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: ResponsiveHelper.getSpacing(context, 16.0),
           children: <Widget>[
-            CustomText("member_benefits".tr, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold),
-            SizedBox(
-              height: ResponsiveHelper.isDesktop(context) ? 150.0 : 100.0,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: CustomImageTextButton(
-                      assetName: "assets/icons/my_points.png",
-                      label: member.isMember ? "my_points".tr : "earn_points".tr,
-                      content: member.isMember ? member.point.toString() : null,
-                      onTap: member.isMember
-                          ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _company.companyID})
-                          : null,
+            if (!_hive.isSignIn)
+              CustomText("member_benefits".tr, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold),
+            if (!_hive.isSignIn || member.isMember)
+              SizedBox(
+                height: ResponsiveHelper.isDesktop(context) ? 150.0 : 100.0,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: CustomImageTextButton(
+                        assetName: "assets/icons/my_points.png",
+                        label: member.isMember ? "my_points".tr : "earn_points".tr,
+                        content: member.isMember ? member.point.toString() : null,
+                        onTap: member.isMember
+                            ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _company.companyID})
+                            : null,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: CustomImageTextButton(
-                      assetName: "assets/icons/my_vouchers.png",
-                      label: member.isMember ? "my_vouchers".tr : "collect_vouchers".tr,
-                      content: member.isMember ? (member.normalVoucherCount + member.specialVoucherCount).toString() : null,
-                      onTap: member.isMember && _hive.memberProfile.value != null
-                          ? () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _company.companyID})
-                          : null,
+                    Expanded(
+                      child: CustomImageTextButton(
+                        assetName: "assets/icons/my_vouchers.png",
+                        label: member.isMember ? "my_vouchers".tr : "collect_vouchers".tr,
+                        content: member.isMember ? (member.normalVoucherCount + member.specialVoucherCount).toString() : null,
+                        onTap: member.isMember && _hive.memberProfile.value != null
+                            ? () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _company.companyID})
+                            : null,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: CustomImageTextButton(
-                      assetName: "assets/icons/my_credits.png",
-                      label: member.isMember ? "my_credits".tr : "redeem_by_credits".tr,
-                      content: member.isMember ? member.credit.toStringAsFixed(1) : null,
-                      onTap: member.isMember
-                          ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _company.companyID})
-                          : null,
+                    Expanded(
+                      child: CustomImageTextButton(
+                        assetName: "assets/icons/my_credits.png",
+                        label: member.isMember ? "my_credits".tr : "redeem_by_credits".tr,
+                        content: member.isMember ? member.credit.toStringAsFixed(1) : null,
+                        onTap: member.isMember
+                            ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _company.companyID})
+                            : null,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
             if (member.isMember) _buildBarcode(),
-            if (!member.isMember && !_company.isExpired) CustomFilledButton(label: "join_now".tr, onTap: _joinMember),
+            if (_hive.isSignIn && !member.isMember && !_company.isExpired) CustomFilledButton(label: "join_us_now".tr, onTap: _joinMember),
             if (member.isMember && !_company.isExpired)
               CustomFilledButton(backgroundColor: Colors.green, label: "Share".tr, onTap: () => _shareContent(context)),
           ],
@@ -197,7 +200,11 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
   Widget _buildBarcode() => InkWell(
     onTap: () => Get.toNamed(AppRoutes.scan),
     child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0)),
+      padding: EdgeInsets.only(
+        bottom: ResponsiveHelper.getSpacing(context, 8.0),
+        left: ResponsiveHelper.getSpacing(context, 32.0),
+        right: ResponsiveHelper.getSpacing(context, 32.0),
+      ),
       child: AspectRatio(
         aspectRatio: 4 / 1,
         child: Code(drawText: false, codeType: CodeType.code39(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
@@ -268,6 +275,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
               border: Border(
                 top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: ResponsiveHelper.getSpacing(context, 5.0)),
               ),
+              color: Colors.white,
             ),
             padding: EdgeInsets.only(
               left: ResponsiveHelper.getSpacing(context, 16.0),

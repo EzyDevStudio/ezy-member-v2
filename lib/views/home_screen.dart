@@ -79,9 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _onRefresh() async {
     await PermissionHelper.checkAndRequestLocation();
 
-    if (await PermissionHelper.checkAndRequestNotification()) {
-      await NotificationService.show(id: 0, title: "EzyMember", body: "2 vouchers will be expired by today.");
-    }
+    // if (await PermissionHelper.checkAndRequestNotification()) {
+    //   await NotificationService.show(id: 0, title: "EzyMember", body: "2 vouchers will be expired by today.");
+    // }
 
     _adsController.loadAdvertisements();
     _branchController.loadBranches(true);
@@ -266,10 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 CustomImageTextButton(
                   assetName: "assets/icons/invoice.png",
                   label: "e_invoice".tr,
-                  onTap: () {
-                    Get.toNamed(AppRoutes.mediaViewer, arguments: {"media_url": _hive.personalInvoice});
-                    // show new invoice page with two tab
-                  },
+                  onTap: () => Get.toNamed(AppRoutes.invoice),
                 ),
               ],
             ),
@@ -285,8 +282,8 @@ class _HomeScreenState extends State<HomeScreen> {
     child: Padding(
       padding: EdgeInsets.only(
         bottom: ResponsiveHelper.getSpacing(context, 24.0),
-        left: ResponsiveHelper.getSpacing(context, 16.0),
-        right: ResponsiveHelper.getSpacing(context, 16.0),
+        left: ResponsiveHelper.getSpacing(context, 32.0),
+        right: ResponsiveHelper.getSpacing(context, 32.0),
       ),
       child: AspectRatio(
         aspectRatio: 4 / 1,

@@ -254,17 +254,8 @@ class CustomAdvertisementCard extends StatelessWidget {
 
 class CustomProfileCard extends StatelessWidget {
   final String backgroundImage, image, memberCode, name;
-  final VoidCallback onTapEdit, onTapEditBg;
 
-  const CustomProfileCard({
-    super.key,
-    required this.backgroundImage,
-    required this.image,
-    required this.memberCode,
-    required this.name,
-    required this.onTapEdit,
-    required this.onTapEditBg,
-  });
+  const CustomProfileCard({super.key, required this.backgroundImage, required this.image, required this.memberCode, required this.name});
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -279,34 +270,14 @@ class CustomProfileCard extends StatelessWidget {
           child: Row(
             spacing: ResponsiveHelper.getSpacing(context, 24.0),
             children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  CustomAvatarImage(size: kProfileImgSizeL, networkImage: image),
-                  Positioned(
-                    bottom: kPositionEmpty,
-                    right: kPositionEmpty,
-                    child: GestureDetector(
-                      onTap: onTapEdit,
-                      child: Container(
-                        decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.edit_rounded, color: Theme.of(context).colorScheme.primary, size: 20.0),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              CustomAvatarImage(size: kProfileImgSizeL, networkImage: image),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CustomText(name, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
                     CustomText(memberCode, color: Colors.white, fontSize: 18.0),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: onTapEditBg,
-                      child: CustomText("change_background".tr, color: Colors.white, fontSize: 12.0, fontWeight: FontWeight.bold),
-                    ),
                   ],
                 ),
               ),

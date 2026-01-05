@@ -32,8 +32,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text("notifications".tr)),
     backgroundColor: Theme.of(context).colorScheme.surface,
+    appBar: AppBar(title: Text("notifications".tr)),
     body: RefreshIndicator(onRefresh: _onRefresh, child: _buildVoucherList()),
   );
 

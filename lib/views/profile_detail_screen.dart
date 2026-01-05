@@ -262,8 +262,6 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 image: _hive.isSignIn ? _hive.memberProfile.value!.image : "",
                 memberCode: _memberProfile.memberCode,
                 name: _memberProfile.name,
-                onTapEdit: () => _uploadMedia(1),
-                onTapEditBg: () => _uploadMedia(0),
               ),
             ),
             CustomSectionCard(
