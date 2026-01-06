@@ -1,5 +1,6 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/phone_detail.dart';
 import 'package:ezy_member_v2/widgets/custom_modal.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
@@ -149,7 +150,7 @@ class _CustomSearchTextFieldState extends State<CustomSearchTextField> {
           vertical: ResponsiveHelper.getSpacing(context, 8.0),
         ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(kBorderRadiusS), borderSide: BorderSide.none),
-        hintText: "search".tr,
+        hintText: Globalization.search.tr,
         prefixIcon: const Icon(Icons.search_rounded),
         suffixIcon: widget.controller.text.isEmpty
             ? null
@@ -266,7 +267,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
       contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
       enabledBorder: _border(context),
       focusedBorder: _focusedBorder(context),
-      hint: CustomText("msg_hint_text".trParams({"label": widget.label.toLowerCase()}), color: Colors.black38, fontSize: 16.0),
+      hint: CustomText(Globalization.msgHintText.trParams({"label": widget.label.toLowerCase()}), color: Colors.black38, fontSize: 16.0),
     ),
     keyboardType: widget.keyboardType,
     onTap: widget.onTap,
@@ -285,7 +286,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
             contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
             enabledBorder: _border(context),
             focusedBorder: _focusedBorder(context),
-            hint: CustomText("registration_scheme_id".tr, fontSize: 16.0, textAlign: TextAlign.center),
+            hint: CustomText(Globalization.registrationSchemeID.tr, fontSize: 16.0, textAlign: TextAlign.center),
           ),
           onTap: widget.onTap,
         ),

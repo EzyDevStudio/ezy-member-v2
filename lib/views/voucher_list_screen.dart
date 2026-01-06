@@ -3,6 +3,7 @@ import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/voucher_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_text_field.dart';
 import 'package:ezy_member_v2/widgets/custom_voucher.dart';
@@ -68,7 +69,7 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(title: Text("my_vouchers".tr)),
+    appBar: AppBar(title: Text(Globalization.myVouchers.tr)),
     body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
   );
 
@@ -83,7 +84,9 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
     if (_voucherController.vouchers.isEmpty) {
       return Padding(
         padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-        child: Center(child: CustomText("msg_no_available".trParams({"label": "vouchers".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
+        child: Center(
+          child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.vouchers.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2),
+        ),
       );
     }
 

@@ -1,4 +1,5 @@
 import 'package:ezy_member_v2/helpers/message_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -51,7 +52,7 @@ class PermissionHelper {
     if (result.isGranted) {
       return true;
     } else if (result.isPermanentlyDenied && openSettingsIfDenied) {
-      _showDialog("take_photos".tr, "camera".tr);
+      _showDialog(Globalization.takePhotos.tr, Globalization.camera.tr);
       return false;
     } else {
       return false;
@@ -94,7 +95,7 @@ class PermissionHelper {
     if (result.isGranted) {
       return true;
     } else if (result.isPermanentlyDenied && openSettingsIfDenied) {
-      _showDialog("select_photos".tr, "gallery".tr);
+      _showDialog(Globalization.selectPhotos.tr, Globalization.gallery.tr);
       return false;
     } else {
       return false;
@@ -105,9 +106,9 @@ class PermissionHelper {
     bool? result = await MessageHelper.showConfirmationDialog(
       backgroundColor: Colors.blue,
       icon: Icons.info_rounded,
-      message: "msg_need_permission".trParams({"action": action, "permission": permission}),
-      title: "need_permission".trParams({"permission": permission}),
-      confirmText: "go_now".tr,
+      message: Globalization.msgNeedPermission.trParams({"action": action, "permission": permission}),
+      title: Globalization.needPermission.trParams({"permission": permission}),
+      confirmText: Globalization.goNow.tr,
     );
 
     if (result != null && result) await openAppSettings();

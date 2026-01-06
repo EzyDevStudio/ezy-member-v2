@@ -10,8 +10,10 @@ import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/promotion_controller.dart';
 import 'package:ezy_member_v2/controllers/timeline_controller.dart';
 import 'package:ezy_member_v2/controllers/voucher_controller.dart';
+import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/permission_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/translations/translations.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
@@ -62,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //   if (!connected) {
     //     WidgetsBinding.instance.addPostFrameCallback((_) {
     //       MessageHelper.show(
-    //         "msg_connection_off".tr,
+    //         Globalization.msgConnectionOff.tr,
     //         backgroundColor: Theme.of(context).colorScheme.error,
     //         duration: Duration(seconds: 10),
     //         icon: Icons.wifi_off_rounded,
@@ -93,12 +95,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _signOut() async {
-    final bool? result = await CustomConfirmationDialog.show(
-      context,
+    final bool? result = await MessageHelper.showConfirmationDialog(
       backgroundColor: Colors.red,
       icon: Icons.warning_rounded,
-      message: "msg_sign_out_confirmation".tr,
-      title: "sign_out".tr,
+      message: Globalization.msgSignOutConfirmation.tr,
+      title: Globalization.signOut.tr,
     );
 
     if (result == true) {
@@ -143,17 +144,15 @@ class _HomeScreenState extends State<HomeScreen> {
     actions: _buildAppBarAction(),
     bottom: _buildAppBarBottom(),
     flexibleSpace: FlexibleSpaceBar(background: CustomBackgroundImage(backgroundImage: _hive.backgroundImage)),
-    title: Text("home".tr),
+    title: Text(Globalization.home.tr),
   );
 
   List<Widget> _buildAppBarAction() => [
-    PopupMenuButton<String>(
-      onSelected: (value) => _settingsController.changeLanguage(value),
-      itemBuilder: (context) => AppTranslations.languages.keys.map((langCode) {
-        String languageName = AppTranslations.languages[langCode] ?? "";
-
-        return PopupMenuItem<String>(value: langCode, child: CustomText(languageName, fontSize: 14.0));
-      }).toList(),
+    PopupMenuButton<Locale>(
+      onSelected: (locale) => _settingsController.changeLanguage(locale),
+      itemBuilder: (context) => Globalization.languages.entries
+          .map((entry) => PopupMenuItem<Locale>(value: entry.value, child: CustomText(entry.key, fontSize: 14.0)))
+          .toList(),
       icon: const Icon(Icons.language_rounded, color: Colors.white),
     ),
     if (_hive.isSignIn) IconButton(onPressed: _signOut, icon: Icon(Icons.logout_rounded)),
@@ -196,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       CustomText(
-                        _hive.isSignIn ? _hive.memberProfile.value!.name : "guest".tr,
+                        _hive.isSignIn ? _hive.memberProfile.value!.name : Globalization.guest.tr,
                         color: Colors.white,
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold,
@@ -251,21 +250,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   isCountVisible: true,
                   count: _voucherController.redeemedCount.value,
                   assetName: "assets/icons/my_vouchers.png",
-                  label: "my_vouchers".tr,
+                  label: Globalization.myVouchers.tr,
                   onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
                 ),
                 CustomImageTextButton(
                   isCountVisible: true,
                   count: _memberController.members.length,
                   assetName: "assets/icons/my_members.png",
-                  label: "my_cards".tr,
+                  label: Globalization.myCards.tr,
                   onTap: () => Get.toNamed(AppRoutes.memberList),
                 ),
-                CustomImageTextButton(
-                  assetName: "assets/icons/invoice.png",
-                  label: "e_invoice".tr,
-                  onTap: () => Get.toNamed(AppRoutes.invoice),
-                ),
+                CustomImageTextButton(assetName: "assets/icons/invoice.png", label: Globalization.eInvoice.tr, onTap: () => Get.toNamed(AppRoutes.invoice)),
               ],
             ),
             _buildBarcode(),
@@ -322,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-                  child: CustomText("vouchers".tr, fontSize: 16.0, fontWeight: FontWeight.w600),
+                  child: CustomText(Globalization.vouchers.tr, fontSize: 16.0, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(
                   height: ResponsiveHelper.getVoucherHeight(context) + ResponsiveHelper.getSpacing(context, 8.0),
@@ -378,10 +373,10 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               spacing: ResponsiveHelper.getSpacing(context, 16.0),
               children: <Widget>[
-                Expanded(child: CustomText("shops_nearby".tr, fontSize: 16.0, fontWeight: FontWeight.w600)),
+                Expanded(child: CustomText(Globalization.shopsNearby.tr, fontSize: 16.0, fontWeight: FontWeight.w600)),
                 GestureDetector(
                   onTap: () => Get.toNamed(AppRoutes.branchList),
-                  child: CustomText("view_all".tr, color: Colors.blue, fontSize: 14.0, fontWeight: FontWeight.bold),
+                  child: CustomText(Globalization.viewAll.tr, color: Colors.blue, fontSize: 14.0, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -398,7 +393,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return SizedBox(
                 height: ResponsiveHelper.getNearbyHeight(context),
                 child: Center(
-                  child: CustomText("msg_no_available".trParams({"label": "shops_nearby".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2),
+                  child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.shopsNearby.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2),
                 ),
               );
             }
@@ -467,7 +462,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (_promoController.promotions.isEmpty) {
         return SizedBox(
           height: ResponsiveHelper.getPromoAdsHeight(context),
-          child: Center(child: CustomText("msg_no_available".trParams({"label": "promotions".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
+          child: Center(child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.promotions.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
         );
       }
 
@@ -502,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (_adsController.advertisements.isEmpty) {
         return SizedBox(
           height: ResponsiveHelper.getPromoAdsHeight(context),
-          child: Center(child: CustomText("msg_no_available".trParams({"label": "advertisements".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
+          child: Center(child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.advertisements.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
         );
       }
 

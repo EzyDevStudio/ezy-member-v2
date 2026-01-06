@@ -1,3 +1,4 @@
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -13,12 +14,12 @@ class AppStrings {
   static const String serverDirectory = "api";
 
   Map<HistoryType, String> historyTypes = {
-    HistoryType.all: "all".tr,
-    HistoryType.point: "points".tr,
-    HistoryType.voucher: "vouchers".tr,
-    HistoryType.credit: "credits".tr,
+    HistoryType.all: Globalization.all.tr,
+    HistoryType.point: Globalization.points.tr,
+    HistoryType.voucher: Globalization.vouchers.tr,
+    HistoryType.credit: Globalization.credits.tr,
   };
-  Map<ImageSource, String> imageSrc = {ImageSource.camera: "camera".tr, ImageSource.gallery: "gallery".tr};
-  Map<String, String> genders = {"M": "male".tr, "F": "female".tr, "O": "prefer_not_to_say".tr};
+  Map<ImageSource, String> imageSrc = {ImageSource.camera: Globalization.camera.tr, ImageSource.gallery: Globalization.gallery.tr};
+  Map<String, String> genders = {"M": Globalization.male.tr, "F": Globalization.female.tr, "O": Globalization.preferNotToSay.tr};
   Map<String, String> idTypes = {"nric": "NRIC", "brn": "BRN", "passport": "PASSPORT", "army": "ARMY"};
 }

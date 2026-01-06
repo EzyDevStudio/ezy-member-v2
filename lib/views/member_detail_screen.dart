@@ -7,6 +7,7 @@ import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/member_model.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_chip.dart';
@@ -75,7 +76,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
             mainAxisSize: MainAxisSize.min,
             spacing: ResponsiveHelper.getSpacing(context, 16.0),
             children: <Widget>[
-              CustomText("history_type".tr, fontSize: 18.0),
+              CustomText(Globalization.historyType.tr, fontSize: 18.0),
               CustomChoiceChip(
                 backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                 textColor: Theme.of(context).colorScheme.onSecondaryContainer,
@@ -84,7 +85,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                 onSelected: (type) => setModalState(() => selectedType = type),
                 alignment: WrapAlignment.start,
               ),
-              CustomText("custom_date_range".tr, fontSize: 18.0),
+              CustomText(Globalization.customDateRange.tr, fontSize: 18.0),
               Row(
                 spacing: ResponsiveHelper.getSpacing(context, 16.0),
                 children: <Widget>[
@@ -144,13 +145,13 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
 
                         Get.back();
                       },
-                      child: CustomText("clear".tr.toLowerCase(), color: Theme.of(context).colorScheme.onSecondaryContainer, fontSize: 16.0),
+                      child: CustomText(Globalization.clear.tr, color: Theme.of(context).colorScheme.onSecondaryContainer, fontSize: 16.0),
                     ),
                   ),
                   Expanded(
                     flex: 3,
                     child: CustomFilledButton(
-                      label: "apply".tr,
+                      label: Globalization.apply.tr,
                       onTap: () {
                         setState(() {
                           _endDate = endDate;
@@ -250,7 +251,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                 CustomLabelChip(
                   backgroundColor: _member.isExpired ? Colors.red : Colors.green,
                   foregroundColor: Colors.white,
-                  label: _member.isExpired ? "expired".tr : "active".tr,
+                  label: _member.isExpired ? Globalization.expired.tr : Globalization.active.tr,
                 ),
               ],
             ),
@@ -274,14 +275,14 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    CustomText("joined".tr, color: Colors.white, fontSize: 14.0),
+                    CustomText(Globalization.joined.tr, color: Colors.white, fontSize: 14.0),
                     CustomText(FormatterHelper.timestampToString(_member.memberCard.createdAt), color: Colors.white, fontSize: 14.0),
                   ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    CustomText("expires".tr, color: Colors.white, fontSize: 14.0),
+                    CustomText(Globalization.expires.tr, color: Colors.white, fontSize: 14.0),
                     CustomText(FormatterHelper.timestampToString(_member.memberCard.expiredDate), color: Colors.white, fontSize: 14.0),
                   ],
                 ),
@@ -300,19 +301,19 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
         Expanded(
           child: InkWell(
             onTap: () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _member.companyID}),
-            child: _buildQuickAccessItem("my_points".tr, _member.point.toString()),
+            child: _buildQuickAccessItem(Globalization.myPoints.tr, _member.point.toString()),
           ),
         ),
         Expanded(
           child: InkWell(
             onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _member.companyID}),
-            child: _buildQuickAccessItem("my_vouchers".tr, (_member.normalVoucherCount + _member.specialVoucherCount).toString()),
+            child: _buildQuickAccessItem(Globalization.myVouchers.tr, (_member.normalVoucherCount + _member.specialVoucherCount).toString()),
           ),
         ),
         Expanded(
           child: InkWell(
             onTap: () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _member.companyID}),
-            child: _buildQuickAccessItem("my_credits".tr, _member.credit.toStringAsFixed(1)),
+            child: _buildQuickAccessItem(Globalization.myCredits.tr, _member.credit.toStringAsFixed(1)),
           ),
         ),
       ],
@@ -374,7 +375,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
         ),
         Container(
           padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-          child: CustomText("msg_history_end".tr, color: Colors.grey, fontSize: 16.0),
+          child: CustomText(Globalization.msgHistoryEnd.tr, color: Colors.grey, fontSize: 16.0),
         ),
       ],
     );
@@ -390,7 +391,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
     child: Row(
       spacing: ResponsiveHelper.getSpacing(context, 16.0),
       children: <Widget>[
-        Expanded(child: CustomText("history".tr, fontSize: 18.0, fontWeight: FontWeight.bold)),
+        Expanded(child: CustomText(Globalization.history.tr, fontSize: 18.0, fontWeight: FontWeight.bold)),
         InkWell(
           onTap: () => _showFilterModal(),
           child: Row(

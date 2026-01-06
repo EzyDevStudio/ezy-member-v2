@@ -1,4 +1,5 @@
 import 'package:ezy_member_v2/helpers/message_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/voucher_model.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
 import 'package:flutter/material.dart';
@@ -60,23 +61,23 @@ class VoucherController extends GetxController {
     final response = await _api.post(endPoint: "collect-voucher", module: "VoucherController - collectVoucher", data: data, memberToken: memberToken);
 
     if (response == null) {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
       return;
     }
 
     if (response.data[ApiService.keyStatusCode] == 200) {
       loadOverview(memberCode);
-      _showSuccess("msg_voucher_collect_success".tr);
+      _showSuccess(Globalization.msgVoucherCollectSuccess.tr);
     } else if (response.data[ApiService.keyStatusCode] == 401) {
-      _showError("msg_member_expired".tr);
+      _showError(Globalization.msgMemberExpired.tr);
     } else if (response.data[ApiService.keyStatusCode] == 403) {
-      _showError("msg_voucher_all_collected".tr);
+      _showError(Globalization.msgVoucherAllCollected.tr);
     } else if (response.data[ApiService.keyStatusCode] == 404) {
-      _showError("msg_voucher_collected_before".tr);
+      _showError(Globalization.msgVoucherCollectedBefore.tr);
     } else if (response.data[ApiService.keyStatusCode] == 520) {
-      _showError("msg_token_invalid".tr);
+      _showError(Globalization.msgTokenInvalid.tr);
     } else {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
     }
   }
 
@@ -85,25 +86,25 @@ class VoucherController extends GetxController {
     final response = await _api.post(endPoint: "redeem-voucher", module: "VoucherController - redeemVoucher", data: data, memberToken: memberToken);
 
     if (response == null) {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
       return;
     }
 
     if (response.data[ApiService.keyStatusCode] == 200) {
       loadVouchers(memberCode, checkToday: 1);
-      _showSuccess("msg_voucher_collect_success".tr);
+      _showSuccess(Globalization.msgVoucherCollectSuccess.tr);
     } else if (response.data[ApiService.keyStatusCode] == 401) {
-      _showError("msg_member_expired".tr);
+      _showError(Globalization.msgMemberExpired.tr);
     } else if (response.data[ApiService.keyStatusCode] == 403) {
-      _showError("msg_voucher_all_collected".tr);
+      _showError(Globalization.msgVoucherAllCollected.tr);
     } else if (response.data[ApiService.keyStatusCode] == 404) {
-      _showError("msg_voucher_collected_before".tr);
+      _showError(Globalization.msgVoucherCollectedBefore.tr);
     } else if (response.data[ApiService.keyStatusCode] == 405) {
-      _showError("msg_point_not_enough".tr);
+      _showError(Globalization.msgPointNotEnough.tr);
     } else if (response.data[ApiService.keyStatusCode] == 520) {
-      _showError("msg_token_invalid".tr);
+      _showError(Globalization.msgTokenInvalid.tr);
     } else {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
     }
   }
 

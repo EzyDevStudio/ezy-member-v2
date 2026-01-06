@@ -3,6 +3,7 @@ import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/voucher_model.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
@@ -108,32 +109,37 @@ class CustomVoucher extends StatelessWidget {
               if (isCollectable)
                 InkWell(
                   onTap: onTapCollect,
-                  child: CustomText("collect".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 12.0),
+                  child: CustomText(Globalization.collect.tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 12.0),
                 ),
               if (isRedeemable)
                 InkWell(
                   onTap: onTapRedeem,
-                  child: CustomText("redeem".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 12.0),
+                  child: CustomText(Globalization.redeem.tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 12.0),
                 ),
             ],
           ),
-          CustomText("${voucher.discountValue.toStringAsFixed(1)} ${"off".tr}", fontSize: isCollectable ? 12.0 : 14.0),
+          CustomText("${voucher.discountValue.toStringAsFixed(1)} ${Globalization.off.tr}", fontSize: isCollectable ? 12.0 : 14.0),
           const Spacer(),
-          if (isRedeemable) CustomText("${"redeem_with".tr} ${voucher.usePointRedeem} ${"points".tr}", fontSize: isCollectable ? 12.0 : 14.0),
-          if (!isRedeemable) CustomText("${"min_spend".tr} ${voucher.minimumSpend}", fontSize: isCollectable ? 12.0 : 14.0),
+          if (isRedeemable)
+            CustomText("${Globalization.redeemWith.tr} ${voucher.usePointRedeem} ${Globalization.points.tr}", fontSize: isCollectable ? 12.0 : 14.0),
+          if (!isRedeemable) CustomText("${Globalization.minSpend.tr} ${voucher.minimumSpend}", fontSize: isCollectable ? 12.0 : 14.0),
           Row(
             spacing: ResponsiveHelper.getSpacing(context, 8.0),
             children: <Widget>[
               Expanded(
                 child: CustomText(
-                  "${"valid_till".tr} ${FormatterHelper.timestampToString(voucher.expiredDate)}",
+                  "${Globalization.validTill.tr} ${FormatterHelper.timestampToString(voucher.expiredDate)}",
                   color: Colors.black54,
                   fontSize: isCollectable ? 11.0 : 14.0,
                 ),
               ),
               InkWell(
                 onTap: () => Get.toNamed(AppRoutes.termsCondition, arguments: {"voucher": voucher}),
-                child: CustomText("tnc".tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: isCollectable ? 11.0 : 14.0),
+                child: CustomText(
+                  Globalization.tnc.tr,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  fontSize: isCollectable ? 11.0 : 14.0,
+                ),
               ),
             ],
           ),

@@ -1,5 +1,6 @@
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,11 +45,11 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
           labelColor: Theme.of(context).colorScheme.onPrimary,
           unselectedLabelColor: Colors.grey,
           tabs: <Tab>[
-            Tab(text: "personal".tr),
-            Tab(text: "working".tr),
+            Tab(text: Globalization.personal.tr),
+            Tab(text: Globalization.working.tr),
           ],
         ),
-        title: Text("e_invoice".tr),
+        title: Text(Globalization.eInvoice.tr),
       ),
       body: TabBarView(
         controller: _tabController,
@@ -75,7 +76,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
             ? InteractiveViewer(maxScale: 5.0, child: Image.network(image, fit: BoxFit.contain))
             : Padding(
                 padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-                child: CustomText("msg_no_e_invoice".tr, fontSize: 16.0, maxLines: 2, textAlign: TextAlign.center),
+                child: CustomText(Globalization.msgNoEInvoice.tr, fontSize: 16.0, maxLines: 2, textAlign: TextAlign.center),
               ),
       ),
       Spacer(),

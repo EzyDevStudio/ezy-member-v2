@@ -1,5 +1,6 @@
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/voucher_model.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
     body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()]),
   );
 
-  Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text("tnc_long".tr));
+  Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text(Globalization.tncLong.tr));
 
   Widget _buildContent() => SliverPadding(
     padding: EdgeInsets.only(
@@ -54,11 +55,11 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
           SizedBox(height: ResponsiveHelper.getSpacing(context, 16.0)),
           _buildListTile(
             subtitle: "${FormatterHelper.timestampToString(_voucher.startDate)} - ${FormatterHelper.timestampToString(_voucher.expiredDate)}",
-            title: "valid_period".tr,
+            title: Globalization.validPeriod.tr,
           ),
-          _buildListTile(subtitle: "${_voucher.discountValue.toStringAsFixed(1)} ${"off".tr}", title: "discount_amount".tr),
-          _buildListTile(subtitle: _voucher.minimumSpend.toStringAsFixed(1), title: "min_spend".tr),
-          _buildListTile(subtitle: _voucher.termsCondition, title: "more".tr),
+          _buildListTile(subtitle: "${_voucher.discountValue.toStringAsFixed(1)} ${Globalization.off.tr}", title: Globalization.discountAmount.tr),
+          _buildListTile(subtitle: _voucher.minimumSpend.toStringAsFixed(1), title: Globalization.minSpend.tr),
+          _buildListTile(subtitle: _voucher.termsCondition, title: Globalization.more.tr),
         ],
       ),
     ),

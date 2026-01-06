@@ -3,6 +3,7 @@ import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/location_helper.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/company_model.dart';
 import 'package:ezy_member_v2/models/history_model.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
@@ -35,7 +36,7 @@ class CustomHistoryListTile extends StatelessWidget {
     } else if (history.type == HistoryType.voucher) {
       title = history.voucher!.batchDescription;
       location = [history.voucher?.branchName, history.voucher?.counterDesc].where((s) => s != null && s.isNotEmpty).join(" - ");
-      value = history.voucher!.redeemDate == 0 ? "collect".tr : "redeem".tr;
+      value = history.voucher!.redeemDate == 0 ? Globalization.collect.tr : Globalization.redeem.tr;
       textColor = history.voucher!.redeemDate == 0 ? Colors.green : Colors.red;
     }
 
@@ -64,7 +65,11 @@ class CustomHistoryListTile extends StatelessWidget {
         children: <Widget>[
           CustomText(value, color: textColor, fontSize: 14.0),
           if (history.type != HistoryType.voucher)
-            CustomText(history.type == HistoryType.point ? "points".tr : "credits".tr, color: Theme.of(context).colorScheme.primary, fontSize: 11.0),
+            CustomText(
+              history.type == HistoryType.point ? Globalization.points.tr : Globalization.credits.tr,
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 11.0,
+            ),
         ],
       ),
     );
@@ -115,7 +120,7 @@ class CustomBranchExpansion extends StatelessWidget {
       child: ExpansionTile(
         childrenPadding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
         tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-        title: CustomText("${"Branches".tr} (${company.branches.length})", fontSize: 18.0, fontWeight: FontWeight.bold),
+        title: CustomText("${Globalization.branches.tr} (${company.branches.length})", fontSize: 18.0, fontWeight: FontWeight.bold),
         children: company.branches.map((branch) {
           return CustomInfoListTile(
             trailing: Icons.content_copy_rounded,
@@ -123,7 +128,7 @@ class CustomBranchExpansion extends StatelessWidget {
             subtitle: "${branch.fullAddress}\n(${branch.contactNumber})",
             onTapCopy: () {
               Clipboard.setData(ClipboardData(text: branch.fullAddress));
-              MessageHelper.show("msg_address_copied".tr, icon: Icons.content_copy_rounded);
+              MessageHelper.show(Globalization.msgAddressCopied.tr, icon: Icons.content_copy_rounded);
             },
             onTap: () => LocationHelper.redirectGoogleMap(branch.fullAddress),
           );

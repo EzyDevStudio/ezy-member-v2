@@ -2,6 +2,7 @@ import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/hive/member_profile_hive.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/profile_model.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
 import 'package:flutter/material.dart';
@@ -16,30 +17,30 @@ class AuthenticationController extends GetxController {
   Future<void> signUp(Map<String, dynamic> data) async {
     isSuccess.value = false;
 
-    _showLoading("msg_sign_up_processing".tr);
+    _showLoading(Globalization.msgSignUpProcessing.tr);
 
     final response = await _api.post(endPoint: "register-account", module: "AuthenticationController - signUp", data: data);
 
     _hideLoading();
 
     if (response == null) {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
       return;
     }
 
     switch (response.data[ApiService.keyStatusCode]) {
       case 200:
         isSuccess.value = true;
-        _showSuccess("msg_sign_up_success".tr);
+        _showSuccess(Globalization.msgSignUpSuccess.tr);
         break;
       case 401:
-        _showError("msg_email_exists".tr);
+        _showError(Globalization.msgEmailExists.tr);
         break;
       case 402:
-        _showError("msg_phone_exists".tr);
+        _showError(Globalization.msgPhoneExists.tr);
         break;
       default:
-        _showError("msg_system_error".tr);
+        _showError(Globalization.msgSystemError.tr);
         break;
     }
   }
@@ -48,14 +49,14 @@ class AuthenticationController extends GetxController {
     isSuccess.value = false;
     memberProfile.value = null;
 
-    _showLoading("msg_sign_in_processing".tr);
+    _showLoading(Globalization.msgSignInProcessing.tr);
 
     final response = await _api.post(endPoint: "login-account", module: "AuthenticationController - signIn", data: data);
 
     _hideLoading();
 
     if (response == null) {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
       return;
     }
 
@@ -81,23 +82,23 @@ class AuthenticationController extends GetxController {
           ),
         );
 
-        _showSuccess("msg_sign_in_success".tr);
+        _showSuccess(Globalization.msgSignInSuccess.tr);
         Get.offAllNamed(AppRoutes.home);
         break;
       case 400:
-        _showError("msg_sign_in_fail".tr);
+        _showError(Globalization.msgSignInFail.tr);
         break;
       case 401:
-        _showError("msg_email_not_found".tr);
+        _showError(Globalization.msgEmailNotFound.tr);
         break;
       case 402:
-        _showError("msg_phone_not_found".tr);
+        _showError(Globalization.msgPhoneNotFound.tr);
         break;
       case 403:
-        _showError("msg_account_inactive".tr);
+        _showError(Globalization.msgAccountInactive.tr);
         break;
       default:
-        _showError("msg_system_error".tr);
+        _showError(Globalization.msgSystemError.tr);
         break;
     }
   }
@@ -111,7 +112,7 @@ class AuthenticationController extends GetxController {
     );
 
     if (response == null) {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
       return;
     }
 
@@ -120,12 +121,12 @@ class AuthenticationController extends GetxController {
 
       await hive.signOut();
 
-      _showError("msg_token_expired".tr);
+      _showError(Globalization.msgTokenExpired.tr);
     }
   }
 
   void _showLoading(String message) {
-    MessageHelper.showDialog(type: DialogType.loading, message: message, title: "processing".tr);
+    MessageHelper.showDialog(type: DialogType.loading, message: message, title: Globalization.processing.tr);
   }
 
   void _hideLoading() {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/advertisement_model.dart';
 import 'package:ezy_member_v2/models/branch_model.dart';
 import 'package:ezy_member_v2/models/member_model.dart';
@@ -62,14 +63,14 @@ class CustomMemberCard extends StatelessWidget {
                   CustomLabelChip(
                     backgroundColor: member.isExpired ? Colors.red : Colors.green,
                     foregroundColor: Colors.white,
-                    label: member.isExpired ? "expired".tr : "active".tr,
+                    label: member.isExpired ? Globalization.expired.tr : Globalization.active.tr,
                   ),
                   const Spacer(),
                   CustomText(member.point.toString(), color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                  CustomText("points".tr, color: Colors.white, fontSize: 16.0),
+                  CustomText(Globalization.points.tr, color: Colors.white, fontSize: 16.0),
                   const Spacer(),
                   CustomText(member.credit.toStringAsFixed(1), color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                  CustomText("credits".tr, color: Colors.white, fontSize: 16.0),
+                  CustomText(Globalization.credits.tr, color: Colors.white, fontSize: 16.0),
                 ],
               ),
             ],
@@ -138,7 +139,7 @@ class CustomNearbyCard extends StatelessWidget {
                           Positioned(
                             right: kPositionLabel,
                             top: kPositionLabel,
-                            child: CustomLabelChip(label: "expired".tr),
+                            child: CustomLabelChip(label: Globalization.expired.tr),
                           ),
                         Positioned(
                           bottom: kPositionLabel,
@@ -169,7 +170,7 @@ class CustomNearbyCard extends StatelessWidget {
                         Positioned(
                           right: kPositionLabel,
                           top: kPositionLabel,
-                          child: CustomLabelChip(label: "join_now".tr),
+                          child: CustomLabelChip(label: Globalization.joinNow.tr),
                         ),
                       ],
                     ],

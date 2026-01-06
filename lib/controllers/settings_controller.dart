@@ -1,14 +1,13 @@
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/services/local/settings_storage_service.dart';
-import 'package:ezy_member_v2/translations/translations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SettingsController extends GetxController {
   final SettingsStorageService _storageService = SettingsStorageService();
+  final Rx<Locale> locale = Globalization.defaultLocale.obs;
 
-  var lang = "".obs;
-
-  String get language => lang.value;
+  Locale get currentLocale => locale.value;
 
   @override
   void onInit() {
@@ -20,21 +19,16 @@ class SettingsController extends GetxController {
   Future<void> _initializeSettings() async {
     await _storageService.init();
 
-    if (_storageService.hasLanguage()) {
-      lang.value = _storageService.getLanguage() ?? AppTranslations.defaultLanguage;
-      Get.updateLocale(Locale(lang.value));
-    } else {
-      lang.value = AppTranslations.defaultLanguage;
-      Get.updateLocale(Locale(AppTranslations.defaultLanguage));
-    }
+    final savedLocale = _storageService.getLocale();
+
+    if (savedLocale != null) locale.value = savedLocale;
+
+    Get.updateLocale(locale.value);
   }
 
-  Future<void> changeLanguage(String languageCode) async {
-    Locale locale = Locale(languageCode);
-    Get.updateLocale(locale);
-
-    await _storageService.saveLanguage(languageCode);
-
-    lang.value = languageCode;
+  Future<void> changeLanguage(Locale newLocale) async {
+    locale.value = newLocale;
+    Get.updateLocale(newLocale);
+    await _storageService.saveLocale(newLocale);
   }
 }

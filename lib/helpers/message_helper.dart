@@ -1,6 +1,7 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -171,7 +172,7 @@ class MessageHelper {
                           child: TextButton(
                             style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, foregroundColor: Colors.black87),
                             onPressed: () => Get.back(result: false),
-                            child: CustomText(cancelText ?? "cancel".tr, fontSize: 18.0),
+                            child: CustomText(cancelText ?? Globalization.cancel.tr, fontSize: 18.0),
                           ),
                         ),
                         Expanded(
@@ -182,7 +183,7 @@ class MessageHelper {
                               padding: EdgeInsets.all(ResponsiveHelper.getSpacing(Get.context!, 16.0)),
                             ),
                             onPressed: () => Get.back(result: true),
-                            child: CustomText(confirmText ?? "confirm".tr, color: Get.theme.colorScheme.onPrimary, fontSize: 18.0),
+                            child: CustomText(confirmText ?? Globalization.confirm.tr, color: Get.theme.colorScheme.onPrimary, fontSize: 18.0),
                           ),
                         ),
                       ],

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:ezy_member_v2/helpers/message_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/pin_model.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class PinController {
     final response = await _api.post(endPoint: "generate-pin", module: "PinController - generatePin", data: data, memberToken: memberToken);
 
     if (response == null || response.data[PinModel.keyPin] == null) {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
       return;
     }
 
@@ -28,9 +29,9 @@ class PinController {
 
       pin.value = PinModel.fromJson(json);
     } else if (response.data[ApiService.keyStatusCode] == 520) {
-      _showError("msg_token_invalid".tr);
+      _showError(Globalization.msgTokenInvalid.tr);
     } else {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
     }
 
     isLoading.value = false;

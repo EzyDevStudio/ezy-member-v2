@@ -2,6 +2,7 @@ import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_text_field.dart';
@@ -51,7 +52,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(title: Text("my_cards".tr)),
+    appBar: AppBar(title: Text(Globalization.myCards.tr)),
     body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
   );
 
@@ -66,7 +67,9 @@ class _MemberListScreenState extends State<MemberListScreen> {
     if (_memberController.members.isEmpty) {
       return Padding(
         padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-        child: Center(child: CustomText("msg_no_available".trParams({"label": "member".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
+        child: Center(
+          child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.member.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2),
+        ),
       );
     }
 

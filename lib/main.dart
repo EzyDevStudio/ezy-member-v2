@@ -4,6 +4,8 @@ import 'package:ezy_member_v2/constants/app_themes.dart';
 import 'package:ezy_member_v2/controllers/authentication_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/settings_controller.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
+import 'package:ezy_member_v2/language/intl_keys.dart';
 import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/local/member_profile_storage_service.dart';
 import 'package:ezy_member_v2/services/local/notification_service.dart';
@@ -39,10 +41,10 @@ void main() async {
       theme: AppThemes().lightTheme,
       getPages: AppRoutes.pages,
       initialRoute: AppRoutes.wrapper,
-      locale: Get.locale,
-      fallbackLocale: Locale(AppTranslations.defaultLanguage),
-      translations: AppTranslations(),
-      supportedLocales: AppTranslations.languages.keys.map((langCode) => Locale(langCode, "")).toList(),
+      locale: Globalization.defaultLocale,
+      fallbackLocale: Globalization.defaultLocale,
+      translations: IntlKeys(),
+      // supportedLocales: AppTranslations.languages.keys.map((langCode) => Locale(langCode, "")).toList(),
       localizationsDelegates: [GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate, GlobalWidgetsLocalizations.delegate],
     ),
   );

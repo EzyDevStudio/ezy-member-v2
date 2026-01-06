@@ -1,4 +1,5 @@
 import 'package:ezy_member_v2/helpers/message_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/company_model.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class CompanyController extends GetxController {
   }
 
   Future<bool> registerMember(String companyID, String memberCode) async {
-    _showLoading("msg_member_register_processing".tr);
+    _showLoading(Globalization.msgMemberRegisterProcessing.tr);
 
     final Map<String, dynamic> data = {"company_id": companyID, "member_code": memberCode};
     final response = await _api.post(endPoint: "register-member", module: "CompanyController - registerMember", data: data);
@@ -39,21 +40,21 @@ class CompanyController extends GetxController {
     _hideLoading();
 
     if (response == null) {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
       return false;
     }
 
     if (response.data[ApiService.keyStatusCode] == 200) {
-      _showSuccess("msg_member_register_success".tr);
+      _showSuccess(Globalization.msgMemberRegisterSuccess.tr);
       return true;
     } else {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
       return false;
     }
   }
 
   void _showLoading(String message) {
-    MessageHelper.showDialog(type: DialogType.loading, message: message, title: "processing".tr);
+    MessageHelper.showDialog(type: DialogType.loading, message: message, title: Globalization.processing.tr);
   }
 
   void _hideLoading() {

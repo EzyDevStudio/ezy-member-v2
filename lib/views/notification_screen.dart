@@ -3,6 +3,7 @@ import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/voucher_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_voucher.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(title: Text("notifications".tr)),
+    appBar: AppBar(title: Text(Globalization.notifications.tr)),
     body: RefreshIndicator(onRefresh: _onRefresh, child: _buildVoucherList()),
   );
 
@@ -67,12 +68,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   if (index == 0 && todayVouchers.isNotEmpty)
                     Padding(
                       padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
-                      child: CustomText("voucher_expires_today".tr, fontSize: 18, fontWeight: FontWeight.bold),
+                      child: CustomText(Globalization.voucherExpiresToday.tr, fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   if (index == todayVouchers.length && redeemableVouchers.isNotEmpty)
                     Padding(
                       padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
-                      child: CustomText("redeemable_vouchers".tr, fontSize: 18, fontWeight: FontWeight.bold),
+                      child: CustomText(Globalization.redeemableVouchers.tr, fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   isTodaySection
                       ? CustomVoucher(

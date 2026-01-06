@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/profile_model.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
 import 'package:ezy_member_v2/views/profile_detail_screen.dart';
@@ -20,7 +21,7 @@ class ProfileController extends GetxController {
   ProfileDetailControllers? workingControllers;
 
   Future<void> loadProfile(String memberCode, ProfileType type) async {
-    _showLoading("msg_profile_retrieving".tr);
+    _showLoading(Globalization.msgProfileRetrieving.tr);
 
     final bool isMember = type == ProfileType.member;
     final String endpoint = isMember ? "get-personal-profile/$memberCode" : "get-working-profile/$memberCode";
@@ -45,7 +46,7 @@ class ProfileController extends GetxController {
   Future<void> updateProfile(Map<String, dynamic> json, ProfileType type, String memberToken) async {
     isUpdate.value = false;
 
-    _showLoading("msg_profile_updating".tr);
+    _showLoading(Globalization.msgProfileUpdating.tr);
 
     final bool isMember = type == ProfileType.member;
     final String endpoint = isMember ? "update-personal-profile" : "update-working-profile";
@@ -54,32 +55,32 @@ class ProfileController extends GetxController {
     _hideLoading();
 
     if (response == null) {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
       return;
     }
 
     switch (response.data[ApiService.keyStatusCode]) {
       case 200:
         isUpdate.value = true;
-        _showSuccess("msg_profile_success".tr);
+        _showSuccess(Globalization.msgProfileSuccess.tr);
         break;
       case 401:
-        _showError("msg_phone_exists".tr);
+        _showError(Globalization.msgPhoneExists.tr);
         break;
       case 402:
-        _showError("msg_email_exists".tr);
+        _showError(Globalization.msgEmailExists.tr);
         break;
       case 520:
-        _showError("msg_token_invalid".tr);
+        _showError(Globalization.msgTokenInvalid.tr);
         break;
       default:
-        _showError("msg_system_error".tr);
+        _showError(Globalization.msgSystemError.tr);
         break;
     }
   }
 
   Future<void> uploadMedia(File file, int imgType, String memberCode, String memberToken) async {
-    _showLoading("msg_profile_updating".tr);
+    _showLoading(Globalization.msgProfileUpdating.tr);
 
     final Map<String, dynamic> data = {"image_type": imgType, "member_code": memberCode};
     final response = await _api.postFile(
@@ -93,7 +94,7 @@ class ProfileController extends GetxController {
     _hideLoading();
 
     if (response == null || response.data["filename"] == null) {
-      _showError("msg_system_error".tr);
+      _showError(Globalization.msgSystemError.tr);
       return;
     }
 
@@ -106,20 +107,20 @@ class ProfileController extends GetxController {
         if (imgType == 2) hive.updatePersonalInvoiceImage(response.data["filename"]);
         if (imgType == 3) hive.updateCompanyInvoiceImage(response.data["filename"]);
 
-        _showSuccess("msg_profile_success".tr);
+        _showSuccess(Globalization.msgProfileSuccess.tr);
 
         break;
       case 520:
-        _showError("msg_token_invalid".tr);
+        _showError(Globalization.msgTokenInvalid.tr);
         break;
       default:
-        _showError("msg_system_error".tr);
+        _showError(Globalization.msgSystemError.tr);
         break;
     }
   }
 
   void _showLoading(String message) {
-    MessageHelper.showDialog(type: DialogType.loading, message: message, title: "processing".tr);
+    MessageHelper.showDialog(type: DialogType.loading, message: message, title: Globalization.processing.tr);
   }
 
   void _hideLoading() {

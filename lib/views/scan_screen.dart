@@ -6,6 +6,7 @@ import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/pin_controller.dart';
 import 'package:ezy_member_v2/helpers/cipher_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -67,12 +68,12 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   String _formatTime(int totalSeconds) {
-    if (totalSeconds <= 0) return "code_expired".tr;
+    if (totalSeconds <= 0) return Globalization.codeExpired.tr;
 
     final int minutes = totalSeconds ~/ 60;
     final int seconds = totalSeconds % 60;
 
-    return "msg_expired_timer".trParams({"minutes": minutes.toString(), "seconds": seconds.toString().padLeft(2, "0")});
+    return Globalization.msgExpiredTimer.trParams({"minutes": minutes.toString(), "seconds": seconds.toString().padLeft(2, "0")});
   }
 
   @override
@@ -85,7 +86,10 @@ class _ScanScreenState extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.primary, title: Text(_type == ScanType.earn ? "earn".tr : "redeem".tr)),
+    appBar: AppBar(
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      title: Text(_type == ScanType.earn ? Globalization.earn.tr : Globalization.redeem.tr),
+    ),
     body: _buildContent(),
   );
 

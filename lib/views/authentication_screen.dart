@@ -2,6 +2,7 @@ import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/controllers/authentication_controller.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/phone_detail.dart';
 import 'package:ezy_member_v2/models/profile_model.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
@@ -25,7 +26,7 @@ class AuthenticationScreen extends StatefulWidget {
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> with SingleTickerProviderStateMixin {
   final AuthenticationController _authController = Get.put(AuthenticationController(), tag: "authentication");
-  final Map<AuthType, String> _authTypes = {AuthType.email: "email".tr, AuthType.phone: "phone".tr};
+  final Map<AuthType, String> _authTypes = {AuthType.email: Globalization.email.tr, AuthType.phone: Globalization.phone.tr};
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -97,24 +98,24 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
     if (!isSignIn) {
       // Sign up validation
       if (username.isEmpty) {
-        message = "msg_required".trParams({"label": "username".tr});
+        message = Globalization.msgRequired.trParams({"label": Globalization.username.tr});
       } else if (email.isEmpty) {
-        message = "msg_required".trParams({"label": "email".tr});
+        message = Globalization.msgRequired.trParams({"label": Globalization.email.tr});
       } else if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(email)) {
-        message = "msg_email_invalid_format".tr;
+        message = Globalization.msgEmailInvalidFormat.tr;
       } else if (phone.isEmpty) {
-        message = "msg_required".trParams({"label": "phone".tr});
+        message = Globalization.msgRequired.trParams({"label": Globalization.phone.tr});
       } else if (!RegExp(r"^\d{6,12}$").hasMatch(phone)) {
-        message = "msg_phone_invalid_format".tr;
+        message = Globalization.msgPhoneInvalidFormat.tr;
       }
     } else {
       // Sign in validation
       if ((_selectedType == AuthType.email) && email.isEmpty) {
-        message = "msg_required".trParams({"label": "email".tr});
+        message = Globalization.msgRequired.trParams({"label": Globalization.email.tr});
       } else if ((_selectedType == AuthType.phone) && phone.isEmpty) {
-        message = "msg_required".trParams({"label": "phone".tr});
+        message = Globalization.msgRequired.trParams({"label": Globalization.phone.tr});
       } else if (password.isEmpty) {
-        message = "msg_required".trParams({"label": "password".tr});
+        message = Globalization.msgRequired.trParams({"label": Globalization.password.tr});
       }
     }
 
@@ -153,11 +154,11 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
       labelColor: Theme.of(context).colorScheme.onPrimary,
       unselectedLabelColor: Colors.grey,
       tabs: <Tab>[
-        Tab(text: "sign_in".tr),
-        Tab(text: "sign_up".tr),
+        Tab(text: Globalization.signIn.tr),
+        Tab(text: Globalization.signUp.tr),
       ],
     ),
-    title: Text("welcome".tr),
+    title: Text(Globalization.welcome.tr),
   );
 
   Widget _buildContent() => SliverFillRemaining(
@@ -177,14 +178,14 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
               spacing: ResponsiveHelper.getSpacing(context, 16.0),
               children: <Widget>[
                 Image.asset("assets/images/sign_in.png", scale: kSquareRatio, height: ResponsiveHelper.getAuthImgSize(context)),
-                CustomText("msg_sign_in".tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
+                CustomText(Globalization.msgSignIn.tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
                 CustomChoiceChip(values: _authTypes, selectedValue: _selectedType, onSelected: (type) => setState(() => _selectedType = type)),
                 if (isEmail)
                   CustomOutlinedTextField(
                     controller: _emailController,
                     icon: Icons.email_rounded,
                     type: OutlinedType.text,
-                    label: "email".tr,
+                    label: Globalization.email.tr,
                     keyboardType: TextInputType.emailAddress,
                   ),
                 if (!isEmail)
@@ -192,13 +193,18 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
                     controller: _phoneController,
                     type: OutlinedType.phone,
                     phone: _phone,
-                    label: "phone".tr,
+                    label: Globalization.phone.tr,
                     keyboardType: TextInputType.phone,
                     onPhoneChanged: (value) => setState(() => _phone = value),
                   ),
-                CustomOutlinedTextField(controller: _passwordController, icon: Icons.lock_rounded, type: OutlinedType.password, label: "password".tr),
+                CustomOutlinedTextField(
+                  controller: _passwordController,
+                  icon: Icons.lock_rounded,
+                  type: OutlinedType.password,
+                  label: Globalization.password.tr,
+                ),
                 _buildForgotPassword(),
-                CustomFilledButton(label: "sign_in".tr, onTap: _signIn),
+                CustomFilledButton(label: Globalization.signIn.tr, onTap: _signIn),
                 _buildAuthMessage(true),
               ],
             ),
@@ -218,30 +224,30 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
             spacing: ResponsiveHelper.getSpacing(context, 16.0),
             children: <Widget>[
               Image.asset("assets/images/sign_up.png", scale: kSquareRatio, height: ResponsiveHelper.getAuthImgSize(context)),
-              CustomText("msg_sign_up".tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
+              CustomText(Globalization.msgSignUp.tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
               CustomOutlinedTextField(
                 controller: _usernameController,
                 icon: Icons.account_circle_rounded,
                 type: OutlinedType.text,
-                label: "username".tr,
+                label: Globalization.username.tr,
               ),
               CustomOutlinedTextField(
                 controller: _emailController,
                 icon: Icons.email_rounded,
                 type: OutlinedType.text,
-                label: "email".tr,
+                label: Globalization.email.tr,
                 keyboardType: TextInputType.emailAddress,
               ),
               CustomOutlinedTextField(
                 controller: _phoneController,
                 type: OutlinedType.phone,
                 phone: _phone,
-                label: "phone".tr,
+                label: Globalization.phone.tr,
                 keyboardType: TextInputType.phone,
                 onPhoneChanged: (value) => setState(() => _phone = value),
               ),
               const SizedBox(),
-              CustomFilledButton(label: "sign_up".tr, onTap: _signUp),
+              CustomFilledButton(label: Globalization.signUp.tr, onTap: _signUp),
               _buildAuthMessage(false),
             ],
           ),
@@ -255,18 +261,18 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
     child: TextButton(
       style: TextButton.styleFrom(tapTargetSize: MaterialTapTargetSize.shrinkWrap, minimumSize: Size.zero),
       onPressed: () {},
-      child: CustomText("forgot_password".tr, color: Theme.of(context).colorScheme.primary, fontSize: 14.0, fontWeight: FontWeight.bold),
+      child: CustomText(Globalization.forgotPassword.tr, color: Theme.of(context).colorScheme.primary, fontSize: 14.0, fontWeight: FontWeight.bold),
     ),
   );
 
   Widget _buildAuthMessage(bool isSignIn) => RichText(
     text: TextSpan(
-      text: isSignIn ? "msg_account_not_exists".tr : "msg_account_exists".tr,
+      text: isSignIn ? Globalization.msgAccountNotExists.tr : Globalization.msgAccountExists.tr,
       style: TextStyle(color: Colors.black87, fontSize: 14.0),
       children: <TextSpan>[
         TextSpan(
           recognizer: TapGestureRecognizer()..onTap = () => _tabController.index = isSignIn ? 1 : 0,
-          text: isSignIn ? "sign_up".tr : "sign_in".tr,
+          text: isSignIn ? Globalization.signUp.tr : Globalization.signIn.tr,
           style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 14.0, fontWeight: FontWeight.bold),
         ),
       ],

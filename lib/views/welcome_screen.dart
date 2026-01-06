@@ -1,6 +1,7 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,10 +36,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: ResponsiveHelper.getSpacing(context, 16.0),
               children: <Widget>[
-                CustomText("welcome".tr, color: Theme.of(context).colorScheme.primary, fontSize: 18.0, fontWeight: FontWeight.w700),
-                CustomText("msg_welcome".tr, fontSize: 14.0, maxLines: null),
-                _buildOptionTile(() => Get.toNamed(AppRoutes.authentication), "msg_continue_sign_in".tr, "sign_in_account".tr),
-                _buildOptionTile(() => Get.offAllNamed(AppRoutes.home), "msg_continue_guest".tr, "continue_guest".tr),
+                CustomText(Globalization.welcome.tr, color: Theme.of(context).colorScheme.primary, fontSize: 18.0, fontWeight: FontWeight.w700),
+                CustomText(Globalization.msgWelcome.tr, fontSize: 14.0, maxLines: null),
+                _buildOptionTile(() => Get.toNamed(AppRoutes.authentication), Globalization.msgContinueSignIn.tr, Globalization.signInAccount.tr),
+                _buildOptionTile(() => Get.offAllNamed(AppRoutes.home), Globalization.msgContinueGuest.tr, Globalization.continueGuest.tr),
               ],
             ),
           ),

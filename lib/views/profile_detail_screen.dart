@@ -8,6 +8,7 @@ import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/media_helper.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/phone_detail.dart';
 import 'package:ezy_member_v2/models/profile_model.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
@@ -107,7 +108,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   void _uploadMedia(int imgType) async {
     final pickedSource = await CustomTypePickerDialog.show<ImageSource, String>(
       context: context,
-      title: "select_source".tr,
+      title: Globalization.selectSource.tr,
       options: AppStrings().imageSrc,
       onDisplay: (option) => option,
     );
@@ -148,7 +149,11 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     FocusScope.of(context).unfocus();
 
     if (_memberControllers[fieldContactNumber].text.trim().isEmpty) {
-      MessageHelper.show("msg_required".trParams({"label": "phone".tr}), backgroundColor: Colors.red, icon: Icons.error_rounded);
+      MessageHelper.show(
+        Globalization.msgRequired.trParams({"label": Globalization.phone.tr}),
+        backgroundColor: Colors.red,
+        icon: Icons.error_rounded,
+      );
       return;
     }
 
@@ -180,7 +185,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     FocusScope.of(context).unfocus();
 
     if (_isRequired && !_workingControllers.validateRequiredFields()) {
-      MessageHelper.show("msg_required_e_invoice".tr, backgroundColor: Colors.red, icon: Icons.error_rounded);
+      MessageHelper.show(Globalization.msgRequiredEInvoice.tr, backgroundColor: Colors.red, icon: Icons.error_rounded);
       return;
     }
 
@@ -237,12 +242,12 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       labelColor: Theme.of(context).colorScheme.onPrimary,
       unselectedLabelColor: Colors.grey,
       tabs: <Tab>[
-        Tab(text: "member".tr),
-        Tab(text: "working".tr),
-        Tab(text: "settings".tr),
+        Tab(text: Globalization.member.tr),
+        Tab(text: Globalization.working.tr),
+        Tab(text: Globalization.settings.tr),
       ],
     ),
-    title: Text("profile".tr),
+    title: Text(Globalization.profile.tr),
   );
 
   Widget _buildContent() => SliverFillRemaining(
@@ -265,14 +270,14 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               ),
             ),
             CustomSectionCard(
-              title: "basic_information".tr,
+              title: Globalization.basicInformation.tr,
               children: <Widget>[
-                CustomUnderlineTextField(controller: _memberControllers[fieldName], label: "name".tr),
-                CustomUnderlineTextField(enabled: false, controller: _memberControllers[fieldEmail], label: "email".tr),
+                CustomUnderlineTextField(controller: _memberControllers[fieldName], label: Globalization.name.tr),
+                CustomUnderlineTextField(enabled: false, controller: _memberControllers[fieldEmail], label: Globalization.email.tr),
                 CustomUnderlineTextField(
                   controller: _memberControllers[fieldContactNumber],
                   phone: _phoneMember,
-                  label: "phone".tr,
+                  label: Globalization.phone.tr,
                   type: UnderlineType.phone,
                   keyboardType: TextInputType.phone,
                   onPhoneChanged: (value) => setState(() => _phoneMember = value),
@@ -283,11 +288,11 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                     Expanded(
                       child: CustomUnderlineTextField(
                         controller: _memberControllers[fieldGender],
-                        label: "gender".tr,
+                        label: Globalization.gender.tr,
                         onTap: () async {
                           final pickedGender = await CustomTypePickerDialog.show<String, String>(
                             context: context,
-                            title: "pick_gender".tr,
+                            title: Globalization.pickGender.tr,
                             options: AppStrings().genders,
                             onDisplay: (option) => option,
                           );
@@ -302,34 +307,34 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                     Expanded(
                       child: CustomUnderlineTextField(
                         controller: _memberControllers[fieldDOB],
-                        label: "dob".tr,
+                        label: Globalization.dob.tr,
                         onTap: () => _selectDate(context, _memberControllers[fieldDOB]),
                       ),
                     ),
                   ],
                 ),
-                CustomUnderlineTextField(controller: _memberControllers[fieldAccountCode], label: "account_code".tr),
+                CustomUnderlineTextField(controller: _memberControllers[fieldAccountCode], label: Globalization.accountCode.tr),
               ],
             ),
             CustomSectionCard(
-              title: "address".tr,
+              title: Globalization.address.tr,
               children: <Widget>[
-                CustomUnderlineTextField(controller: _memberControllers[fieldAddress1], label: "${"address_line".tr} 1"),
-                CustomUnderlineTextField(controller: _memberControllers[fieldAddress2], label: "${"address_line".tr} 2"),
-                CustomUnderlineTextField(controller: _memberControllers[fieldAddress3], label: "${"address_line".tr} 3"),
-                CustomUnderlineTextField(controller: _memberControllers[fieldAddress4], label: "${"address_line".tr} 4"),
+                CustomUnderlineTextField(controller: _memberControllers[fieldAddress1], label: "${Globalization.addressLine.tr} 1"),
+                CustomUnderlineTextField(controller: _memberControllers[fieldAddress2], label: "${Globalization.addressLine.tr} 2"),
+                CustomUnderlineTextField(controller: _memberControllers[fieldAddress3], label: "${Globalization.addressLine.tr} 3"),
+                CustomUnderlineTextField(controller: _memberControllers[fieldAddress4], label: "${Globalization.addressLine.tr} 4"),
                 Row(
                   spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
                     Expanded(
                       child: CustomUnderlineTextField(
                         controller: _memberControllers[fieldPostcode],
-                        label: "postcode".tr,
+                        label: Globalization.postcode.tr,
                         keyboardType: TextInputType.number,
                       ),
                     ),
                     Expanded(
-                      child: CustomUnderlineTextField(controller: _memberControllers[fieldCity], label: "city".tr),
+                      child: CustomUnderlineTextField(controller: _memberControllers[fieldCity], label: Globalization.city.tr),
                     ),
                   ],
                 ),
@@ -337,12 +342,12 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
                     Expanded(
-                      child: CustomUnderlineTextField(controller: _memberControllers[fieldState], label: "state".tr),
+                      child: CustomUnderlineTextField(controller: _memberControllers[fieldState], label: Globalization.state.tr),
                     ),
                     Expanded(
                       child: CustomUnderlineTextField(
                         controller: _memberControllers[fieldCountry],
-                        label: "country".tr,
+                        label: Globalization.country.tr,
                         onTap: () async {
                           final selectedPhone = await CustomCountryPickerDialog.show(context);
 
@@ -355,11 +360,11 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               ],
             ),
             CustomSectionCard(
-              title: "registration_information".tr,
+              title: Globalization.registrationInformation.tr,
               children: <Widget>[
-                CustomUnderlineTextField(controller: _memberControllers[fieldTIN], label: "tin".tr),
-                CustomUnderlineTextField(controller: _memberControllers[fieldSSTRegistrationNo], label: "sst_registration".tr),
-                CustomUnderlineTextField(controller: _memberControllers[fieldTTXRegistrationNo], label: "ttx_registration".tr),
+                CustomUnderlineTextField(controller: _memberControllers[fieldTIN], label: Globalization.tin.tr),
+                CustomUnderlineTextField(controller: _memberControllers[fieldSSTRegistrationNo], label: Globalization.sstRegistration.tr),
+                CustomUnderlineTextField(controller: _memberControllers[fieldTTXRegistrationNo], label: Globalization.ttxRegistration.tr),
               ],
             ),
             const SizedBox(),
@@ -369,7 +374,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 left: ResponsiveHelper.getSpacing(context, 16.0),
                 right: ResponsiveHelper.getSpacing(context, 16.0),
               ),
-              child: CustomFilledButton(label: "save_changes".tr, onTap: () => _updateMemberProfile()),
+              child: CustomFilledButton(label: Globalization.saveChanges.tr, onTap: () => _updateMemberProfile()),
             ),
           ],
         ),
@@ -405,9 +410,9 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 value: _isRequired,
                 contentPadding: EdgeInsets.zero,
                 onChanged: (value) => setState(() => _isRequired = value!),
-                subtitle: _isRequired ? CustomText("msg_required_e_invoice".tr, fontSize: 14.0) : null,
+                subtitle: _isRequired ? CustomText(Globalization.msgRequiredEInvoice.tr, fontSize: 14.0) : null,
                 title: CustomText(
-                  "required_e_invoice".tr,
+                  Globalization.requiredEInvoice.tr,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
@@ -415,20 +420,20 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               ),
             ),
             CustomSectionCard(
-              title: "company_information".tr,
+              title: Globalization.companyInformation.tr,
               children: <Widget>[
-                CustomUnderlineTextField(controller: _workingControllers[fieldName], isRequired: _isRequired, label: "name".tr),
+                CustomUnderlineTextField(controller: _workingControllers[fieldName], isRequired: _isRequired, label: Globalization.name.tr),
                 CustomUnderlineTextField(
                   controller: _workingControllers[fieldEmail],
                   isRequired: _isRequired,
-                  label: "email".tr,
+                  label: Globalization.email.tr,
                   keyboardType: TextInputType.emailAddress,
                 ),
                 CustomUnderlineTextField(
                   controller: _workingControllers[fieldContactNumber],
                   isRequired: _isRequired,
                   phone: _phoneWorking,
-                  label: "phone".tr,
+                  label: Globalization.phone.tr,
                   type: UnderlineType.phone,
                   keyboardType: TextInputType.phone,
                   onPhoneChanged: (value) => setState(() => _phoneWorking = value),
@@ -436,12 +441,16 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               ],
             ),
             CustomSectionCard(
-              title: "address".tr,
+              title: Globalization.address.tr,
               children: <Widget>[
-                CustomUnderlineTextField(controller: _workingControllers[fieldAddress1], isRequired: _isRequired, label: "${"address_line".tr} 1"),
-                CustomUnderlineTextField(controller: _workingControllers[fieldAddress2], label: "${"address_line".tr} 2"),
-                CustomUnderlineTextField(controller: _workingControllers[fieldAddress3], label: "${"address_line".tr} 3"),
-                CustomUnderlineTextField(controller: _workingControllers[fieldAddress4], label: "${"address_line".tr} 4"),
+                CustomUnderlineTextField(
+                  controller: _workingControllers[fieldAddress1],
+                  isRequired: _isRequired,
+                  label: "${Globalization.addressLine.tr} 1",
+                ),
+                CustomUnderlineTextField(controller: _workingControllers[fieldAddress2], label: "${Globalization.addressLine.tr} 2"),
+                CustomUnderlineTextField(controller: _workingControllers[fieldAddress3], label: "${Globalization.addressLine.tr} 3"),
+                CustomUnderlineTextField(controller: _workingControllers[fieldAddress4], label: "${Globalization.addressLine.tr} 4"),
                 Row(
                   spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
@@ -449,12 +458,16 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                       child: CustomUnderlineTextField(
                         controller: _workingControllers[fieldPostcode],
                         isRequired: _isRequired,
-                        label: "postcode".tr,
+                        label: Globalization.postcode.tr,
                         keyboardType: TextInputType.number,
                       ),
                     ),
                     Expanded(
-                      child: CustomUnderlineTextField(controller: _workingControllers[fieldCity], isRequired: _isRequired, label: "city".tr),
+                      child: CustomUnderlineTextField(
+                        controller: _workingControllers[fieldCity],
+                        isRequired: _isRequired,
+                        label: Globalization.city.tr,
+                      ),
                     ),
                   ],
                 ),
@@ -462,13 +475,17 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
                     Expanded(
-                      child: CustomUnderlineTextField(controller: _workingControllers[fieldState], isRequired: _isRequired, label: "state".tr),
+                      child: CustomUnderlineTextField(
+                        controller: _workingControllers[fieldState],
+                        isRequired: _isRequired,
+                        label: Globalization.state.tr,
+                      ),
                     ),
                     Expanded(
                       child: CustomUnderlineTextField(
                         controller: _workingControllers[fieldCountry],
                         isRequired: _isRequired,
-                        label: "country".tr,
+                        label: Globalization.country.tr,
                         onTap: () async {
                           final selectedPhone = await CustomCountryPickerDialog.show(context);
 
@@ -481,18 +498,18 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               ],
             ),
             CustomSectionCard(
-              title: "registration_information".tr,
+              title: Globalization.registrationInformation.tr,
               children: <Widget>[
                 CustomUnderlineTextField(
                   typeController: _workingControllers[fieldRegistrationSchemeID],
                   valueController: _workingControllers[fieldRegistrationSchemeNo],
                   isRequired: _isRequired,
-                  label: "registration_scheme_id".tr,
+                  label: Globalization.registrationSchemeID.tr,
                   type: UnderlineType.idType,
                   onTap: () async {
                     final pickedIDTypes = await CustomTypePickerDialog.show<String, String>(
                       context: context,
-                      title: "pick_registration_type".tr,
+                      title: Globalization.pickRegistrationType.tr,
                       options: AppStrings().idTypes,
                       onDisplay: (option) => option,
                     );
@@ -503,15 +520,15 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                     }
                   },
                 ),
-                CustomUnderlineTextField(controller: _workingControllers[fieldTIN], isRequired: _isRequired, label: "tin".tr),
-                CustomUnderlineTextField(controller: _workingControllers[fieldSSTRegistrationNo], label: "sst_registration".tr),
+                CustomUnderlineTextField(controller: _workingControllers[fieldTIN], isRequired: _isRequired, label: Globalization.tin.tr),
+                CustomUnderlineTextField(controller: _workingControllers[fieldSSTRegistrationNo], label: Globalization.sstRegistration.tr),
                 CustomUnderlineTextField(
                   controller: _workingControllers[fieldTTXRegistrationNo],
                   isRequired: _isRequired,
-                  label: "ttx_registration".tr,
+                  label: Globalization.ttxRegistration.tr,
                 ),
-                CustomUnderlineTextField(controller: _workingControllers[fieldROC], isRequired: _isRequired, label: "roc".tr),
-                CustomUnderlineTextField(controller: _workingControllers[fieldMSICCode], isRequired: _isRequired, label: "msic_code".tr),
+                CustomUnderlineTextField(controller: _workingControllers[fieldROC], isRequired: _isRequired, label: Globalization.roc.tr),
+                CustomUnderlineTextField(controller: _workingControllers[fieldMSICCode], isRequired: _isRequired, label: Globalization.msicCode.tr),
               ],
             ),
             const SizedBox(),
@@ -521,7 +538,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 left: ResponsiveHelper.getSpacing(context, 16.0),
                 right: ResponsiveHelper.getSpacing(context, 16.0),
               ),
-              child: CustomFilledButton(label: "save_changes".tr, onTap: () => _updateWorkingProfile()),
+              child: CustomFilledButton(label: Globalization.saveChanges.tr, onTap: () => _updateWorkingProfile()),
             ),
           ],
         ),
@@ -538,10 +555,10 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: ResponsiveHelper.getSpacing(context, 24.0),
             children: <Widget>[
-              _buildSettingsItem("Change Avatar".tr, () => _uploadMedia(0)),
-              _buildSettingsItem("Change App Background".tr, () => _uploadMedia(1)),
-              _buildSettingsItem("Upload Personal E-Invoice".tr, () => _uploadMedia(2)),
-              _buildSettingsItem("Upload Working E-Invoice".tr, () => _uploadMedia(3)),
+              _buildSettingsItem(Globalization.changeAvatar.tr, () => _uploadMedia(0)),
+              _buildSettingsItem(Globalization.changeBackground.tr, () => _uploadMedia(1)),
+              _buildSettingsItem(Globalization.uploadPersonalEInvoice.tr, () => _uploadMedia(2)),
+              _buildSettingsItem(Globalization.uploadWorkingEInvoice.tr, () => _uploadMedia(3)),
             ],
           ),
         ),

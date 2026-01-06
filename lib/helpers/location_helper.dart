@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:math' hide log;
 
 import 'package:ezy_member_v2/helpers/message_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -89,14 +90,14 @@ class LocationHelper {
     bool? result = await MessageHelper.showConfirmationDialog(
       backgroundColor: Colors.blue,
       icon: Icons.info_rounded,
-      message: "msg_google_maps_confirmation".tr,
-      title: "confirmation".tr,
-      confirmText: "go_now".tr,
+      message: Globalization.msgGoogleMapsConfirmation.tr,
+      title: Globalization.confirmation.tr,
+      confirmText: Globalization.goNow.tr,
     );
 
     if (result == null || !result) return;
 
-    MessageHelper.showDialog(type: DialogType.loading, message: "msg_google_maps_redirecting".tr, title: "redirecting".tr);
+    MessageHelper.showDialog(type: DialogType.loading, message: Globalization.msgGoogleMapsRedirecting.tr, title: Globalization.redirecting.tr);
 
     Coordinate? c = await LocationHelper.getCurrentCoordinate();
     Coordinate? t = await LocationHelper.getCoordinate(fullAddress);

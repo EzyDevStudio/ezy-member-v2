@@ -3,6 +3,7 @@ import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/controllers/company_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,7 +35,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(title: Text("payment".tr)),
+    appBar: AppBar(title: Text(Globalization.payment.tr)),
     body: _buildContent(),
   );
 
@@ -58,7 +59,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ),
       ),
       CustomFilledButton(
-        label: "payment".tr,
+        label: Globalization.payment.tr,
         onTap: () async {
           final result = await _companyController.registerMember(_companyID, _hive.memberProfile.value!.memberCode);
 

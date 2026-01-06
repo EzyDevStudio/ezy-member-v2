@@ -1,6 +1,7 @@
 import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/controllers/branch_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_text_field.dart';
@@ -59,7 +60,7 @@ class _BranchListScreenState extends State<BranchListScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(title: Text("shops".tr)),
+    appBar: AppBar(title: Text(Globalization.shops.tr)),
     body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
   );
 
@@ -74,7 +75,9 @@ class _BranchListScreenState extends State<BranchListScreen> {
     if (_branchController.branches.isEmpty) {
       return Padding(
         padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-        child: Center(child: CustomText("msg_no_available".trParams({"label": "shops".tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
+        child: Center(
+          child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.shops.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2),
+        ),
       );
     }
 

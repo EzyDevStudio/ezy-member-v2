@@ -8,6 +8,7 @@ import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/timeline_controller.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/company_model.dart';
 import 'package:ezy_member_v2/models/member_model.dart';
 import 'package:ezy_member_v2/widgets/custom_app_bar.dart';
@@ -71,7 +72,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
     final result = await SharePlus.instance.share(
       ShareParams(
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-        text: "msg_referral_program".trParams({
+        text: Globalization.msgReferralProgram.trParams({
           "company": _company.companyName,
           "member": member.referralCode,
           "url": "${AppStrings.serverUrl}/${_company.companyName}/${member.referralCode}",
@@ -85,7 +86,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
 
   void _joinMember() async {
     if (_hive.memberProfile.value == null) {
-      MessageHelper.show("msg_no_account".tr, icon: Icons.info_rounded);
+      MessageHelper.show(Globalization.msgNoAccount.tr, icon: Icons.info_rounded);
       return;
     }
 
@@ -148,7 +149,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
           spacing: ResponsiveHelper.getSpacing(context, 16.0),
           children: <Widget>[
             if (!_hive.isSignIn)
-              CustomText("member_benefits".tr, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold),
+              CustomText(Globalization.memberBenefits.tr, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold),
             if (!_hive.isSignIn || member.isMember)
               SizedBox(
                 height: ResponsiveHelper.isDesktop(context) ? 150.0 : 100.0,
@@ -157,7 +158,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                     Expanded(
                       child: CustomImageTextButton(
                         assetName: "assets/icons/my_points.png",
-                        label: member.isMember ? "my_points".tr : "earn_points".tr,
+                        label: member.isMember ? Globalization.myPoints.tr : Globalization.earnPoints.tr,
                         content: member.isMember ? member.point.toString() : null,
                         onTap: member.isMember
                             ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _company.companyID})
@@ -167,7 +168,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                     Expanded(
                       child: CustomImageTextButton(
                         assetName: "assets/icons/my_vouchers.png",
-                        label: member.isMember ? "my_vouchers".tr : "collect_vouchers".tr,
+                        label: member.isMember ? Globalization.myVouchers.tr : Globalization.collectVouchers.tr,
                         content: member.isMember ? (member.normalVoucherCount + member.specialVoucherCount).toString() : null,
                         onTap: member.isMember && _hive.memberProfile.value != null
                             ? () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _company.companyID})
@@ -177,7 +178,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                     Expanded(
                       child: CustomImageTextButton(
                         assetName: "assets/icons/my_credits.png",
-                        label: member.isMember ? "my_credits".tr : "redeem_by_credits".tr,
+                        label: member.isMember ? Globalization.myCredits.tr : Globalization.redeemByCredits.tr,
                         content: member.isMember ? member.credit.toStringAsFixed(1) : null,
                         onTap: member.isMember
                             ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _company.companyID})
@@ -188,9 +189,9 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                 ),
               ),
             if (member.isMember) _buildBarcode(),
-            if (_hive.isSignIn && !member.isMember && !_company.isExpired) CustomFilledButton(label: "join_us_now".tr, onTap: _joinMember),
+            if (_hive.isSignIn && !member.isMember && !_company.isExpired) CustomFilledButton(label: Globalization.joinUsNow.tr, onTap: _joinMember),
             if (member.isMember && !_company.isExpired)
-              CustomFilledButton(backgroundColor: Colors.green, label: "Share".tr, onTap: () => _shareContent(context)),
+              CustomFilledButton(backgroundColor: Colors.green, label: Globalization.share.tr, onTap: () => _shareContent(context)),
           ],
         ),
       ),
@@ -224,11 +225,11 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
         child: ExpansionTile(
           childrenPadding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
           tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-          title: CustomText("about_us".tr, fontSize: 18.0, fontWeight: FontWeight.bold),
+          title: CustomText(Globalization.aboutUs.tr, fontSize: 18.0, fontWeight: FontWeight.bold),
           children: <Widget>[
             CustomInfoListTile(
               icon: Icons.category_rounded,
-              title: "categories".tr,
+              title: Globalization.categories.tr,
               subWidget: Padding(
                 padding: EdgeInsets.only(top: ResponsiveHelper.getSpacing(context, 4.0)),
                 child: Wrap(
@@ -245,9 +246,9 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                 ),
               ),
             ),
-            CustomInfoListTile(icon: Icons.account_box_rounded, title: "about_us".tr, subtitle: _company.aboutUs.companyDescription2),
-            CustomInfoListTile(icon: Icons.email_rounded, title: "email".tr, subtitle: _company.companyEmail),
-            CustomInfoListTile(icon: Icons.phone_rounded, title: "phone".tr, subtitle: _company.companyNumber),
+            CustomInfoListTile(icon: Icons.account_box_rounded, title: Globalization.aboutUs.tr, subtitle: _company.aboutUs.companyDescription2),
+            CustomInfoListTile(icon: Icons.email_rounded, title: Globalization.email.tr, subtitle: _company.companyEmail),
+            CustomInfoListTile(icon: Icons.phone_rounded, title: Globalization.phone.tr, subtitle: _company.companyNumber),
           ],
         ),
       ),
@@ -282,7 +283,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
               right: ResponsiveHelper.getSpacing(context, 16.0),
               top: ResponsiveHelper.getSpacing(context, 24.0),
             ),
-            child: CustomText("what_new".tr, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
+            child: CustomText(Globalization.whatNew.tr, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
           ListView.separated(
             shrinkWrap: true,
