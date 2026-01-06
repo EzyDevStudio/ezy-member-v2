@@ -156,7 +156,7 @@ class _ScanScreenState extends State<ScanScreen> {
     children: <Widget>[
       AspectRatio(
         aspectRatio: 3 / 1,
-        child: Code(drawText: false, codeType: CodeType.code39(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
+        child: Code(drawText: false, codeType: CodeType.code128(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
       ),
       _buildQRCode(_hive.memberProfile.value!.memberCode),
     ],

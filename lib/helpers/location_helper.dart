@@ -86,6 +86,16 @@ class LocationHelper {
   }
 
   static Future<void> redirectGoogleMap(String fullAddress) async {
+    bool? result = await MessageHelper.showConfirmationDialog(
+      backgroundColor: Colors.blue,
+      icon: Icons.info_rounded,
+      message: "msg_google_maps_confirmation".tr,
+      title: "confirmation".tr,
+      confirmText: "go_now".tr,
+    );
+
+    if (result == null || !result) return;
+
     MessageHelper.showDialog(type: DialogType.loading, message: "msg_google_maps_redirecting".tr, title: "redirecting".tr);
 
     Coordinate? c = await LocationHelper.getCurrentCoordinate();

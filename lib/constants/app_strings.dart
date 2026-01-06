@@ -8,7 +8,8 @@ class AppStrings {
   static const String appName = "EzyMember";
 
   // App Server Url
-  static const String serverUrl = "http://127.0.0.1:8000";
+  // static const String serverUrl = "http://127.0.0.1:8000";
+  static const String serverUrl = "http://192.168.0.171:8000";
   static const String serverDirectory = "api";
 
   Map<HistoryType, String> historyTypes = {

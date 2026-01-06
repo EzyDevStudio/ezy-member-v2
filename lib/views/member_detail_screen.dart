@@ -333,7 +333,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
       padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0)),
       child: AspectRatio(
         aspectRatio: 4 / 1,
-        child: Code(drawText: false, codeType: CodeType.code39(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
+        child: Code(drawText: false, codeType: CodeType.code128(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
       ),
     ),
   );

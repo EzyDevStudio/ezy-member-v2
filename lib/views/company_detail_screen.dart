@@ -207,7 +207,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
       ),
       child: AspectRatio(
         aspectRatio: 4 / 1,
-        child: Code(drawText: false, codeType: CodeType.code39(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
+        child: Code(drawText: false, codeType: CodeType.code128(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
       ),
     ),
   );
