@@ -119,6 +119,37 @@ class ProfileController extends GetxController {
     }
   }
 
+  Future<void> changePassword(Map<String, dynamic> data, String memberToken) async {
+    isUpdate.value = false;
+
+    _showLoading(Globalization.msgPasswordUpdating.tr);
+
+    final response = await _api.post(endPoint: "change-password", module: "ProfileController - changePassword", data: data, memberToken: memberToken);
+
+    _hideLoading();
+
+    if (response == null) {
+      _showError(Globalization.msgSystemError.tr);
+      return;
+    }
+
+    switch (response.data[ApiService.keyStatusCode]) {
+      case 200:
+        isUpdate.value = true;
+        _showSuccess(Globalization.msgPasswordSuccess.tr);
+        break;
+      case 520:
+        _showError(Globalization.msgTokenInvalid.tr);
+        break;
+      case 401:
+        _showError(Globalization.msgOldPasswordNotMatch.tr);
+        break;
+      default:
+        _showError(Globalization.msgSystemError.tr);
+        break;
+    }
+  }
+
   void _showLoading(String message) {
     MessageHelper.showDialog(type: DialogType.loading, message: message, title: Globalization.processing.tr);
   }

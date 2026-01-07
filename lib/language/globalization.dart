@@ -25,6 +25,7 @@ class Globalization {
   static const String categories = "Categories";
   static const String changeAvatar = "Change Avatar";
   static const String changeBackground = "Change Background";
+  static const String changePassword = "Change Password";
   static const String city = "City";
   static const String clear = "Clear";
   static const String codeExpired = "Code Expired";
@@ -32,6 +33,7 @@ class Globalization {
   static const String collectVouchers = "Collect Vouchers";
   static const String companyInformation = "Company Information";
   static const String confirm = "Confirm";
+  static const String confirmPassword = "Confirm Password";
   static const String confirmation = "Confirmation";
   static const String continueGuest = "Continue as Guest";
   static const String country = "Country";
@@ -69,8 +71,10 @@ class Globalization {
   static const String myVouchers = "My Vouchers";
   static const String name = "Name";
   static const String needPermission = "Need @permission Access";
+  static const String newPassword = "New Password";
   static const String notifications = "Notifications";
   static const String off = "Off";
+  static const String oldPassword = "Old Password";
   static const String password = "Password";
   static const String payment = "Payment";
   static const String personal = "Personal";
@@ -145,6 +149,10 @@ class Globalization {
   static const String msgNoAccount = "You’re currently using the app as a guest. To explore more features, please sign up an account.";
   static const String msgNoAvailable = "No @label are available at the moment.";
   static const String msgNoEInvoice = "No e-invoice available. Please go to your profile page to upload your invoice.";
+  static const String msgOldPasswordNotMatch = "The old password you entered is incorrect.";
+  static const String msgPasswordMismatch = "New password and confirm password do not match.";
+  static const String msgPasswordSuccess = "Your password has been updated successfully.";
+  static const String msgPasswordUpdating = "Please wait while we update your password.";
   static const String msgPhoneExists = "This phone number is already registered. Please use another phone number.";
   static const String msgPhoneInvalidFormat = "Please enter a valid phone number.";
   static const String msgPhoneNotFound = "No account found with this phone number.";

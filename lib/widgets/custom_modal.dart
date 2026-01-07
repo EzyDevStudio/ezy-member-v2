@@ -1,56 +1,62 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
-import 'package:ezy_member_v2/models/phone_detail.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
-// Dialog: For selecting a country
-class CustomCountryPickerDialog extends StatefulWidget {
-  const CustomCountryPickerDialog({super.key});
+typedef ToCompare<T> = String Function(T item);
+typedef WidgetBuilder<T> = Widget Function(BuildContext context, T item);
+
+class CustomPickerDialog<T> extends StatefulWidget {
+  final Future<List<T>> Function() loadItems;
+  final ToCompare<T> toCompare;
+  final WidgetBuilder<T> itemTileBuilder;
+
+  const CustomPickerDialog({super.key, required this.loadItems, required this.toCompare, required this.itemTileBuilder});
+
+  static Future<T?> show<T>(
+    BuildContext context, {
+    required Future<List<T>> Function() loadItems,
+    required ToCompare<T> toCompare,
+    required WidgetBuilder<T> itemTileBuilder,
+  }) async => showDialog<T>(
+    context: context,
+    barrierDismissible: true,
+    builder: (context) => CustomPickerDialog<T>(loadItems: loadItems, toCompare: toCompare, itemTileBuilder: itemTileBuilder),
+  );
 
   @override
-  State<CustomCountryPickerDialog> createState() => _CustomCountryPickerDialogState();
-
-  static Future<PhoneDetail?> show(BuildContext context) async {
-    return showDialog<PhoneDetail>(context: context, barrierDismissible: true, builder: (context) => const CustomCountryPickerDialog());
-  }
+  State<CustomPickerDialog<T>> createState() => _CustomPickerDialogState<T>();
 }
 
-class _CustomCountryPickerDialogState extends State<CustomCountryPickerDialog> {
+class _CustomPickerDialogState<T> extends State<CustomPickerDialog<T>> {
   final TextEditingController _controller = TextEditingController();
 
-  List<PhoneDetail> _countries = [];
-  List<PhoneDetail> _filteredCountries = [];
+  List<T> _items = [];
+  List<T> _filteredItems = [];
 
   @override
   void initState() {
     super.initState();
 
-    _loadCountries();
+    _loadItems();
   }
 
-  Future<void> _loadCountries() async {
-    final List<PhoneDetail> countries = await PhoneDetail.loadAll();
+  Future<void> _loadItems() async {
+    final items = await widget.loadItems();
 
-    if (mounted) {
-      setState(() {
-        _countries = countries;
-        _filteredCountries = countries;
-      });
-    }
+    if (!mounted) return;
+
+    setState(() {
+      _items = items;
+      _filteredItems = items;
+    });
   }
 
   void _onSearchChanged(String value) {
-    final String search = value.toLowerCase();
+    final search = value.toLowerCase();
 
-    setState(
-      () => _filteredCountries = _countries.where((country) {
-        return country.country.toLowerCase().contains(search) ||
-            country.countryCode.toLowerCase().contains(search) ||
-            country.dialCode.toLowerCase().contains(search);
-      }).toList(),
-    );
+    setState(() => _filteredItems = _items.where((item) => widget.toCompare(item).toLowerCase().contains(search)).toList());
   }
 
   @override
@@ -68,20 +74,9 @@ class _CustomCountryPickerDialogState extends State<CustomCountryPickerDialog> {
           CustomSearchTextField(controller: _controller, onChanged: _onSearchChanged),
           Expanded(
             child: ListView.builder(
-              itemCount: _filteredCountries.length,
-              itemBuilder: (context, index) {
-                final PhoneDetail country = _filteredCountries[index];
-                final String flag = PhoneDetail.countryCodeToEmoji(country.countryCode);
-
-                return ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  onTap: () => Navigator.pop(context, country),
-                  leading: CustomText(flag, fontSize: 25.0),
-                  subtitle: CustomText(country.countryCode, color: Colors.black54, fontSize: 14.0),
-                  title: CustomText(country.country, fontSize: 16.0),
-                  trailing: CustomText("+${country.dialCode}", fontSize: 14.0),
-                );
-              },
+              itemCount: _filteredItems.length,
+              itemBuilder: (context, index) =>
+                  InkWell(onTap: () => Navigator.pop(context, _filteredItems[index]), child: widget.itemTileBuilder(context, _filteredItems[index])),
             ),
           ),
         ],

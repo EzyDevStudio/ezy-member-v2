@@ -2,23 +2,19 @@ import 'dart:async';
 
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_routes.dart';
-import 'package:ezy_member_v2/controllers/advertisement_controller.dart';
 import 'package:ezy_member_v2/controllers/branch_controller.dart';
 import 'package:ezy_member_v2/controllers/settings_controller.dart';
 import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
-import 'package:ezy_member_v2/controllers/promotion_controller.dart';
 import 'package:ezy_member_v2/controllers/timeline_controller.dart';
 import 'package:ezy_member_v2/controllers/voucher_controller.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/permission_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
-import 'package:ezy_member_v2/translations/translations.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
-import 'package:ezy_member_v2/widgets/custom_modal.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_timeline.dart';
 import 'package:ezy_member_v2/widgets/custom_voucher.dart';
@@ -36,10 +32,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _hive = Get.find<MemberHiveController>();
   final _settingsController = Get.find<SettingsController>();
-  final _adsController = Get.put(AdvertisementController(), tag: "home");
   final _branchController = Get.put(BranchController(), tag: "home");
   final _memberController = Get.put(MemberController(), tag: "home");
-  final _promoController = Get.put(PromotionController(), tag: "home");
   final _timelineController = Get.put(TimelineController(), tag: "home");
   final _voucherController = Get.put(VoucherController(), tag: "home");
   final _scrollController = ScrollController();
@@ -83,9 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //   await NotificationService.show(id: 0, title: "EzyMember", body: "2 vouchers will be expired by today.");
     // }
 
-    _adsController.loadAdvertisements();
     _branchController.loadBranches(true);
-    _promoController.loadPromotions();
     _timelineController.loadTimelines();
 
     if (_hive.isSignIn) {
@@ -449,74 +441,4 @@ class _HomeScreenState extends State<HomeScreen> {
     onPressed: () => _scrollController.animateTo(0.0, duration: const Duration(milliseconds: 400), curve: Curves.easeOut),
     child: Icon(Icons.keyboard_arrow_up_rounded),
   );
-
-  List<Widget> _buildPromotions() => [
-    Obx(() {
-      if (_promoController.isLoading.value) {
-        return SizedBox(
-          height: ResponsiveHelper.getPromoAdsHeight(context),
-          child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
-        );
-      }
-
-      if (_promoController.promotions.isEmpty) {
-        return SizedBox(
-          height: ResponsiveHelper.getPromoAdsHeight(context),
-          child: Center(child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.promotions.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
-        );
-      }
-
-      return SizedBox(
-        height: ResponsiveHelper.getPromoAdsHeight(context),
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: _promoController.promotions.length,
-          separatorBuilder: (_, _) => SizedBox(width: ResponsiveHelper.getSpacing(context, 16.0)),
-          itemBuilder: (context, index) => Padding(
-            padding: EdgeInsets.only(
-              bottom: ResponsiveHelper.getSpacing(context, 24.0),
-              left: index == 0 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
-              right: index == _promoController.promotions.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
-            ),
-            child: CustomPromotionCard(promotion: _promoController.promotions[index]),
-          ),
-        ),
-      );
-    }),
-  ];
-
-  List<Widget> _buildAdvertisements() => [
-    Obx(() {
-      if (_adsController.isLoading.value) {
-        return SizedBox(
-          height: ResponsiveHelper.getPromoAdsHeight(context),
-          child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
-        );
-      }
-
-      if (_adsController.advertisements.isEmpty) {
-        return SizedBox(
-          height: ResponsiveHelper.getPromoAdsHeight(context),
-          child: Center(child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.advertisements.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2)),
-        );
-      }
-
-      return SizedBox(
-        height: ResponsiveHelper.getPromoAdsHeight(context),
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: _adsController.advertisements.length,
-          separatorBuilder: (_, _) => SizedBox(width: ResponsiveHelper.getSpacing(context, 16.0)),
-          itemBuilder: (context, index) => Padding(
-            padding: EdgeInsets.only(
-              bottom: ResponsiveHelper.getSpacing(context, 24.0),
-              left: index == 0 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
-              right: index == _adsController.advertisements.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
-            ),
-            child: CustomAdvertisementCard(advertisement: _adsController.advertisements[index]),
-          ),
-        ),
-      );
-    }),
-  ];
 }

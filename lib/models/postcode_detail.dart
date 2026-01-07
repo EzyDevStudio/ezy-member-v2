@@ -21,4 +21,6 @@ class PostcodeDetail {
 
     return data.map((detail) => PostcodeDetail.fromJson(detail)).toList();
   }
+
+  String toCompare() => "$city $postcode $stateName";
 }

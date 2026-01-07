@@ -1,5 +1,6 @@
 import 'package:ezy_member_v2/main.dart';
 import 'package:ezy_member_v2/views/authentication_screen.dart';
+import 'package:ezy_member_v2/views/change_password_screen.dart';
 import 'package:ezy_member_v2/views/company_detail_screen.dart';
 import 'package:ezy_member_v2/views/branch_list_screen.dart';
 import 'package:ezy_member_v2/views/home_screen.dart';
@@ -20,6 +21,7 @@ class AppRoutes {
   static const wrapper = "/";
   static const authentication = "/authentication";
   static const branchList = "/branch_list";
+  static const changePassword = "/change_password";
   static const companyDetail = "/company_detail";
   static const home = "/home";
   static const invoice = "/invoice";
@@ -38,6 +40,7 @@ class AppRoutes {
     GetPage(name: wrapper, page: () => WrapperScreen()),
     GetPage(name: authentication, page: () => AuthenticationScreen()),
     GetPage(name: branchList, page: () => BranchListScreen()),
+    GetPage(name: changePassword, page: () => ChangePasswordScreen()),
     GetPage(name: companyDetail, page: () => CompanyDetailScreen()),
     GetPage(name: home, page: () => HomeScreen()),
     GetPage(name: invoice, page: () => InvoiceScreen()),

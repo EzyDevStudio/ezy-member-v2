@@ -10,15 +10,14 @@ import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/local/member_profile_storage_service.dart';
 import 'package:ezy_member_v2/services/local/notification_service.dart';
 import 'package:ezy_member_v2/services/local/settings_storage_service.dart';
-import 'package:ezy_member_v2/translations/translations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 // Settle AssetImage, NetworkImage, Image.asset, Image.network
-// custom text field to autocomplete - postcode
-// Multilingual
+// google sign up and in
+// deep link for referral
 
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
@@ -41,10 +40,10 @@ void main() async {
       theme: AppThemes().lightTheme,
       getPages: AppRoutes.pages,
       initialRoute: AppRoutes.wrapper,
-      locale: Globalization.defaultLocale,
+      locale: Get.locale,
       fallbackLocale: Globalization.defaultLocale,
       translations: IntlKeys(),
-      // supportedLocales: AppTranslations.languages.keys.map((langCode) => Locale(langCode, "")).toList(),
+      supportedLocales: Globalization.languages.values.toList(),
       localizationsDelegates: [GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate, GlobalWidgetsLocalizations.delegate],
     ),
   );

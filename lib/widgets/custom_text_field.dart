@@ -99,7 +99,18 @@ class _CustomOutlinedTextFieldState extends State<CustomOutlinedTextField> {
             hint: CustomText(_phoneDetail.displayFlagCode, fontSize: 16.0, textAlign: TextAlign.center),
           ),
           onTap: () async {
-            final phone = await CustomCountryPickerDialog.show(context);
+            PhoneDetail? phone = await CustomPickerDialog.show<PhoneDetail>(
+              context,
+              loadItems: PhoneDetail.loadAll,
+              toCompare: (item) => item.toCompare(),
+              itemTileBuilder: (context, item) => ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: CustomText(PhoneDetail.countryCodeToEmoji(item.countryCode), fontSize: 25.0),
+                subtitle: CustomText(item.countryCode, color: Colors.black54, fontSize: 14.0),
+                title: CustomText(item.country, fontSize: 16.0),
+                trailing: CustomText("+${item.dialCode}", fontSize: 14.0),
+              ),
+            );
 
             if (phone != null) {
               setState(() => _phoneDetail = phone);
@@ -323,7 +334,18 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
             hint: CustomText(_phoneDetail.displayFlagCode, fontSize: 16.0, textAlign: TextAlign.center),
           ),
           onTap: () async {
-            final phone = await CustomCountryPickerDialog.show(context);
+            PhoneDetail? phone = await CustomPickerDialog.show<PhoneDetail>(
+              context,
+              loadItems: PhoneDetail.loadAll,
+              toCompare: (item) => item.toCompare(),
+              itemTileBuilder: (context, item) => ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: CustomText(PhoneDetail.countryCodeToEmoji(item.countryCode), fontSize: 25.0),
+                subtitle: CustomText(item.countryCode, color: Colors.black54, fontSize: 14.0),
+                title: CustomText(item.country, fontSize: 16.0),
+                trailing: CustomText("+${item.dialCode}", fontSize: 14.0),
+              ),
+            );
 
             if (phone != null) {
               setState(() => _phoneDetail = phone);

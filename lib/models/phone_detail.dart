@@ -39,4 +39,6 @@ class PhoneDetail {
     dialCode = newDetail.dialCode;
     hintLabel = newDetail.hintLabel;
   }
+
+  String toCompare() => "$country $countryCode $dialCode $hintLabel $number";
 }

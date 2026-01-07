@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ezy_member_v2/constants/app_constants.dart';
+import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/profile_controller.dart';
@@ -10,6 +11,7 @@ import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/phone_detail.dart';
+import 'package:ezy_member_v2/models/postcode_detail.dart';
 import 'package:ezy_member_v2/models/profile_model.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
@@ -326,32 +328,31 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 Row(
                   spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
-                    Expanded(
-                      child: CustomUnderlineTextField(
-                        controller: _memberControllers[fieldPostcode],
-                        label: Globalization.postcode.tr,
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    Expanded(
-                      child: CustomUnderlineTextField(controller: _memberControllers[fieldCity], label: Globalization.city.tr),
-                    ),
+                    Expanded(child: _buildPostCodeField(_memberControllers[fieldPostcode], _memberControllers, Globalization.postcode.tr)),
+                    Expanded(child: _buildPostCodeField(_memberControllers[fieldCity], _memberControllers, Globalization.city.tr)),
                   ],
                 ),
                 Row(
                   spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
-                    Expanded(
-                      child: CustomUnderlineTextField(controller: _memberControllers[fieldState], label: Globalization.state.tr),
-                    ),
+                    Expanded(child: _buildPostCodeField(_memberControllers[fieldState], _memberControllers, Globalization.state.tr)),
                     Expanded(
                       child: CustomUnderlineTextField(
                         controller: _memberControllers[fieldCountry],
                         label: Globalization.country.tr,
                         onTap: () async {
-                          final selectedPhone = await CustomCountryPickerDialog.show(context);
+                          PhoneDetail? selectedCountry = await CustomPickerDialog.show<PhoneDetail>(
+                            context,
+                            loadItems: PhoneDetail.loadAll,
+                            toCompare: (item) => item.toCompare(),
+                            itemTileBuilder: (context, item) => ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: CustomText(PhoneDetail.countryCodeToEmoji(item.countryCode), fontSize: 25.0),
+                              title: CustomText(item.country, fontSize: 16.0),
+                            ),
+                          );
 
-                          if (selectedPhone != null) _memberControllers[fieldCountry].text = selectedPhone.country;
+                          if (selectedCountry != null) _memberControllers[fieldCountry].text = selectedCountry.country;
                         },
                       ),
                     ),
@@ -381,6 +382,32 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       ),
     ],
   );
+
+  Widget _buildPostCodeField(TextEditingController controller, ProfileDetailControllers profile, String label, {bool isRequired = false}) =>
+      CustomUnderlineTextField(
+        controller: controller,
+        isRequired: isRequired,
+        label: label,
+        onTap: () async {
+          PostcodeDetail? selectedPostcode = await CustomPickerDialog.show<PostcodeDetail>(
+            context,
+            loadItems: PostcodeDetail.loadAll,
+            toCompare: (item) => item.toCompare(),
+            itemTileBuilder: (context, item) => ListTile(
+              contentPadding: EdgeInsets.zero,
+              subtitle: CustomText(item.stateName, color: Colors.black54, fontSize: 14.0),
+              title: CustomText(item.city, fontSize: 16.0),
+              trailing: CustomText(item.postcode, fontSize: 14.0),
+            ),
+          );
+
+          if (selectedPostcode != null) {
+            profile[fieldPostcode].text = selectedPostcode.postcode;
+            profile[fieldCity].text = selectedPostcode.city;
+            profile[fieldState].text = selectedPostcode.stateName;
+          }
+        },
+      );
 
   Widget _buildWorkingProfile() => CustomScrollView(
     slivers: <Widget>[
@@ -455,19 +482,15 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
                     Expanded(
-                      child: CustomUnderlineTextField(
-                        controller: _workingControllers[fieldPostcode],
+                      child: _buildPostCodeField(
+                        _workingControllers[fieldPostcode],
+                        _workingControllers,
+                        Globalization.postcode.tr,
                         isRequired: _isRequired,
-                        label: Globalization.postcode.tr,
-                        keyboardType: TextInputType.number,
                       ),
                     ),
                     Expanded(
-                      child: CustomUnderlineTextField(
-                        controller: _workingControllers[fieldCity],
-                        isRequired: _isRequired,
-                        label: Globalization.city.tr,
-                      ),
+                      child: _buildPostCodeField(_workingControllers[fieldCity], _workingControllers, Globalization.city.tr, isRequired: _isRequired),
                     ),
                   ],
                 ),
@@ -475,10 +498,11 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   spacing: ResponsiveHelper.getSpacing(context, 32.0),
                   children: <Widget>[
                     Expanded(
-                      child: CustomUnderlineTextField(
-                        controller: _workingControllers[fieldState],
+                      child: _buildPostCodeField(
+                        _workingControllers[fieldState],
+                        _workingControllers,
+                        Globalization.state.tr,
                         isRequired: _isRequired,
-                        label: Globalization.state.tr,
                       ),
                     ),
                     Expanded(
@@ -487,9 +511,18 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                         isRequired: _isRequired,
                         label: Globalization.country.tr,
                         onTap: () async {
-                          final selectedPhone = await CustomCountryPickerDialog.show(context);
+                          PhoneDetail? selectedCountry = await CustomPickerDialog.show<PhoneDetail>(
+                            context,
+                            loadItems: PhoneDetail.loadAll,
+                            toCompare: (item) => item.toCompare(),
+                            itemTileBuilder: (context, item) => ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: CustomText(PhoneDetail.countryCodeToEmoji(item.countryCode), fontSize: 25.0),
+                              title: CustomText(item.country, fontSize: 16.0),
+                            ),
+                          );
 
-                          if (selectedPhone != null) _workingControllers[fieldCountry].text = selectedPhone.country;
+                          if (selectedCountry != null) _workingControllers[fieldCountry].text = selectedCountry.country;
                         },
                       ),
                     ),
@@ -559,6 +592,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               _buildSettingsItem(Globalization.changeBackground.tr, () => _uploadMedia(1)),
               _buildSettingsItem(Globalization.uploadPersonalEInvoice.tr, () => _uploadMedia(2)),
               _buildSettingsItem(Globalization.uploadWorkingEInvoice.tr, () => _uploadMedia(3)),
+              _buildSettingsItem(Globalization.changePassword.tr, () => Get.toNamed(AppRoutes.changePassword)),
             ],
           ),
         ),
