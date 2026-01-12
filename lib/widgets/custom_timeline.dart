@@ -17,21 +17,21 @@ class CustomTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     color: Colors.white,
-    padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.getSpacing(context, 16.0)),
+    padding: EdgeInsets.symmetric(vertical: 16.dp),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: ResponsiveHelper.getSpacing(context, 8.0),
+      spacing: 8.dp,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0)),
+          padding: EdgeInsets.symmetric(horizontal: 16.dp),
           child: Row(
-            spacing: ResponsiveHelper.getSpacing(context, 8.0),
+            spacing: 8.dp,
             children: <Widget>[
               GestureDetector(
                 onTap: () => isDetail
                     ? null
                     : (isNavigateCompany ? Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": timeline.companyID}) : null),
-                child: CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context), networkImage: timeline.companyLogo),
+                child: CustomAvatarImage(size: ResponsiveHelper().avatarSize(), networkImage: timeline.companyLogo),
               ),
               Expanded(
                 child: Column(
@@ -47,7 +47,7 @@ class CustomTimeline extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0)),
+          padding: EdgeInsets.symmetric(horizontal: 16.dp),
           child: CustomReadMore(
             text: timeline.timelineCaption,
             style: const TextStyle(fontFamily: "AlibabaPuHuiTi", fontSize: 16.0),

@@ -22,7 +22,7 @@ class CustomChoiceChip<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Wrap(
-    spacing: ResponsiveHelper.getSpacing(context, 16.0),
+    spacing: 16.dp,
     alignment: alignment!,
     children: values.keys.map((value) {
       final bool isSelected = selectedValue == value;
@@ -63,12 +63,12 @@ class CustomLabelChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(chipRadius!), color: backgroundColor),
-    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 8.0), vertical: ResponsiveHelper.getSpacing(context, 4.0)),
+    padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 4.dp),
     child: Row(
       mainAxisSize: MainAxisSize.min,
-      spacing: ResponsiveHelper.getSpacing(context, 4.0),
+      spacing: 4.dp,
       children: <Widget>[
-        if (icon != null) Icon(icon, color: foregroundColor, size: foregroundSize! * ResponsiveHelper.getTextScaler(context)),
+        if (icon != null) Icon(icon, color: foregroundColor, size: foregroundSize!.sp),
         CustomText(label, color: foregroundColor, fontSize: foregroundSize!),
       ],
     ),

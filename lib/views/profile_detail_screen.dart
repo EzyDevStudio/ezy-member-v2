@@ -248,7 +248,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       SliverToBoxAdapter(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: ResponsiveHelper.getSpacing(context, 8.0),
+          spacing: 8.dp,
           children: <Widget>[
             Obx(
               () => CustomProfileCard(
@@ -272,7 +272,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   onPhoneChanged: (value) => setState(() => _phoneMember = value),
                 ),
                 Row(
-                  spacing: ResponsiveHelper.getSpacing(context, 32.0),
+                  spacing: 32.dp,
                   children: <Widget>[
                     Expanded(
                       child: CustomUnderlineTextField(
@@ -313,14 +313,14 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 CustomUnderlineTextField(controller: _memberControllers[fieldAddress3], label: "${Globalization.addressLine.tr} 3"),
                 CustomUnderlineTextField(controller: _memberControllers[fieldAddress4], label: "${Globalization.addressLine.tr} 4"),
                 Row(
-                  spacing: ResponsiveHelper.getSpacing(context, 32.0),
+                  spacing: 32.dp,
                   children: <Widget>[
                     Expanded(child: _buildPostCodeField(_memberControllers[fieldPostcode], _memberControllers, Globalization.postcode.tr)),
                     Expanded(child: _buildPostCodeField(_memberControllers[fieldCity], _memberControllers, Globalization.city.tr)),
                   ],
                 ),
                 Row(
-                  spacing: ResponsiveHelper.getSpacing(context, 32.0),
+                  spacing: 32.dp,
                   children: <Widget>[
                     Expanded(child: _buildPostCodeField(_memberControllers[fieldState], _memberControllers, Globalization.state.tr)),
                     Expanded(
@@ -357,11 +357,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             ),
             const SizedBox(),
             Padding(
-              padding: EdgeInsets.only(
-                bottom: ResponsiveHelper.getSpacing(context, 16.0),
-                left: ResponsiveHelper.getSpacing(context, 16.0),
-                right: ResponsiveHelper.getSpacing(context, 16.0),
-              ),
+              padding: EdgeInsets.only(bottom: 16.dp, left: 16.dp, right: 16.dp),
               child: CustomFilledButton(label: Globalization.saveChanges.tr, onTap: () => _updateMemberProfile()),
             ),
           ],
@@ -401,7 +397,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       SliverToBoxAdapter(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: ResponsiveHelper.getSpacing(context, 8.0),
+          spacing: 8.dp,
           children: <Widget>[
             Container(
               decoration: BoxDecoration(
@@ -415,11 +411,8 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   ),
                 ],
               ),
-              margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-              padding: EdgeInsets.symmetric(
-                horizontal: ResponsiveHelper.getSpacing(context, 24.0),
-                vertical: ResponsiveHelper.getSpacing(context, 16.0),
-              ),
+              margin: EdgeInsets.all(16.dp),
+              padding: EdgeInsets.symmetric(horizontal: 24.dp, vertical: 16.dp),
               child: CheckboxListTile(
                 value: _isRequired,
                 contentPadding: EdgeInsets.zero,
@@ -466,7 +459,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                 CustomUnderlineTextField(controller: _workingControllers[fieldAddress3], label: "${Globalization.addressLine.tr} 3"),
                 CustomUnderlineTextField(controller: _workingControllers[fieldAddress4], label: "${Globalization.addressLine.tr} 4"),
                 Row(
-                  spacing: ResponsiveHelper.getSpacing(context, 32.0),
+                  spacing: 32.dp,
                   children: <Widget>[
                     Expanded(
                       child: _buildPostCodeField(
@@ -482,7 +475,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   ],
                 ),
                 Row(
-                  spacing: ResponsiveHelper.getSpacing(context, 32.0),
+                  spacing: 32.dp,
                   children: <Widget>[
                     Expanded(
                       child: _buildPostCodeField(
@@ -553,11 +546,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             ),
             const SizedBox(),
             Padding(
-              padding: EdgeInsets.only(
-                bottom: ResponsiveHelper.getSpacing(context, 16.0),
-                left: ResponsiveHelper.getSpacing(context, 16.0),
-                right: ResponsiveHelper.getSpacing(context, 16.0),
-              ),
+              padding: EdgeInsets.only(bottom: 16.dp, left: 16.dp, right: 16.dp),
               child: CustomFilledButton(label: Globalization.saveChanges.tr, onTap: () => _updateWorkingProfile()),
             ),
           ],
@@ -570,10 +559,10 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     slivers: <Widget>[
       SliverToBoxAdapter(
         child: Container(
-          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+          padding: EdgeInsets.all(16.dp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: ResponsiveHelper.getSpacing(context, 24.0),
+            spacing: 24.dp,
             children: <Widget>[
               _buildSettingsItem(Globalization.changeAvatar.tr, () => _uploadMedia(0)),
               _buildSettingsItem(Globalization.changeBackground.tr, () => _uploadMedia(1)),
@@ -595,7 +584,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
         BoxShadow(color: Theme.of(context).colorScheme.surfaceContainerHigh, blurRadius: kBlurRadius, offset: const Offset(kOffsetX, kOffsetY)),
       ],
     ),
-    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 24.0), vertical: ResponsiveHelper.getSpacing(context, 16.0)),
+    padding: EdgeInsets.symmetric(horizontal: 24.dp, vertical: 16.dp),
     child: ListTile(
       contentPadding: EdgeInsets.zero,
       onTap: onTap,

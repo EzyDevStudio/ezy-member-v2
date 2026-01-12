@@ -92,12 +92,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     slivers: <Widget>[
       SliverToBoxAdapter(
         child: Padding(
-          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+          padding: EdgeInsets.all(16.dp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: ResponsiveHelper.getSpacing(context, 16.0),
+            spacing: 16.dp,
             children: <Widget>[
-              Image.asset("assets/images/change_password.png", scale: kSquareRatio, height: ResponsiveHelper.getAuthImgSize(context)),
+              Image.asset("assets/images/change_password.png", scale: kSquareRatio, height: ResponsiveHelper().authSize()),
               CustomOutlinedTextField(
                 controller: _oldController,
                 icon: Icons.lock_rounded,

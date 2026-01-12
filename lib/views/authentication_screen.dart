@@ -172,12 +172,12 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
       slivers: <Widget>[
         SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+            padding: EdgeInsets.all(16.dp),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: ResponsiveHelper.getSpacing(context, 16.0),
+              spacing: 16.dp,
               children: <Widget>[
-                Image.asset("assets/images/sign_in.png", scale: kSquareRatio, height: ResponsiveHelper.getAuthImgSize(context)),
+                Image.asset("assets/images/sign_in.png", scale: kSquareRatio, height: ResponsiveHelper().authSize()),
                 CustomText(Globalization.msgSignIn.tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
                 CustomChoiceChip(values: _authTypes, selectedValue: _selectedType, onSelected: (type) => setState(() => _selectedType = type)),
                 if (isEmail)
@@ -218,12 +218,12 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
     slivers: <Widget>[
       SliverToBoxAdapter(
         child: Padding(
-          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+          padding: EdgeInsets.all(16.dp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: ResponsiveHelper.getSpacing(context, 16.0),
+            spacing: 16.dp,
             children: <Widget>[
-              Image.asset("assets/images/sign_up.png", scale: kSquareRatio, height: ResponsiveHelper.getAuthImgSize(context)),
+              Image.asset("assets/images/sign_up.png", scale: kSquareRatio, height: ResponsiveHelper().authSize()),
               CustomText(Globalization.msgSignUp.tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
               CustomOutlinedTextField(
                 controller: _usernameController,
@@ -268,16 +268,15 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
   Widget _buildAuthMessage(bool isSignIn) => RichText(
     text: TextSpan(
       text: isSignIn ? Globalization.msgAccountNotExists.tr : Globalization.msgAccountExists.tr,
-      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black87, fontSize: 14.0),
+      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black87, fontSize: 14.sp),
       children: <TextSpan>[
         TextSpan(
           recognizer: TapGestureRecognizer()..onTap = () => _tabController.index = isSignIn ? 1 : 0,
           text: isSignIn ? Globalization.signUp.tr : Globalization.signIn.tr,
-          style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 14.0, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 14.sp, fontWeight: FontWeight.bold),
         ),
       ],
     ),
     textAlign: TextAlign.center,
-    textScaler: TextScaler.linear(ResponsiveHelper.getTextScaler(context)),
   );
 }

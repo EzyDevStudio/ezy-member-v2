@@ -21,8 +21,7 @@ class CustomText extends StatelessWidget {
     maxLines: maxLines,
     textAlign: textAlign,
     overflow: maxLines == null ? null : overflow ?? TextOverflow.ellipsis,
-    textScaler: TextScaler.linear(ResponsiveHelper.getTextScaler(context)),
-    style: TextStyle(color: color ?? Colors.black87, fontSize: fontSize, fontWeight: fontWeight),
+    style: TextStyle(color: color ?? Colors.black87, fontSize: fontSize.sp, fontWeight: fontWeight),
   );
 }
 

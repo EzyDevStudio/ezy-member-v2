@@ -9,10 +9,9 @@ import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/timeline_controller.dart';
 import 'package:ezy_member_v2/controllers/voucher_controller.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
-import 'package:ezy_member_v2/helpers/permission_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
+import 'package:ezy_member_v2/helpers/permission_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
-import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
@@ -152,15 +151,15 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   PreferredSize _buildAppBarBottom() => PreferredSize(
-    preferredSize: Size.fromHeight(kProfileImgSizeM + ResponsiveHelper.getSpacing(context, 32.0)),
+    preferredSize: Size.fromHeight(kProfileImgSizeM + 32.dp),
     child: Padding(
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+      padding: EdgeInsets.all(16.dp),
       child: SafeArea(
         child: Column(
-          spacing: ResponsiveHelper.getSpacing(context, 16.0),
+          spacing: 16.dp,
           children: <Widget>[
             Row(
-              spacing: ResponsiveHelper.getSpacing(context, 16.0),
+              spacing: 16.dp,
               children: <Widget>[
                 Stack(
                   children: <Widget>[
@@ -228,15 +227,15 @@ class _HomeScreenState extends State<HomeScreen> {
             GridView(
               shrinkWrap: true,
               padding: EdgeInsets.symmetric(
-                horizontal: ResponsiveHelper.getSpacing(context, 16.0),
-                vertical: ResponsiveHelper.getSpacing(context, 24.0),
+                horizontal: 16.dp,
+                vertical: 24.dp,
               ),
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisSpacing: ResponsiveHelper.getSpacing(context, 16.0),
-                mainAxisExtent: ResponsiveHelper.getQuickAccessHeight(context),
-                mainAxisSpacing: ResponsiveHelper.getSpacing(context, 16.0),
-                crossAxisCount: ResponsiveHelper.getQuickAccessCount(context),
+                crossAxisSpacing: 16.dp,
+                mainAxisExtent: ResponsiveHelper().quickAccessHeight(),
+                mainAxisSpacing: 16.dp,
+                crossAxisCount: ResponsiveHelper().quickAccessCount(),
               ),
               children: <Widget>[
                 CustomImageTextButton(
@@ -267,9 +266,9 @@ class _HomeScreenState extends State<HomeScreen> {
     onTap: () => Get.toNamed(AppRoutes.scan),
     child: Padding(
       padding: EdgeInsets.only(
-        bottom: ResponsiveHelper.getSpacing(context, 24.0),
-        left: ResponsiveHelper.getSpacing(context, 32.0),
-        right: ResponsiveHelper.getSpacing(context, 32.0),
+        bottom: 24.dp,
+        left: 32.dp,
+        right: 32.dp,
       ),
       child: AspectRatio(
         aspectRatio: 4 / 1,
@@ -283,8 +282,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return SliverToBoxAdapter(
         child: Container(
           color: Colors.grey.withValues(alpha: 0.7),
-          height: ResponsiveHelper.getSpacing(context, 5.0),
-          margin: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 8.0)),
+          height: 5.dp,
+          margin: EdgeInsets.only(bottom: 8.dp),
         ),
       );
     }
@@ -304,25 +303,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Container(
             color: Colors.grey.withValues(alpha: 0.5),
-            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.getSpacing(context, 8.0)),
+            padding: EdgeInsets.symmetric(vertical: 8.dp),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+                  padding: EdgeInsets.all(16.dp),
                   child: CustomText(Globalization.vouchers.tr, fontSize: 16.0, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(
-                  height: ResponsiveHelper.getVoucherHeight(context) + ResponsiveHelper.getSpacing(context, 8.0),
+                  height: ResponsiveHelper().voucherHeight() + 8.dp,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: vouchers.length,
-                    separatorBuilder: (_, _) => SizedBox(width: ResponsiveHelper.getSpacing(context, 16.0)),
+                    separatorBuilder: (_, _) => SizedBox(width: 16.dp),
                     itemBuilder: (context, index) => Padding(
                       padding: EdgeInsets.only(
-                        bottom: ResponsiveHelper.getSpacing(context, 24.0),
-                        left: index == 0 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
-                        right: index == vouchers.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
+                        bottom: 24.dp,
+                        left: index == 0 ? 16.dp : 0.0,
+                        right: index == vouchers.length - 1 ? 16.dp : 0.0,
                       ),
                       child: CustomVoucher(
                         shadowColor: Colors.black54,
@@ -342,7 +341,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
+            margin: EdgeInsets.only(bottom: 16.dp),
             decoration: BoxDecoration(
               boxShadow: <BoxShadow>[
                 BoxShadow(color: Colors.black38, blurRadius: 6.0, spreadRadius: 2.0, offset: Offset(0.0, -4.0)),
@@ -357,14 +356,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildNearby() => SliverToBoxAdapter(
     child: Padding(
-      padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
+      padding: EdgeInsets.only(bottom: 16.dp),
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+            padding: EdgeInsets.all(16.dp),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
-              spacing: ResponsiveHelper.getSpacing(context, 16.0),
+              spacing: 16.dp,
               children: <Widget>[
                 Expanded(child: CustomText(Globalization.shopsNearby.tr, fontSize: 16.0, fontWeight: FontWeight.w600)),
                 GestureDetector(
@@ -374,43 +373,37 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          Obx(() {
-            if (_branchController.isLoading.value) {
-              return SizedBox(
-                height: ResponsiveHelper.getNearbyHeight(context),
-                child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
-              );
-            }
+          SizedBox(
+            height: ResponsiveHelper().nearbyHeight(),
+            child: Obx(() {
+              if (_branchController.isLoading.value) {
+                return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary));
+              }
 
-            if (_branchController.branches.isEmpty) {
-              return SizedBox(
-                height: ResponsiveHelper.getNearbyHeight(context),
-                child: Center(
+              if (_branchController.branches.isEmpty) {
+                return Center(
                   child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.shopsNearby.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2),
-                ),
-              );
-            }
+                );
+              }
 
-            return SizedBox(
-              height: ResponsiveHelper.getNearbyHeight(context),
-              child: ListView.separated(
+              return ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: _branchController.branches.length,
-                separatorBuilder: (_, _) => SizedBox(width: ResponsiveHelper.getSpacing(context, 16.0)),
+                separatorBuilder: (_, _) => SizedBox(width: 16.dp),
                 itemBuilder: (context, index) => Padding(
                   padding: EdgeInsets.only(
-                    bottom: ResponsiveHelper.getSpacing(context, 16.0),
-                    left: index == 0 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
-                    right: index == _branchController.branches.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
+                    bottom: 16.dp,
+                    left: index == 0 ? 16.dp : 0.0,
+                    right: index == _branchController.branches.length - 1 ? 16.dp : 0.0,
                   ),
                   child: GestureDetector(
                     onTap: () => Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": _branchController.branches[index].companyID}),
                     child: CustomNearbyCard(branch: _branchController.branches[index], members: _memberController.members),
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
+          )
         ],
       ),
     ),
@@ -423,7 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: ResponsiveHelper.getSpacing(context, 5.0)),
+            top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
           ),
         ),
         child: ListView.separated(
@@ -431,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.zero,
           itemCount: _timelineController.timelines.length,
           physics: NeverScrollableScrollPhysics(),
-          separatorBuilder: (_, _) => Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
+          separatorBuilder: (_, _) => Container(color: Colors.grey.withValues(alpha: 0.7), height: 5.dp),
           itemBuilder: (context, index) => CustomTimeline(timeline: _timelineController.timelines[index], isNavigateCompany: true, isNavigateTimeline: true,),
         ),
       ),

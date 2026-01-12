@@ -23,18 +23,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget _buildContent() => SliverFillRemaining(
     hasScrollBody: false,
     child: Padding(
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 24.0)),
+      padding: EdgeInsets.all(24.dp),
       child: Wrap(
         alignment: WrapAlignment.spaceEvenly,
         crossAxisAlignment: WrapCrossAlignment.center,
         runAlignment: WrapAlignment.center,
         children: <Widget>[
-          Image.asset("assets/images/welcome.png", scale: kSquareRatio, width: ResponsiveHelper.getWelcomeImgSize(context) - 100.0),
+          Image.asset("assets/images/welcome.png", scale: kSquareRatio, width: ResponsiveHelper().welcomeSize() - 100.0),
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: ResponsiveHelper.getWelcomeImgSize(context) + 100.0),
+            constraints: BoxConstraints(maxWidth: ResponsiveHelper().welcomeSize() + 100.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: ResponsiveHelper.getSpacing(context, 16.0),
+              spacing: 16.dp,
               children: <Widget>[
                 CustomText(Globalization.welcome.tr, color: Theme.of(context).colorScheme.primary, fontSize: 18.0, fontWeight: FontWeight.w700),
                 CustomText(Globalization.msgWelcome.tr, fontSize: 14.0, maxLines: null),
@@ -55,10 +55,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       borderRadius: BorderRadius.circular(kBorderRadiusS),
       onTap: onTap,
       child: ListTile(
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: ResponsiveHelper.getSpacing(context, 24.0),
-          vertical: ResponsiveHelper.getSpacing(context, 4.0),
-        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 24.dp, vertical: 4.dp),
         subtitle: CustomText(subtitle, fontSize: 14.0, maxLines: null),
         title: CustomText(title, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.w700),
         trailing: Icon(Icons.arrow_forward_ios_rounded),

@@ -51,7 +51,7 @@ class _CustomOutlinedTextFieldState extends State<CustomOutlinedTextField> {
   InputDecoration _decoration(BuildContext context, {Widget? prefix, Widget? suffix, String? hint}) => InputDecoration(
     filled: true,
     fillColor: Colors.white,
-    contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 8.0), vertical: ResponsiveHelper.getSpacing(context, 16.0)),
+    contentPadding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 16.dp),
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(kBorderRadiusS), borderSide: BorderSide.none),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(kBorderRadiusS),
@@ -156,10 +156,7 @@ class _CustomSearchTextFieldState extends State<CustomSearchTextField> {
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: ResponsiveHelper.getSpacing(context, 16.0),
-          vertical: ResponsiveHelper.getSpacing(context, 8.0),
-        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(kBorderRadiusS), borderSide: BorderSide.none),
         hintText: Globalization.search.tr,
         prefixIcon: const Icon(Icons.search_rounded),
@@ -239,13 +236,12 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
           text: widget.label,
           style: Theme.of(
             context,
-          ).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontSize: 12.0, fontWeight: FontWeight.bold),
+          ).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontSize: 12.sp, fontWeight: FontWeight.bold),
         ),
       ],
     ),
     maxLines: 1,
     overflow: TextOverflow.ellipsis,
-    textScaler: TextScaler.linear(ResponsiveHelper.getTextScaler(context)),
   );
 
   @override
@@ -287,7 +283,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
   );
 
   Widget _idTypeField(BuildContext context) => Row(
-    spacing: ResponsiveHelper.getSpacing(context, 16.0),
+    spacing: 16.dp,
     children: <Widget>[
       Expanded(
         flex: 1,
@@ -322,7 +318,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
   );
 
   Widget _phoneField(BuildContext context) => Row(
-    spacing: ResponsiveHelper.getSpacing(context, 16.0),
+    spacing: 16.dp,
     children: <Widget>[
       Expanded(
         flex: 1,

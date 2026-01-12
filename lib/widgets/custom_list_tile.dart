@@ -41,15 +41,12 @@ class CustomHistoryListTile extends StatelessWidget {
     }
 
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.getSpacing(context, 16.0),
-        vertical: ResponsiveHelper.getSpacing(context, 8.0),
-      ),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.getSpacing(context, 4.0)),
+            padding: EdgeInsets.symmetric(vertical: 4.dp),
             child: CustomText(title, fontSize: 16.0),
           ),
           if (location.isNotEmpty) CustomText(location, color: Colors.black54, fontSize: 12.0),
@@ -89,13 +86,13 @@ class CustomInfoListTile extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     color: Colors.white,
     child: ListTile(
-      leading: icon != null ? Icon(icon, size: ResponsiveHelper.getTextScaler(context) * 24.0) : null,
+      leading: icon != null ? Icon(icon, size: 24.sp) : null,
       subtitle: subtitle != null ? CustomText(subtitle!, fontSize: 14.0, maxLines: null) : subWidget,
       title: CustomText(title, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold, maxLines: null),
       trailing: trailing != null
           ? GestureDetector(
               onTap: onTapCopy,
-              child: Icon(trailing, size: ResponsiveHelper.getTextScaler(context) * 24.0),
+              child: Icon(trailing, size: 24.sp),
             )
           : null,
       onTap: onTap,
@@ -112,14 +109,14 @@ class CustomBranchExpansion extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     decoration: BoxDecoration(
       border: Border(
-        top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: ResponsiveHelper.getSpacing(context, 5.0)),
+        top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
       ),
     ),
     child: Material(
       elevation: 1.0,
       child: ExpansionTile(
-        childrenPadding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
-        tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+        childrenPadding: EdgeInsets.only(bottom: 16.dp),
+        tilePadding: EdgeInsets.all(16.dp),
         title: CustomText("${Globalization.branches.tr} (${company.branches.length})", fontSize: 18.0, fontWeight: FontWeight.bold),
         children: company.branches.map((branch) {
           return CustomInfoListTile(

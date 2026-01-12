@@ -40,7 +40,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   );
 
   Widget _buildContent() => ListView(
-    padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+    padding: EdgeInsets.all(16.dp),
     children: <Widget>[
       Container(
         decoration: BoxDecoration(
@@ -48,8 +48,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
           border: Border.all(color: Theme.of(context).colorScheme.surfaceDim),
           color: Colors.white,
         ),
-        margin: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
-        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.getSpacing(context, 8.0)),
+        margin: EdgeInsets.only(bottom: 16.dp),
+        padding: EdgeInsets.symmetric(vertical: 8.dp),
         child: Column(
           children: <Widget>[
             _buildPaymentOption(Icons.account_balance_rounded, "Online Banking", PaymentMethod.onlineBanking),

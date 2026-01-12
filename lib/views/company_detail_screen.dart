@@ -143,16 +143,16 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
 
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0), vertical: ResponsiveHelper.getSpacing(context, 24.0)),
+        padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 24.dp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: ResponsiveHelper.getSpacing(context, 16.0),
+          spacing: 16.dp,
           children: <Widget>[
             if (!_hive.isSignIn)
               CustomText(Globalization.memberBenefits.tr, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold),
             if (!_hive.isSignIn || member.isMember)
               SizedBox(
-                height: ResponsiveHelper.isDesktop(context) ? 150.0 : 100.0,
+                height: ResponsiveHelper().quickAccessHeight(),
                 child: Row(
                   children: <Widget>[
                     Expanded(
@@ -202,9 +202,9 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
     onTap: () => Get.toNamed(AppRoutes.scan),
     child: Padding(
       padding: EdgeInsets.only(
-        bottom: ResponsiveHelper.getSpacing(context, 8.0),
-        left: ResponsiveHelper.getSpacing(context, 32.0),
-        right: ResponsiveHelper.getSpacing(context, 32.0),
+        bottom: 8.dp,
+        left: 32.dp,
+        right: 32.dp,
       ),
       child: AspectRatio(
         aspectRatio: 4 / 1,
@@ -217,24 +217,24 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
     child: Container(
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: ResponsiveHelper.getSpacing(context, 5.0)),
+          top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
         ),
       ),
       child: Material(
         elevation: 1.0,
         child: ExpansionTile(
-          childrenPadding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
-          tilePadding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+          childrenPadding: EdgeInsets.only(bottom: 16.dp),
+          tilePadding: EdgeInsets.all(16.dp),
           title: CustomText(Globalization.aboutUs.tr, fontSize: 18.0, fontWeight: FontWeight.bold),
           children: <Widget>[
             CustomInfoListTile(
               icon: Icons.category_rounded,
               title: Globalization.categories.tr,
               subWidget: Padding(
-                padding: EdgeInsets.only(top: ResponsiveHelper.getSpacing(context, 4.0)),
+                padding: EdgeInsets.only(top: 4.dp),
                 child: Wrap(
-                  runSpacing: ResponsiveHelper.getSpacing(context, 8.0),
-                  spacing: ResponsiveHelper.getSpacing(context, 8.0),
+                  runSpacing: 8.dp,
+                  spacing: 8.dp,
                   children: _company.getCategoryTitles().split(", ").map((category) {
                     return CustomLabelChip(
                       backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
@@ -274,14 +274,14 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
           Container(
             decoration: BoxDecoration(
               border: Border(
-                top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: ResponsiveHelper.getSpacing(context, 5.0)),
+                top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
               ),
               color: Colors.white,
             ),
             padding: EdgeInsets.only(
-              left: ResponsiveHelper.getSpacing(context, 16.0),
-              right: ResponsiveHelper.getSpacing(context, 16.0),
-              top: ResponsiveHelper.getSpacing(context, 24.0),
+              left: 16.dp,
+              right: 16.dp,
+              top: 24.dp,
             ),
             child: CustomText(Globalization.whatNew.tr, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
@@ -290,7 +290,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
             padding: EdgeInsets.zero,
             itemCount: _timelineController.timelines.length,
             physics: NeverScrollableScrollPhysics(),
-            separatorBuilder: (_, _) => Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
+            separatorBuilder: (_, _) => Container(color: Colors.grey.withValues(alpha: 0.7), height: 5.dp),
             itemBuilder: (context, index) => CustomTimeline(timeline: _timelineController.timelines[index], isNavigateTimeline: true),
           ),
         ],

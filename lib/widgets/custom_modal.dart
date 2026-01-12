@@ -63,13 +63,13 @@ class _CustomPickerDialogState<T> extends State<CustomPickerDialog<T>> {
   Widget build(BuildContext context) => Dialog(
     backgroundColor: Colors.transparent,
     child: Container(
-      constraints: const BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+      constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusS), color: Colors.white),
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 24.0)),
+      padding: EdgeInsets.all(24.dp),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
-        spacing: ResponsiveHelper.getSpacing(context, 16.0),
+        spacing: 16.dp,
         children: <Widget>[
           CustomSearchTextField(controller: _controller, onChanged: _onSearchChanged),
           Expanded(
@@ -97,13 +97,13 @@ class CustomTypePickerDialog<K, V> extends StatelessWidget {
   Widget build(BuildContext context) => Dialog(
     backgroundColor: Colors.transparent,
     child: Container(
-      constraints: const BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+      constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusM), color: Colors.white),
       padding: const EdgeInsets.all(kBorderRadiusM),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
-        spacing: ResponsiveHelper.getSpacing(context, 16.0),
+        spacing: 16.dp,
         children: <Widget>[
           CustomText(title, fontSize: 24.0, fontWeight: FontWeight.bold, textAlign: TextAlign.center),
           ...options.entries.map(

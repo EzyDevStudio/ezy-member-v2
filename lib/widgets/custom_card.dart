@@ -33,7 +33,7 @@ class CustomMemberCard extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: ResponsiveHelper.getSpacing(context, 16.0),
+            spacing: 16.dp,
             children: <Widget>[
               Expanded(
                 child: Column(
@@ -41,7 +41,7 @@ class CustomMemberCard extends StatelessWidget {
                   children: <Widget>[
                     CustomText(member.branch.companyName, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
                     const Spacer(),
-                    CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context) * 1.2, networkImage: member.branch.companyLogo),
+                    CustomAvatarImage(size: ResponsiveHelper().avatarSize() * 1.2, networkImage: member.branch.companyLogo),
                     const Spacer(),
                     CustomText(
                       member.memberCard.memberCardNumber.replaceAllMapped(RegExp(r".{4}"), (m) => "${m.group(0)} "),
@@ -117,7 +117,7 @@ class CustomNearbyCard extends StatelessWidget {
                             fit: BoxFit.cover,
                             errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
                               return Center(
-                                child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: ResponsiveHelper.getPromoAdsHeight(context) / 2),
+                                child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 70.dp),
                               );
                             },
                             loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
@@ -145,7 +145,7 @@ class CustomNearbyCard extends StatelessWidget {
                           bottom: kPositionLabel,
                           right: kPositionLabel,
                           child: Row(
-                            spacing: ResponsiveHelper.getSpacing(context, 8.0),
+                            spacing: 8.dp,
                             children: <Widget>[
                               CustomLabelChip(
                                 backgroundColor: Colors.white.withValues(alpha: 0.85),
@@ -177,13 +177,10 @@ class CustomNearbyCard extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ResponsiveHelper.getSpacing(context, 16.0),
-                    vertical: ResponsiveHelper.getSpacing(context, 8.0),
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: ResponsiveHelper.getSpacing(context, 4.0),
+                    spacing: 4.dp,
                     children: <Widget>[
                       CustomText(branch.branchName, fontSize: 16.0, fontWeight: FontWeight.w700),
                       CustomText(branch.fullAddress, fontSize: 14.0),
@@ -218,7 +215,7 @@ class CustomAdvertisementCard extends StatelessWidget {
               fit: BoxFit.cover,
               errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
                 return Center(
-                  child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: ResponsiveHelper.getPromoAdsHeight(context) / 2),
+                  child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 70.dp),
                 );
               },
               loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
@@ -244,7 +241,7 @@ class CustomAdvertisementCard extends StatelessWidget {
               borderRadius: BorderRadiusGeometry.vertical(bottom: Radius.circular(kBorderRadiusS)),
               color: Colors.black.withValues(alpha: 0.25),
             ),
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 8.0), vertical: ResponsiveHelper.getSpacing(context, 4.0)),
+            padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 4.dp),
             child: CustomText(advertisement.adsTitle, color: Colors.white, fontSize: 16.0),
           ),
         ),
@@ -260,16 +257,16 @@ class CustomProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+    padding: EdgeInsets.all(16.dp),
     child: CustomBackgroundImage(
       isBorderRadius: true,
       isShadow: true,
       backgroundImage: backgroundImage,
       child: Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 24.0)),
+        padding: EdgeInsets.all(24.dp),
         child: IntrinsicHeight(
           child: Row(
-            spacing: ResponsiveHelper.getSpacing(context, 24.0),
+            spacing: 24.dp,
             children: <Widget>[
               CustomAvatarImage(size: kProfileImgSizeL, networkImage: image),
               Expanded(
@@ -339,7 +336,7 @@ class _CustomPromotionCardState extends State<CustomPromotionCard> {
               fit: BoxFit.cover,
               errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
                 return Center(
-                  child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: ResponsiveHelper.getPromoAdsHeight(context) / 2),
+                  child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 70.dp),
                 );
               },
               loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
@@ -370,7 +367,7 @@ class _CustomPromotionCardState extends State<CustomPromotionCard> {
               borderRadius: BorderRadiusGeometry.vertical(bottom: Radius.circular(kBorderRadiusS)),
               color: Colors.black.withValues(alpha: 0.25),
             ),
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 8.0), vertical: ResponsiveHelper.getSpacing(context, 4.0)),
+            padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 4.dp),
             child: CustomText(widget.promotion.promotionTitle, color: Colors.white, fontSize: 16.0),
           ),
         ),
@@ -395,7 +392,7 @@ class CustomSectionCard extends StatelessWidget {
         BoxShadow(color: Theme.of(context).colorScheme.surfaceDim, blurRadius: kBlurRadius, offset: Offset(-kOffsetX, -kOffsetY)),
       ],
     ),
-    margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0), vertical: ResponsiveHelper.getSpacing(context, 8.0)),
+    margin: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
     child: ClipRRect(
       borderRadius: BorderRadius.circular(kBorderRadiusM),
       child: Column(
@@ -403,20 +400,13 @@ class CustomSectionCard extends StatelessWidget {
         children: <Widget>[
           Container(
             color: Colors.white,
-            padding: EdgeInsets.only(
-              left: ResponsiveHelper.getSpacing(context, 16.0),
-              right: ResponsiveHelper.getSpacing(context, 16.0),
-              top: ResponsiveHelper.getSpacing(context, 16.0),
-            ),
+            padding: EdgeInsets.only(left: 16.dp, right: 16.dp, top: 16.dp),
             child: CustomText(title, color: Colors.black54, fontSize: 18.0),
           ),
           Container(
             color: Colors.white,
-            padding: EdgeInsets.symmetric(
-              horizontal: ResponsiveHelper.getSpacing(context, 24.0),
-              vertical: ResponsiveHelper.getSpacing(context, 16.0),
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, spacing: ResponsiveHelper.getSpacing(context, 8.0), children: children),
+            padding: EdgeInsets.symmetric(horizontal: 24.dp, vertical: 16.dp),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, spacing: 8.dp, children: children),
           ),
         ],
       ),
@@ -441,14 +431,14 @@ class CustomShopCard extends StatelessWidget {
             BoxShadow(color: Theme.of(context).colorScheme.surfaceContainerHigh, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
           ],
         ),
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0), vertical: ResponsiveHelper.getSpacing(context, 8.0)),
+        padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          spacing: ResponsiveHelper.getSpacing(context, 8.0),
+          spacing: 8.dp,
           children: <Widget>[
             Row(
-              spacing: ResponsiveHelper.getSpacing(context, 16.0),
+              spacing: 16.dp,
               children: <Widget>[
                 CustomAvatarImage(size: kProfileImgSizeM, networkImage: branch.companyLogo),
                 Expanded(
@@ -464,7 +454,7 @@ class CustomShopCard extends StatelessWidget {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: ResponsiveHelper.getSpacing(context, 4.0),
+              spacing: 4.dp,
               children: <Widget>[
                 CustomText(branch.companyName, fontSize: 14.0, maxLines: 2, fontWeight: FontWeight.bold),
                 CustomText(branch.fullAddress, fontSize: 13.0, maxLines: 2),

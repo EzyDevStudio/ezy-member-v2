@@ -39,10 +39,10 @@ class CustomVoucher extends StatelessWidget {
         curveAxis: Axis.vertical,
         clockwise: false,
         borderRadius: kBorderRadiusS,
-        curvePosition: (isCollectable ? ResponsiveHelper.getVoucherWidth(context) : constraints.maxWidth) * 0.3,
+        curvePosition: (isCollectable ? ResponsiveHelper().voucherWidth() : constraints.maxWidth) * 0.3,
         curveRadius: kBorderRadiusS * 2,
-        height: isCollectable ? ResponsiveHelper.getVoucherHeight(context) : kVoucherDefaultHeight,
-        width: isCollectable ? ResponsiveHelper.getVoucherWidth(context) : null,
+        height: isCollectable ? ResponsiveHelper().voucherHeight() : kVoucherDefaultHeight,
+        width: isCollectable ? ResponsiveHelper().voucherWidth() : null,
         shadow: Shadow(color: shadowColor!, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
         firstChild: _buildFirstChild(context),
         secondChild: _buildSecondChild(context),
@@ -57,12 +57,12 @@ class CustomVoucher extends StatelessWidget {
 
     Widget content = Container(
       color: bgColor,
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 4.0)),
+      padding: EdgeInsets.all(4.dp),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context) * (isCollectable ? 1 : 1.1), networkImage: voucher.companyLogo),
+          CustomAvatarImage(size: ResponsiveHelper().avatarSize() * (isCollectable ? 1.0 : 1.1), networkImage: voucher.companyLogo),
           CustomText(
             voucher.companyName,
             color: Theme.of(context).colorScheme.onPrimary,
@@ -81,7 +81,7 @@ class CustomVoucher extends StatelessWidget {
       alignment: Alignment.topLeft,
       backgroundColor: Theme.of(context).colorScheme.errorContainer,
       padding: EdgeInsets.only(left: 10.0, right: 6.0),
-      offset: Offset(-6.0, ResponsiveHelper.getSpacing(context, 8.0)),
+      offset: Offset(-6.0, 8.dp),
       label: CustomText("x${voucher.quantity}", color: Theme.of(context).colorScheme.onErrorContainer, fontSize: 11.0),
       child: content,
     );
@@ -94,12 +94,12 @@ class CustomVoucher extends StatelessWidget {
 
     return Container(
       color: bgColor,
-      padding: EdgeInsets.all(isCollectable ? ResponsiveHelper.getSpacing(context, 8.0) : 16.0),
+      padding: EdgeInsets.all(isCollectable ? 8.dp : 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
-            spacing: ResponsiveHelper.getSpacing(context, 8.0),
+            spacing: 8.dp,
             children: <Widget>[
               Expanded(
                 child: CustomText(
@@ -126,7 +126,7 @@ class CustomVoucher extends StatelessWidget {
             CustomText("${Globalization.redeemWith.tr} ${voucher.usePointRedeem} ${Globalization.points.tr}", fontSize: isCollectable ? 12.0 : 14.0),
           if (!isRedeemable) CustomText("${Globalization.minSpend.tr} ${voucher.minimumSpend}", fontSize: isCollectable ? 12.0 : 14.0),
           Row(
-            spacing: ResponsiveHelper.getSpacing(context, 8.0),
+            spacing: 8.dp,
             children: <Widget>[
               Expanded(
                 child: CustomText(

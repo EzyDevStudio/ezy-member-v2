@@ -4,6 +4,7 @@ import 'package:ezy_member_v2/constants/app_themes.dart';
 import 'package:ezy_member_v2/controllers/authentication_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/settings_controller.dart';
+import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/language/intl_keys.dart';
 import 'package:ezy_member_v2/services/local/connection_service.dart';
@@ -25,7 +26,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 // quick access "Shops Nearby", "Company Subscribed (See Who’s on Our App / Trusted by These Companies)"
 // combine api - home, member_detail, company_detail
-// sort out order by all api
 
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
@@ -44,10 +44,10 @@ void main() async {
 
   runApp(
     GetMaterialApp(
-      // builder: (context, child) {
-      //   NewResponsiveHelper().init(context);
-      //   return child!;
-      // },
+      builder: (context, child) {
+        ResponsiveHelper().init(context);
+        return child!;
+      },
       title: AppStrings.appName,
       theme: AppThemes().lightTheme,
       getPages: AppRoutes.pages,

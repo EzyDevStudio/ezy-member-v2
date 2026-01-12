@@ -20,14 +20,11 @@ class MessageHelper {
       borderRadius: kBorderRadiusS,
       animationDuration: const Duration(milliseconds: 300),
       duration: duration,
-      margin: EdgeInsets.all(ResponsiveHelper.getSpacing(Get.context!, 16.0)),
-      padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.getSpacing(Get.context!, 24.0),
-        vertical: ResponsiveHelper.getSpacing(Get.context!, 16.0),
-      ),
+      margin: EdgeInsets.all(16.dp),
+      padding: EdgeInsets.symmetric(horizontal: 24.dp, vertical: 16.dp),
       snackPosition: SnackPosition.BOTTOM,
       snackStyle: SnackStyle.FLOATING,
-      icon: Icon(icon, color: foregroundColor ?? Get.theme.colorScheme.onPrimary, size: 32.0 * ResponsiveHelper.getTextScaler(Get.context!)),
+      icon: Icon(icon, color: foregroundColor ?? Get.theme.colorScheme.onPrimary, size: 32.sp),
       messageText: CustomText(message, color: foregroundColor ?? Get.theme.colorScheme.onPrimary, fontSize: 14.0, maxLines: null),
       titleText: CustomText(
         AppStrings.appName,
@@ -74,7 +71,7 @@ class MessageHelper {
         child: Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
-            constraints: const BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+            constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusM)),
             padding: const EdgeInsets.all(kBorderRadiusM),
             child: Column(
@@ -136,7 +133,7 @@ class MessageHelper {
       Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          constraints: const BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+          constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusM)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -180,7 +177,7 @@ class MessageHelper {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Get.theme.colorScheme.primary,
                               foregroundColor: Get.theme.colorScheme.onPrimary,
-                              padding: EdgeInsets.all(ResponsiveHelper.getSpacing(Get.context!, 16.0)),
+                              padding: EdgeInsets.all(16.dp),
                             ),
                             onPressed: () => Get.back(result: true),
                             child: CustomText(confirmText ?? Globalization.confirm.tr, color: Get.theme.colorScheme.onPrimary, fontSize: 18.0),

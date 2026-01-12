@@ -70,11 +70,11 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(kBorderRadiusM))),
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Padding(
-          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+          padding: EdgeInsets.all(16.dp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
-            spacing: ResponsiveHelper.getSpacing(context, 16.0),
+            spacing: 16.dp,
             children: <Widget>[
               CustomText(Globalization.historyType.tr, fontSize: 18.0),
               CustomChoiceChip(
@@ -87,7 +87,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
               ),
               CustomText(Globalization.customDateRange.tr, fontSize: 18.0),
               Row(
-                spacing: ResponsiveHelper.getSpacing(context, 16.0),
+                spacing: 16.dp,
                 children: <Widget>[
                   Expanded(
                     child: TextButton(
@@ -127,7 +127,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                 ],
               ),
               Row(
-                spacing: ResponsiveHelper.getSpacing(context, 16.0),
+                spacing: 16.dp,
                 children: <Widget>[
                   Expanded(
                     flex: 1,
@@ -217,11 +217,8 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
             Center(
               child: Container(
                 constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.9),
-                padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
-                child: Column(
-                  spacing: ResponsiveHelper.getSpacing(context, 16.0),
-                  children: <Widget>[_buildMemberCard(), _buildQuickAccess(), _buildBarcode()],
-                ),
+                padding: EdgeInsets.all(16.dp),
+                child: Column(spacing: 16.dp, children: <Widget>[_buildMemberCard(), _buildQuickAccess(), _buildBarcode()]),
               ),
             ),
             _buildHistory(),
@@ -246,7 +243,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context) * 1.2, networkImage: _hive.image),
+                CustomAvatarImage(size: ResponsiveHelper().avatarSize() * 1.2, networkImage: _hive.image),
                 const Spacer(),
                 CustomLabelChip(
                   backgroundColor: _member.isExpired ? Colors.red : Colors.green,
@@ -262,7 +259,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
             ),
             const Spacer(),
             Row(
-              spacing: ResponsiveHelper.getSpacing(context, 16.0),
+              spacing: 16.dp,
               children: <Widget>[
                 Expanded(child: CustomText(_hive.memberProfile.value!.name, color: Colors.white, fontSize: 18.0)),
                 CustomText(_member.memberCard.cardDesc, color: Colors.white, fontSize: 18.0),
@@ -270,7 +267,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
             ),
             const Spacer(),
             Row(
-              spacing: ResponsiveHelper.getSpacing(context, 16.0),
+              spacing: 16.dp,
               children: <Widget>[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,7 +292,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
   );
 
   Widget _buildQuickAccess() => Container(
-    margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+    margin: EdgeInsets.all(16.dp),
     child: Row(
       children: <Widget>[
         Expanded(
@@ -321,7 +318,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
   );
 
   Widget _buildQuickAccessItem(String label, String value) => Column(
-    spacing: ResponsiveHelper.getSpacing(context, 8.0),
+    spacing: 8.dp,
     children: <Widget>[
       CustomText(value, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
       CustomText(label, fontSize: 16.0),
@@ -331,7 +328,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
   Widget _buildBarcode() => InkWell(
     onTap: () => Get.toNamed(AppRoutes.scan),
     child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0)),
+      padding: EdgeInsets.symmetric(horizontal: 16.dp),
       child: AspectRatio(
         aspectRatio: 4 / 1,
         child: Code(drawText: false, codeType: CodeType.code128(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
@@ -363,18 +360,12 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
           (index) => Column(
             children: <Widget>[
               CustomHistoryListTile(history: filteredHistories[index]),
-              if (index + 1 != filteredHistories.length)
-                Divider(
-                  color: Colors.grey.shade200,
-                  endIndent: ResponsiveHelper.getSpacing(context, 16.0),
-                  indent: ResponsiveHelper.getSpacing(context, 16.0),
-                  height: 1.0,
-                ),
+              if (index + 1 != filteredHistories.length) Divider(color: Colors.grey.shade200, endIndent: 16.dp, indent: 16.dp, height: 1.0),
             ],
           ),
         ),
         Container(
-          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+          padding: EdgeInsets.all(16.dp),
           child: CustomText(Globalization.msgHistoryEnd.tr, color: Colors.grey, fontSize: 16.0),
         ),
       ],
@@ -384,18 +375,18 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
   Widget _buildHistoryHeader() => Container(
     decoration: BoxDecoration(
       border: Border(
-        top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: ResponsiveHelper.getSpacing(context, 5.0)),
+        top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
       ),
     ),
-    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0), vertical: ResponsiveHelper.getSpacing(context, 16.0)),
+    padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 16.dp),
     child: Row(
-      spacing: ResponsiveHelper.getSpacing(context, 16.0),
+      spacing: 16.dp,
       children: <Widget>[
         Expanded(child: CustomText(Globalization.history.tr, fontSize: 18.0, fontWeight: FontWeight.bold)),
         InkWell(
           onTap: () => _showFilterModal(),
           child: Row(
-            spacing: ResponsiveHelper.getSpacing(context, 4.0),
+            spacing: 4.dp,
             children: <Widget>[
               CustomText(AppStrings().historyTypes[_selectedType]!, color: Colors.grey, fontSize: 16.0),
               Icon(Icons.filter_alt_rounded, color: Colors.grey),

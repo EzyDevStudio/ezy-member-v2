@@ -60,7 +60,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
   );
 
   Widget _buildInvoiceTab(String image) => Column(
-    spacing: ResponsiveHelper.getSpacing(context, 64.0),
+    spacing: 64.dp,
     children: <Widget>[
       Container(
         decoration: BoxDecoration(
@@ -75,7 +75,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
             ? InteractiveViewer(maxScale: 5.0, child: Image.network(image, fit: BoxFit.contain))
             : Center(
                 child: Padding(
-                  padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+                  padding: EdgeInsets.all(16.dp),
                   child: CustomText(Globalization.msgNoEInvoice.tr, fontSize: 16.0, maxLines: 2, textAlign: TextAlign.center),
                 ),
               ),

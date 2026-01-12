@@ -59,14 +59,14 @@ class _MemberListScreenState extends State<MemberListScreen> {
   Widget _buildContent() => Obx(() {
     if (_memberController.isLoading.value) {
       return Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+        padding: EdgeInsets.all(16.dp),
         child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
       );
     }
 
     if (_memberController.members.isEmpty) {
       return Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+        padding: EdgeInsets.all(16.dp),
         child: Center(
           child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.member.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2),
         ),
@@ -87,19 +87,14 @@ class _MemberListScreenState extends State<MemberListScreen> {
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+          padding: EdgeInsets.all(16.dp),
           child: CustomSearchTextField(controller: _searchController, onChanged: (String value) => _onSearchChanged()),
         ),
         Expanded(
           child: ListView.builder(
             itemCount: displayMembers.length,
             itemBuilder: (context, index) => Padding(
-              padding: EdgeInsetsGeometry.only(
-                bottom: index == displayMembers.length - 1 ? ResponsiveHelper.getSpacing(context, 16.0) : 0.0,
-                left: ResponsiveHelper.getSpacing(context, 16.0),
-                right: ResponsiveHelper.getSpacing(context, 16.0),
-                top: ResponsiveHelper.getSpacing(context, 16.0),
-              ),
+              padding: EdgeInsetsGeometry.only(bottom: index == displayMembers.length - 1 ? 16.dp : 0.0, left: 16.dp, right: 16.dp, top: 16.dp),
               child: Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.7),

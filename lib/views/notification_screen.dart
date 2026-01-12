@@ -41,7 +41,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget _buildVoucherList() => Obx(() {
     if (_voucherController.isLoading.value) {
       return Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+        padding: EdgeInsets.all(16.dp),
         child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
       );
     }
@@ -51,14 +51,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final totalCount = todayVouchers.length + redeemableVouchers.length;
 
     return ListView.builder(
-      padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+      padding: EdgeInsets.all(16.dp),
       itemCount: totalCount,
       itemBuilder: (context, index) {
         final bool isTodaySection = index < todayVouchers.length;
         final voucher = isTodaySection ? todayVouchers[index] : redeemableVouchers[index - todayVouchers.length];
 
         return Padding(
-          padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
+          padding: EdgeInsets.only(bottom: 16.dp),
           child: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
@@ -67,12 +67,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 children: <Widget>[
                   if (index == 0 && todayVouchers.isNotEmpty)
                     Padding(
-                      padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
+                      padding: EdgeInsets.only(bottom: 16.dp),
                       child: CustomText(Globalization.voucherExpiresToday.tr, fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   if (index == todayVouchers.length && redeemableVouchers.isNotEmpty)
                     Padding(
-                      padding: EdgeInsets.only(bottom: ResponsiveHelper.getSpacing(context, 16.0)),
+                      padding: EdgeInsets.only(bottom: 16.dp),
                       child: CustomText(Globalization.redeemableVouchers.tr, fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   isTodaySection

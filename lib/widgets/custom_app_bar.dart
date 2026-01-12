@@ -17,12 +17,12 @@ class CustomAppBar extends StatelessWidget {
     snap: false,
     actions: actions,
     bottom: PreferredSize(
-      preferredSize: Size.fromHeight(kProfileImgSizeM + ResponsiveHelper.getSpacing(context, 32.0)),
+      preferredSize: Size.fromHeight(kProfileImgSizeM + 32.dp),
       child: Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 16.0)),
+        padding: EdgeInsets.all(16.dp),
         child: SafeArea(
           child: Row(
-            spacing: ResponsiveHelper.getSpacing(context, 16.0),
+            spacing: 16.dp,
             children: <Widget>[
               CustomAvatarImage(size: kProfileImgSizeM, networkImage: avatarImage),
               child,

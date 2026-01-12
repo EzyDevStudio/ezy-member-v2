@@ -112,8 +112,8 @@ class _ScanScreenState extends State<ScanScreen> {
               ),
               height: size,
               width: size,
-              margin: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 32.0)),
-              padding: EdgeInsets.all(ResponsiveHelper.getSpacing(context, 32.0)),
+              margin: EdgeInsets.all(32.dp),
+              padding: EdgeInsets.all(32.dp),
               child: Center(child: _type == ScanType.earn ? _buildEarnSection() : _buildRedeemSection()),
             ),
           );
@@ -156,7 +156,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
   Widget _buildEarnSection() => Column(
     mainAxisAlignment: MainAxisAlignment.center,
-    spacing: ResponsiveHelper.getSpacing(context, 32.0),
+    spacing: 32.dp,
     children: <Widget>[
       AspectRatio(
         aspectRatio: 3 / 1,

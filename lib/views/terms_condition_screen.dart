@@ -41,18 +41,13 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
   Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text(Globalization.tncLong.tr));
 
   Widget _buildContent() => SliverPadding(
-    padding: EdgeInsets.only(
-      bottom: ResponsiveHelper.getSpacing(context, 16.0),
-      left: ResponsiveHelper.getSpacing(context, 16.0),
-      right: ResponsiveHelper.getSpacing(context, 16.0),
-      top: ResponsiveHelper.getSpacing(context, 24.0),
-    ),
+    padding: EdgeInsets.only(bottom: 16.dp, left: 16.dp, right: 16.dp, top: 24.dp),
     sliver: SliverToBoxAdapter(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           CustomText(_voucher.batchDescription, fontSize: 24.0, fontWeight: FontWeight.bold),
-          SizedBox(height: ResponsiveHelper.getSpacing(context, 16.0)),
+          SizedBox(height: 16.dp),
           _buildListTile(
             subtitle: "${FormatterHelper.timestampToString(_voucher.startDate)} - ${FormatterHelper.timestampToString(_voucher.expiredDate)}",
             title: Globalization.validPeriod.tr,
