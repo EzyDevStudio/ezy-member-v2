@@ -291,7 +291,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
             itemCount: _timelineController.timelines.length,
             physics: NeverScrollableScrollPhysics(),
             separatorBuilder: (_, _) => Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
-            itemBuilder: (context, index) => CustomTimeline(timeline: _timelineController.timelines[index]),
+            itemBuilder: (context, index) => CustomTimeline(timeline: _timelineController.timelines[index], isNavigateTimeline: true),
           ),
         ],
       ),

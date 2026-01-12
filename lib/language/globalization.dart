@@ -30,6 +30,7 @@ class Globalization {
   static const String clear = "Clear";
   static const String codeExpired = "Code Expired";
   static const String collect = "Collect";
+  static const String collectBy = "Collect By";
   static const String collectVouchers = "Collect Vouchers";
   static const String companyInformation = "Company Information";
   static const String confirm = "Confirm";
@@ -59,6 +60,7 @@ class Globalization {
   static const String joinUsNow = "Join Us Now";
   static const String joined = "Joined";
   static const String home = "Home";
+  static const String less = "Less";
   static const String male = "Male";
   static const String member = "Member";
   static const String memberBenefits = "Member Benefits";
@@ -88,6 +90,7 @@ class Globalization {
   static const String profile = "Profile";
   static const String promotions = "Promotions";
   static const String redeem = "Redeem";
+  static const String redeemBy = "Redeem By";
   static const String redeemableVouchers = "Redeemable Vouchers";
   static const String redeemByCredits = "Redeem By Credits";
   static const String redeemWith = "Redeem With";
@@ -111,6 +114,7 @@ class Globalization {
   static const String sstRegistration = "SST Registration";
   static const String state = "State";
   static const String takePhotos = "Take Photos";
+  static const String timeline = "timeline";
   static const String tin = "TIN";
   static const String tnc = "T&C";
   static const String tncLong = "Terms & Conditions";

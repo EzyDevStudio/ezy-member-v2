@@ -14,6 +14,7 @@ const String fieldDiscountValue = "discount_value";
 const String fieldMinimumSpend = "minimum_spend";
 const String fieldStartDate = "start_date";
 const String fieldExpiredDate = "expired_date";
+const String fieldEndCollectDate = "end_collect_date";
 const String fieldQuantity = "quantity";
 const String fieldTermsCondition = "terms_condition";
 const String fieldCompanyID = "company_id";
@@ -42,6 +43,7 @@ class VoucherModel {
   final double minimumSpend;
   final int startDate;
   final int expiredDate;
+  final int endCollectDate;
   final int quantity;
   final String termsCondition;
   final String companyID;
@@ -67,6 +69,7 @@ class VoucherModel {
     this.minimumSpend = 0.0,
     this.startDate = 0,
     this.expiredDate = 0,
+    this.endCollectDate = 0,
     this.quantity = 0,
     this.termsCondition = "",
     this.companyID = "",
@@ -95,6 +98,7 @@ class VoucherModel {
     minimumSpend: (data[fieldMinimumSpend] ?? 0).toDouble(),
     startDate: data[fieldStartDate] != null ? DateTime.tryParse(data[fieldStartDate])?.millisecondsSinceEpoch ?? 0 : 0,
     expiredDate: data[fieldExpiredDate] != null ? DateTime.tryParse(data[fieldExpiredDate])?.millisecondsSinceEpoch ?? 0 : 0,
+    endCollectDate: data[fieldEndCollectDate] != null ? DateTime.tryParse(data[fieldEndCollectDate])?.millisecondsSinceEpoch ?? 0 : 0,
     quantity: data[fieldQuantity] ?? 0,
     termsCondition: data[fieldTermsCondition] ?? "",
     companyID: data[fieldCompanyID] ?? "",
@@ -106,5 +110,5 @@ class VoucherModel {
 
   @override
   String toString() =>
-      "VoucherModel(id: $id, batchCode: $batchCode, voucherCode: $voucherCode, holder: $holder, status: $status, redeemMember: $redeemMember, redeemDate: $redeemDate, redeemCounter: $redeemCounter, docNo: $docNo, createdAt: $createdAt, usePointRedeem: $usePointRedeem, batchDescription: $batchDescription, discountValue: $discountValue, minimumSpend: $minimumSpend, startDate: $startDate, expiredDate: $expiredDate, quantity: $quantity, termsCondition: $termsCondition, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo, branchName: $branchName, counterDesc: $counterDesc)\n";
+      "VoucherModel(id: $id, batchCode: $batchCode, voucherCode: $voucherCode, holder: $holder, status: $status, redeemMember: $redeemMember, redeemDate: $redeemDate, redeemCounter: $redeemCounter, docNo: $docNo, createdAt: $createdAt, usePointRedeem: $usePointRedeem, batchDescription: $batchDescription, discountValue: $discountValue, minimumSpend: $minimumSpend, startDate: $startDate, expiredDate: $expiredDate, endCollectDate: $endCollectDate, quantity: $quantity, termsCondition: $termsCondition, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo, branchName: $branchName, counterDesc: $counterDesc)\n";
 }

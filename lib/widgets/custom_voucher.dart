@@ -89,6 +89,8 @@ class CustomVoucher extends StatelessWidget {
 
   Widget _buildSecondChild(BuildContext context) {
     final bgColor = !isCollectable && voucher.startDate > DateTime.now().millisecondsSinceEpoch ? Colors.grey.shade200 : Colors.white;
+    final dateTitle = isCollectable ? Globalization.collectBy.tr : (isRedeemable ? Globalization.redeemBy.tr : Globalization.validTill.tr);
+    final date = isCollectable || isRedeemable ? voucher.endCollectDate : voucher.expiredDate;
 
     return Container(
       color: bgColor,
@@ -128,7 +130,7 @@ class CustomVoucher extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: CustomText(
-                  "${Globalization.validTill.tr} ${FormatterHelper.timestampToString(voucher.expiredDate)}",
+                  "$dateTitle ${FormatterHelper.timestampToString(date)}",
                   color: Colors.black54,
                   fontSize: isCollectable ? 11.0 : 14.0,
                 ),

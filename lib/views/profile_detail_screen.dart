@@ -54,34 +54,17 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
 
     _memberControllers = ProfileDetailControllers(_memberProfile);
     _workingControllers = ProfileDetailControllers(_workingProfile);
-
     _tabController = TabController(length: ProfileType.values.length, vsync: this);
-    // Listen to tab change, then retrieve data, "0" for personal and "1" for working
-    _tabController.addListener(() {
-      if (_tabController.index == 0) {
-        _fetchProfile(true);
-      } else if (_tabController.index == 1) {
-        _fetchProfile(false);
-      }
-    });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => _fetchProfile(true));
-
-    ever(_profileController.isUpdate, (updated) {
-      if (updated == true && _tabController.index == 0) {
-        _fetchProfile(true);
-      } else if (updated == true && _tabController.index == 1) {
-        _fetchProfile(false);
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _fetchProfile());
   }
 
-  void _fetchProfile(bool isMember) async {
+  void _fetchProfile() async {
     if (_hive.memberProfile.value == null) return;
 
-    await _profileController.loadProfile(_hive.memberProfile.value!.memberCode, isMember ? ProfileType.member : ProfileType.working);
+    await _profileController.loadProfile(_hive.memberProfile.value!.memberCode);
 
-    if (isMember && _profileController.memberProfile.value != null) {
+    if (_profileController.memberProfile.value != null) {
       _memberProfile = _profileController.memberProfile.value!;
       _memberControllers = ProfileDetailControllers(_memberProfile);
 
@@ -91,7 +74,9 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
 
       _memberControllers[fieldGender].text = AppStrings().genders[_selectedGender] ?? "";
       setState(() {});
-    } else if (!isMember && _profileController.workingProfile.value != null) {
+    }
+
+    if (_profileController.workingProfile.value != null) {
       _workingProfile = _profileController.workingProfile.value!;
       _workingControllers = ProfileDetailControllers(_workingProfile);
 
@@ -101,27 +86,12 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
 
       _workingControllers[fieldRegistrationSchemeID].text = AppStrings().idTypes[_selectedIDType] ?? AppStrings().idTypes.values.first;
       setState(() {});
-    } else if (!isMember && _profileController.workingProfile.value == null) {
+    }
+
+    if (_profileController.workingProfile.value == null) {
       _workingControllers[fieldRegistrationSchemeID].text = AppStrings().idTypes[_selectedIDType] ?? AppStrings().idTypes.values.first;
       setState(() {});
     }
-  }
-
-  void _uploadMedia(int imgType) async {
-    final pickedSource = await CustomTypePickerDialog.show<ImageSource, String>(
-      context: context,
-      title: Globalization.selectSource.tr,
-      options: AppStrings().imageSrc,
-      onDisplay: (option) => option,
-    );
-
-    if (pickedSource == null) return;
-
-    File? pickedFile = await MediaHelper.processImage(pickedSource.key);
-
-    if (pickedFile == null) return;
-
-    _profileController.uploadMedia(pickedFile, imgType, _hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token);
   }
 
   Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
@@ -215,6 +185,23 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     );
 
     _profileController.updateProfile(data, ProfileType.working, _hive.memberProfile.value!.token);
+  }
+
+  void _uploadMedia(int imgType) async {
+    final pickedSource = await CustomTypePickerDialog.show<ImageSource, String>(
+      context: context,
+      title: Globalization.selectSource.tr,
+      options: AppStrings().imageSrc,
+      onDisplay: (option) => option,
+    );
+
+    if (pickedSource == null) return;
+
+    File? pickedFile = await MediaHelper.processImage(pickedSource.key);
+
+    if (pickedFile == null) return;
+
+    _profileController.uploadMedia(pickedFile, imgType, _hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token);
   }
 
   @override

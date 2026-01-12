@@ -10,8 +10,9 @@ import 'package:get/get.dart';
 
 class CustomTimeline extends StatelessWidget {
   final TimelineModel timeline;
+  final bool isDetail, isNavigateCompany, isNavigateTimeline;
 
-  const CustomTimeline({super.key, required this.timeline});
+  const CustomTimeline({super.key, required this.timeline, this.isDetail = false, this.isNavigateCompany = false, this.isNavigateTimeline = false});
 
   @override
   Widget build(BuildContext context) => Container(
@@ -26,7 +27,12 @@ class CustomTimeline extends StatelessWidget {
           child: Row(
             spacing: ResponsiveHelper.getSpacing(context, 8.0),
             children: <Widget>[
-              CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context), networkImage: timeline.companyLogo),
+              GestureDetector(
+                onTap: () => isDetail
+                    ? null
+                    : (isNavigateCompany ? Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": timeline.companyID}) : null),
+                child: CustomAvatarImage(size: ResponsiveHelper.getBranchImgSize(context), networkImage: timeline.companyLogo),
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,11 +48,14 @@ class CustomTimeline extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.getSpacing(context, 16.0)),
-          child: CustomText(timeline.timelineCaption, fontSize: 16.0, maxLines: null),
+          child: CustomReadMore(
+            text: timeline.timelineCaption,
+            style: const TextStyle(fontFamily: "AlibabaPuHuiTi", fontSize: 16.0),
+          ),
         ),
         GestureDetector(
-          onTap: () => Get.toNamed(AppRoutes.mediaViewer, arguments: {"media_url": timeline.timelineImage}),
-          child: Image.network(timeline.timelineImage, fit: BoxFit.cover, height: kTimelineHeight, width: double.infinity),
+          onTap: () => isDetail ? null : (isNavigateTimeline ? Get.toNamed(AppRoutes.timelineDetail, arguments: {"timeline": timeline}) : null),
+          child: Image.network(timeline.timelineImage, fit: BoxFit.cover, height: isDetail ? null : kTimelineHeight, width: double.infinity),
         ),
       ],
     ),

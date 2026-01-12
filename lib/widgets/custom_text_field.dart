@@ -237,7 +237,9 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
           ),
         TextSpan(
           text: widget.label,
-          style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12.0, fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontSize: 12.0, fontWeight: FontWeight.bold),
         ),
       ],
     ),

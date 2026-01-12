@@ -18,6 +18,14 @@ import 'package:hive_flutter/hive_flutter.dart';
 // Settle AssetImage, NetworkImage, Image.asset, Image.network
 // google sign up and in
 // deep link for referral
+// forget password
+// payment gateway
+// company category selection
+// device kick out
+
+// quick access "Shops Nearby", "Company Subscribed (See Who’s on Our App / Trusted by These Companies)"
+// combine api - home, member_detail, company_detail
+// sort out order by all api
 
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
@@ -36,6 +44,10 @@ void main() async {
 
   runApp(
     GetMaterialApp(
+      // builder: (context, child) {
+      //   NewResponsiveHelper().init(context);
+      //   return child!;
+      // },
       title: AppStrings.appName,
       theme: AppThemes().lightTheme,
       getPages: AppRoutes.pages,

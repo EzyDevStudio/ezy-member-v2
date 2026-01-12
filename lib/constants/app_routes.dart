@@ -5,7 +5,7 @@ import 'package:ezy_member_v2/views/company_detail_screen.dart';
 import 'package:ezy_member_v2/views/branch_list_screen.dart';
 import 'package:ezy_member_v2/views/home_screen.dart';
 import 'package:ezy_member_v2/views/invoice_screen.dart';
-import 'package:ezy_member_v2/views/media_viewer_screen.dart';
+import 'package:ezy_member_v2/views/timeline_detail_screen.dart';
 import 'package:ezy_member_v2/views/member_detail_screen.dart';
 import 'package:ezy_member_v2/views/member_list_screen.dart';
 import 'package:ezy_member_v2/views/notification_screen.dart';
@@ -25,7 +25,6 @@ class AppRoutes {
   static const companyDetail = "/company_detail";
   static const home = "/home";
   static const invoice = "/invoice";
-  static const mediaViewer = "/media_viewer";
   static const memberDetail = "/member_detail";
   static const memberList = "/member_list";
   static const notification = "/notification";
@@ -33,6 +32,7 @@ class AppRoutes {
   static const scan = "/scan";
   static const profileDetail = "/profile_detail";
   static const termsCondition = "/terms_condition";
+  static const timelineDetail = "/timeline_detail";
   static const voucherList = "/voucher_list";
   static const welcome = "/welcome";
 
@@ -44,7 +44,6 @@ class AppRoutes {
     GetPage(name: companyDetail, page: () => CompanyDetailScreen()),
     GetPage(name: home, page: () => HomeScreen()),
     GetPage(name: invoice, page: () => InvoiceScreen()),
-    GetPage(name: mediaViewer, page: () => MediaViewerScreen()),
     GetPage(name: memberDetail, page: () => MemberDetailScreen()),
     GetPage(name: memberList, page: () => MemberListScreen()),
     GetPage(name: notification, page: () => NotificationScreen()),
@@ -52,6 +51,7 @@ class AppRoutes {
     GetPage(name: scan, page: () => ScanScreen()),
     GetPage(name: profileDetail, page: () => ProfileDetailScreen()),
     GetPage(name: termsCondition, page: () => TermsConditionScreen()),
+    GetPage(name: timelineDetail, page: () => TimelineDetailScreen()),
     GetPage(name: voucherList, page: () => VoucherListScreen()),
     GetPage(name: welcome, page: () => WelcomeScreen()),
   ];

@@ -20,32 +20,30 @@ class ProfileController extends GetxController {
   ProfileDetailControllers? memberControllers;
   ProfileDetailControllers? workingControllers;
 
-  Future<void> loadProfile(String memberCode, ProfileType type) async {
+  Future<void> loadProfile(String memberCode) async {
     _showLoading(Globalization.msgProfileRetrieving.tr);
 
-    final bool isMember = type == ProfileType.member;
-    final String endpoint = isMember ? "get-personal-profile/$memberCode" : "get-working-profile/$memberCode";
-    final String key = isMember ? MemberProfileModel.keyMember : WorkingProfileModel.keyWorking;
-    final response = await _api.get(endPoint: endpoint, module: "ProfileController - loadProfile");
+    final response = await _api.get(endPoint: "get-profile/$memberCode", module: "ProfileController - loadProfile");
 
     _hideLoading();
 
-    if (response == null || response.data[key] == null) {
+    if (response == null) {
+      _showError(Globalization.msgSystemError.tr);
       return;
     }
 
-    if (isMember) {
-      memberProfile.value = MemberProfileModel.fromJson(response.data[key]);
+    if (response.data[MemberProfileModel.keyMember] != null) {
+      memberProfile.value = MemberProfileModel.fromJson(response.data[MemberProfileModel.keyMember]);
       memberControllers = ProfileDetailControllers(memberProfile.value!);
-    } else {
-      workingProfile.value = WorkingProfileModel.fromJson(response.data[key]);
+    }
+
+    if (response.data[WorkingProfileModel.keyWorking] != null) {
+      workingProfile.value = WorkingProfileModel.fromJson(response.data[WorkingProfileModel.keyWorking]);
       workingControllers = ProfileDetailControllers(workingProfile.value!);
     }
   }
 
   Future<void> updateProfile(Map<String, dynamic> json, ProfileType type, String memberToken) async {
-    isUpdate.value = false;
-
     _showLoading(Globalization.msgProfileUpdating.tr);
 
     final bool isMember = type == ProfileType.member;
@@ -61,7 +59,6 @@ class ProfileController extends GetxController {
 
     switch (response.data[ApiService.keyStatusCode]) {
       case 200:
-        isUpdate.value = true;
         _showSuccess(Globalization.msgProfileSuccess.tr);
         break;
       case 401:

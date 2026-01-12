@@ -268,7 +268,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
   Widget _buildAuthMessage(bool isSignIn) => RichText(
     text: TextSpan(
       text: isSignIn ? Globalization.msgAccountNotExists.tr : Globalization.msgAccountExists.tr,
-      style: TextStyle(color: Colors.black87, fontSize: 14.0),
+      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black87, fontSize: 14.0),
       children: <TextSpan>[
         TextSpan(
           recognizer: TapGestureRecognizer()..onTap = () => _tabController.index = isSignIn ? 1 : 0,

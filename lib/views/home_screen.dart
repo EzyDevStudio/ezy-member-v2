@@ -12,6 +12,7 @@ import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/permission_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
+import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
@@ -416,7 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
   Widget _buildTimeline() => Obx(() {
-    if (_branchController.branches.isEmpty || _timelineController.timelines.isEmpty) return SliverToBoxAdapter();
+    if (_timelineController.timelines.isEmpty) return SliverToBoxAdapter();
 
     return SliverToBoxAdapter(
       child: Container(
@@ -431,7 +432,7 @@ class _HomeScreenState extends State<HomeScreen> {
           itemCount: _timelineController.timelines.length,
           physics: NeverScrollableScrollPhysics(),
           separatorBuilder: (_, _) => Container(color: Colors.grey.withValues(alpha: 0.7), height: ResponsiveHelper.getSpacing(context, 5.0)),
-          itemBuilder: (context, index) => CustomTimeline(timeline: _timelineController.timelines[index]),
+          itemBuilder: (context, index) => CustomTimeline(timeline: _timelineController.timelines[index], isNavigateCompany: true, isNavigateTimeline: true,),
         ),
       ),
     );
