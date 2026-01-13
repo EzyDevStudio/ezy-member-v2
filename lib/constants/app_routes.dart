@@ -3,6 +3,7 @@ import 'package:ezy_member_v2/views/authentication_screen.dart';
 import 'package:ezy_member_v2/views/change_password_screen.dart';
 import 'package:ezy_member_v2/views/company_detail_screen.dart';
 import 'package:ezy_member_v2/views/branch_list_screen.dart';
+import 'package:ezy_member_v2/views/forgot_password_screen.dart';
 import 'package:ezy_member_v2/views/home_screen.dart';
 import 'package:ezy_member_v2/views/invoice_screen.dart';
 import 'package:ezy_member_v2/views/timeline_detail_screen.dart';
@@ -23,6 +24,7 @@ class AppRoutes {
   static const branchList = "/branch_list";
   static const changePassword = "/change_password";
   static const companyDetail = "/company_detail";
+  static const forgotPassword = "/forgot_password";
   static const home = "/home";
   static const invoice = "/invoice";
   static const memberDetail = "/member_detail";
@@ -42,6 +44,7 @@ class AppRoutes {
     GetPage(name: branchList, page: () => BranchListScreen()),
     GetPage(name: changePassword, page: () => ChangePasswordScreen()),
     GetPage(name: companyDetail, page: () => CompanyDetailScreen()),
+    GetPage(name: forgotPassword, page: () => ForgotPasswordScreen()),
     GetPage(name: home, page: () => HomeScreen()),
     GetPage(name: invoice, page: () => InvoiceScreen()),
     GetPage(name: memberDetail, page: () => MemberDetailScreen()),

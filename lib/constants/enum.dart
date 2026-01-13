@@ -1,3 +1,3 @@
 enum HistoryType { all, point, voucher, credit }
 
-enum ScanType { earn, redeem }
+enum ScanType { earnPoints, redeemPoints, redeemVoucher, redeemCredits }

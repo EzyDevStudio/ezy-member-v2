@@ -9,11 +9,15 @@ class TimelineController extends GetxController {
   var isLoading = false.obs;
   var timelines = <TimelineModel>[].obs;
 
-  Future<void> loadTimelines({String? companyID}) async {
+  Future<void> loadTimelines({String? companyID, String? memberCode}) async {
     isLoading.value = true;
 
     final Coordinate? c = await LocationHelper.getCurrentCoordinate();
-    final Map<String, dynamic> data = {if (c != null) "city": c.city, if (companyID != null) "company_id": companyID};
+    final Map<String, dynamic> data = {
+      if (c != null) "city": c.city,
+      if (companyID != null) "company_id": companyID,
+      if (memberCode != null) "member_code": memberCode,
+    };
     final response = await _api.get(endPoint: "get-all-timeline", module: "TimelineController - loadTimelines", data: data);
 
     if (response == null || response.data[TimelineModel.keyTimeline] == null) {

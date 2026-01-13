@@ -81,7 +81,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           type: VoucherType.normal,
                           onTap: () => Get.toNamed(
                             AppRoutes.scan,
-                            arguments: {"scan_type": ScanType.redeem, "company_id": voucher.companyID, "value": voucher.voucherCode},
+                            arguments: {"scan_type": ScanType.redeemVoucher, "company_id": voucher.companyID, "value": voucher.voucherCode},
                           ),
                         )
                       : CustomVoucher(

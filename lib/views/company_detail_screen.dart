@@ -6,6 +6,7 @@ import 'package:ezy_member_v2/controllers/company_controller.dart';
 import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/timeline_controller.dart';
+import 'package:ezy_member_v2/helpers/code_generator_helper.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
@@ -19,7 +20,6 @@ import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qr_bar_code/code/code.dart';
 import 'package:share_plus/share_plus.dart';
 
 class CompanyDetailScreen extends StatefulWidget {
@@ -161,7 +161,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                         label: member.isMember ? Globalization.myPoints.tr : Globalization.earnPoints.tr,
                         content: member.isMember ? member.point.toString() : null,
                         onTap: member.isMember
-                            ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _company.companyID})
+                            ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemPoints, "company_id": _company.companyID})
                             : null,
                       ),
                     ),
@@ -181,14 +181,18 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                         label: member.isMember ? Globalization.myCredits.tr : Globalization.redeemByCredits.tr,
                         content: member.isMember ? member.credit.toStringAsFixed(1) : null,
                         onTap: member.isMember
-                            ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _company.companyID})
+                            ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemCredits, "company_id": _company.companyID})
                             : null,
                       ),
                     ),
                   ],
                 ),
               ),
-            if (member.isMember) _buildBarcode(),
+            if (member.isMember)
+              CodeGeneratorHelper.barcode(
+                _hive.memberProfile.value!.memberCode,
+                padding: EdgeInsets.only(bottom: 8.dp, left: 32.dp, right: 32.dp),
+              ),
             if (_hive.isSignIn && !member.isMember && !_company.isExpired) CustomFilledButton(label: Globalization.joinUsNow.tr, onTap: _joinMember),
             if (member.isMember && !_company.isExpired)
               CustomFilledButton(backgroundColor: Colors.green, label: Globalization.share.tr, onTap: () => _shareContent(context)),
@@ -197,21 +201,6 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
       ),
     );
   });
-
-  Widget _buildBarcode() => InkWell(
-    onTap: () => Get.toNamed(AppRoutes.scan),
-    child: Padding(
-      padding: EdgeInsets.only(
-        bottom: 8.dp,
-        left: 32.dp,
-        right: 32.dp,
-      ),
-      child: AspectRatio(
-        aspectRatio: 4 / 1,
-        child: Code(drawText: false, codeType: CodeType.code128(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
-      ),
-    ),
-  );
 
   Widget _buildCompanyInfo() => SliverToBoxAdapter(
     child: Container(
@@ -278,11 +267,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
               ),
               color: Colors.white,
             ),
-            padding: EdgeInsets.only(
-              left: 16.dp,
-              right: 16.dp,
-              top: 24.dp,
-            ),
+            padding: EdgeInsets.only(left: 16.dp, right: 16.dp, top: 24.dp),
             child: CustomText(Globalization.whatNew.tr, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
           ListView.separated(

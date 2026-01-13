@@ -90,6 +90,9 @@ class Globalization {
   static const String profile = "Profile";
   static const String promotions = "Promotions";
   static const String redeem = "Redeem";
+  static const String redeemCredit = "Redeem Credit";
+  static const String redeemPoint = "Redeem Point";
+  static const String redeemVoucher = "Redeem Voucher";
   static const String redeemBy = "Redeem By";
   static const String redeemableVouchers = "Redeemable Vouchers";
   static const String redeemByCredits = "Redeem By Credits";
@@ -98,6 +101,7 @@ class Globalization {
   static const String registrationInformation = "Registration Information";
   static const String registrationSchemeID = "Registration Scheme ID";
   static const String requiredEInvoice = "Require E-Invoice";
+  static const String resetPassword = "Reset Password";
   static const String roc = "ROC";
   static const String saveChanges = "Save Changes";
   static const String search = "Search";
@@ -154,6 +158,8 @@ class Globalization {
   static const String msgNoAvailable = "No @label are available at the moment.";
   static const String msgNoEInvoice = "No e-invoice available. Please go to your profile page to upload your invoice.";
   static const String msgOldPasswordNotMatch = "The old password you entered is incorrect.";
+  static const String msgPasswordEmailSent =
+      "A temporary password has been sent to your email address. Please check your inbox and use it to sign in.";
   static const String msgPasswordMismatch = "New password and confirm password do not match.";
   static const String msgPasswordSuccess = "Your password has been updated successfully.";
   static const String msgPasswordUpdating = "Please wait while we update your password.";
@@ -167,6 +173,8 @@ class Globalization {
   static const String msgReferralProgram = "Hey! Join [@company] as a member using my code [@member] and enjoy all the exclusive benefits. @url";
   static const String msgRequired = "@label cannot be empty.";
   static const String msgRequiredEInvoice = "Fields marked with * are required.";
+  static const String msgResetPassword =
+      "A new temporary password will be generated and sent to your email. You can use it to sign in and change your password.";
   static const String msgSignIn = "Welcome to ${AppStrings.appName}. Please sign in to access your account.";
   static const String msgSignInFail = "Incorrect password. Please try again.";
   static const String msgSignInProcessing = "Please wait while we sign you in.";

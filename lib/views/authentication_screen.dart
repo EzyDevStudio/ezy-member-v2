@@ -1,4 +1,5 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
+import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/controllers/authentication_controller.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
@@ -260,7 +261,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
     alignment: Alignment.centerRight,
     child: TextButton(
       style: TextButton.styleFrom(tapTargetSize: MaterialTapTargetSize.shrinkWrap, minimumSize: Size.zero),
-      onPressed: () {},
+      onPressed: () => Get.toNamed(AppRoutes.forgotPassword),
       child: CustomText(Globalization.forgotPassword.tr, color: Theme.of(context).colorScheme.primary, fontSize: 14.0, fontWeight: FontWeight.bold),
     ),
   );

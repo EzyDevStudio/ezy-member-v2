@@ -113,7 +113,7 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
                     onTap: () => Get.toNamed(
                       AppRoutes.scan,
                       arguments: {
-                        "scan_type": ScanType.redeem,
+                        "scan_type": ScanType.redeemVoucher,
                         "company_id": displayVouchers[index].companyID,
                         "value": displayVouchers[index].voucherCode,
                       },

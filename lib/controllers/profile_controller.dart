@@ -147,6 +147,10 @@ class ProfileController extends GetxController {
     }
   }
 
+  Future<void> forgotPassword(Map<String, dynamic> data) async {
+    _api.post(endPoint: "forgot-password", module: "ProfileController - forgotPassword", data: data);
+  }
+
   void _showLoading(String message) {
     MessageHelper.showDialog(type: DialogType.loading, message: message, title: Globalization.processing.tr);
   }

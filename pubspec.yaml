@@ -33,6 +33,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  app_links: ^6.4.1
   connectivity_plus: ^7.0.0
   coupon_uikit: ^0.2.1
   cupertino_icons: ^1.0.8
@@ -43,6 +44,7 @@ dependencies:
   geocoding: ^4.0.0 # web app doesn't allow
   geolocator: ^14.0.2
   get: ^4.7.3
+  google_sign_in: ^7.2.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   image_picker: ^1.2.1

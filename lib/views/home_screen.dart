@@ -8,6 +8,7 @@ import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/timeline_controller.dart';
 import 'package:ezy_member_v2/controllers/voucher_controller.dart';
+import 'package:ezy_member_v2/helpers/code_generator_helper.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/helpers/permission_helper.dart';
@@ -20,7 +21,6 @@ import 'package:ezy_member_v2/widgets/custom_timeline.dart';
 import 'package:ezy_member_v2/widgets/custom_voucher.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qr_bar_code/code/code.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // }
 
     _branchController.loadBranches(true);
-    _timelineController.loadTimelines();
+    _timelineController.loadTimelines(memberCode: _hive.isSignIn ? _hive.memberProfile.value!.memberCode : null);
 
     if (_hive.isSignIn) {
       _memberController.loadMembers(_hive.memberProfile.value!.memberCode);
@@ -226,10 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             GridView(
               shrinkWrap: true,
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.dp,
-                vertical: 24.dp,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 24.dp),
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisSpacing: 16.dp,
@@ -252,27 +249,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: Globalization.myCards.tr,
                   onTap: () => Get.toNamed(AppRoutes.memberList),
                 ),
-                CustomImageTextButton(assetName: "assets/icons/invoice.png", label: Globalization.eInvoice.tr, onTap: () => Get.toNamed(AppRoutes.invoice)),
+                CustomImageTextButton(
+                  assetName: "assets/icons/invoice.png",
+                  label: Globalization.eInvoice.tr,
+                  onTap: () => Get.toNamed(AppRoutes.invoice),
+                ),
               ],
             ),
-            _buildBarcode(),
+            CodeGeneratorHelper.barcode(
+              _hive.memberProfile.value!.memberCode,
+              padding: EdgeInsets.only(bottom: 24.dp, left: 32.dp, right: 32.dp),
+            ),
           ],
         ),
-      ),
-    ),
-  );
-
-  Widget _buildBarcode() => InkWell(
-    onTap: () => Get.toNamed(AppRoutes.scan),
-    child: Padding(
-      padding: EdgeInsets.only(
-        bottom: 24.dp,
-        left: 32.dp,
-        right: 32.dp,
-      ),
-      child: AspectRatio(
-        aspectRatio: 4 / 1,
-        child: Code(drawText: false, codeType: CodeType.code128(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
       ),
     ),
   );
@@ -318,11 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: vouchers.length,
                     separatorBuilder: (_, _) => SizedBox(width: 16.dp),
                     itemBuilder: (context, index) => Padding(
-                      padding: EdgeInsets.only(
-                        bottom: 24.dp,
-                        left: index == 0 ? 16.dp : 0.0,
-                        right: index == vouchers.length - 1 ? 16.dp : 0.0,
-                      ),
+                      padding: EdgeInsets.only(bottom: 24.dp, left: index == 0 ? 16.dp : 0.0, right: index == vouchers.length - 1 ? 16.dp : 0.0),
                       child: CustomVoucher(
                         shadowColor: Colors.black54,
                         voucher: vouchers[index],
@@ -382,7 +367,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
               if (_branchController.branches.isEmpty) {
                 return Center(
-                  child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.shopsNearby.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2),
+                  child: CustomText(
+                    Globalization.msgNoAvailable.trParams({"label": Globalization.shopsNearby.tr.toLowerCase()}),
+                    fontSize: 16.0,
+                    maxLines: 2,
+                  ),
                 );
               }
 
@@ -403,7 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             }),
-          )
+          ),
         ],
       ),
     ),
@@ -425,7 +414,8 @@ class _HomeScreenState extends State<HomeScreen> {
           itemCount: _timelineController.timelines.length,
           physics: NeverScrollableScrollPhysics(),
           separatorBuilder: (_, _) => Container(color: Colors.grey.withValues(alpha: 0.7), height: 5.dp),
-          itemBuilder: (context, index) => CustomTimeline(timeline: _timelineController.timelines[index], isNavigateCompany: true, isNavigateTimeline: true,),
+          itemBuilder: (context, index) =>
+              CustomTimeline(timeline: _timelineController.timelines[index], isNavigateCompany: true, isNavigateTimeline: true),
         ),
       ),
     );

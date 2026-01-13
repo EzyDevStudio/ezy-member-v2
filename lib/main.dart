@@ -17,15 +17,16 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 // Settle AssetImage, NetworkImage, Image.asset, Image.network
-// google sign up and in
-// deep link for referral
-// forget password
-// payment gateway
-// company category selection
-// device kick out
-
 // quick access "Shops Nearby", "Company Subscribed (See Who’s on Our App / Trusted by These Companies)"
 // combine api - home, member_detail, company_detail
+
+// Possible Features: Payment Gateway (Join or Renew member), soe company don't want expiry
+// Possible Features: Google Sign In or Up
+// Possible Features: Referral Program - deep linking (Gain points or voucher)
+// Possible Features: Point expires
+// Possible Features: Voucher auto show (new user, birthday)
+// Possible Features: Auto upgrade or downgrade member tier
+// Possible Features: Device sign in another devices
 
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device

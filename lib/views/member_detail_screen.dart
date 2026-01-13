@@ -5,6 +5,7 @@ import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/controllers/history_controller.dart';
 import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
+import 'package:ezy_member_v2/helpers/code_generator_helper.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
@@ -16,7 +17,6 @@ import 'package:ezy_member_v2/widgets/custom_list_tile.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qr_bar_code/code/code.dart';
 
 class MemberDetailScreen extends StatefulWidget {
   const MemberDetailScreen({super.key});
@@ -218,7 +218,14 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
               child: Container(
                 constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.9),
                 padding: EdgeInsets.all(16.dp),
-                child: Column(spacing: 16.dp, children: <Widget>[_buildMemberCard(), _buildQuickAccess(), _buildBarcode()]),
+                child: Column(
+                  spacing: 16.dp,
+                  children: <Widget>[
+                    _buildMemberCard(),
+                    _buildQuickAccess(),
+                    CodeGeneratorHelper.barcode(_hive.memberProfile.value!.memberCode, padding: EdgeInsets.symmetric(horizontal: 16.dp)),
+                  ],
+                ),
               ),
             ),
             _buildHistory(),
@@ -297,7 +304,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
       children: <Widget>[
         Expanded(
           child: InkWell(
-            onTap: () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _member.companyID}),
+            onTap: () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemPoints, "company_id": _member.companyID}),
             child: _buildQuickAccessItem(Globalization.myPoints.tr, _member.point.toString()),
           ),
         ),
@@ -309,7 +316,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
         ),
         Expanded(
           child: InkWell(
-            onTap: () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeem, "company_id": _member.companyID}),
+            onTap: () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemCredits, "company_id": _member.companyID}),
             child: _buildQuickAccessItem(Globalization.myCredits.tr, _member.credit.toStringAsFixed(1)),
           ),
         ),
@@ -323,17 +330,6 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
       CustomText(value, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
       CustomText(label, fontSize: 16.0),
     ],
-  );
-
-  Widget _buildBarcode() => InkWell(
-    onTap: () => Get.toNamed(AppRoutes.scan),
-    child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.dp),
-      child: AspectRatio(
-        aspectRatio: 4 / 1,
-        child: Code(drawText: false, codeType: CodeType.code128(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
-      ),
-    ),
   );
 
   Widget _buildHistory() => Obx(() {

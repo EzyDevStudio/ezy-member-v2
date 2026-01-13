@@ -28,6 +28,7 @@ class _ScanScreenState extends State<ScanScreen> {
   late String? _companyID, _value;
 
   int _remainingSeconds = 120;
+  String _title = Globalization.earnPoints.tr;
   Timer? _timer;
 
   @override
@@ -38,11 +39,17 @@ class _ScanScreenState extends State<ScanScreen> {
 
     final args = Get.arguments ?? {};
 
-    _type = args["scan_type"] ?? ScanType.earn;
+    _type = args["scan_type"] ?? ScanType.earnPoints;
     _companyID = args["company_id"];
     _value = args["value"];
 
-    if (_type == ScanType.redeem) WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
+    if (_type != ScanType.earnPoints) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
+
+      _title = _type == ScanType.redeemPoints
+          ? Globalization.redeemPoint.tr
+          : (_type == ScanType.redeemVoucher ? Globalization.redeemVoucher.tr : Globalization.redeemCredit.tr);
+    }
   }
 
   Future<void> _onRefresh() async {
@@ -86,10 +93,7 @@ class _ScanScreenState extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      title: Text(_type == ScanType.earn ? Globalization.earn.tr : Globalization.redeem.tr),
-    ),
+    appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.primary, title: Text(_title)),
     body: _buildContent(),
   );
 
@@ -114,7 +118,7 @@ class _ScanScreenState extends State<ScanScreen> {
               width: size,
               margin: EdgeInsets.all(32.dp),
               padding: EdgeInsets.all(32.dp),
-              child: Center(child: _type == ScanType.earn ? _buildEarnSection() : _buildRedeemSection()),
+              child: Center(child: _type == ScanType.earnPoints ? _buildEarnSection() : _buildRedeemSection()),
             ),
           );
         },
@@ -126,7 +130,7 @@ class _ScanScreenState extends State<ScanScreen> {
         fontWeight: FontWeight.bold,
         textAlign: TextAlign.center,
       ),
-      if (_type == ScanType.redeem)
+      if (_type != ScanType.earnPoints)
         CustomText(_formatTime(_remainingSeconds), color: Theme.of(context).colorScheme.error, fontSize: 22.0, textAlign: TextAlign.center),
     ],
   );
