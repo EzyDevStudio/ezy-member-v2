@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
@@ -149,6 +150,37 @@ class ProfileController extends GetxController {
 
   Future<void> forgotPassword(Map<String, dynamic> data) async {
     _api.post(endPoint: "forgot-password", module: "ProfileController - forgotPassword", data: data);
+  }
+
+  Future<void> deleteAccount(String memberCode, String memberToken) async {
+    _showLoading(Globalization.msgDeleteAccountProcessing.tr);
+
+    final Map<String, dynamic> data = {"member_code": memberCode};
+    final response = await _api.post(endPoint: "delete-account", module: "ProfileController - deleteAccount", data: data, memberToken: memberToken);
+
+    _hideLoading();
+
+    if (response == null) {
+      _showError(Globalization.msgSystemError.tr);
+      return;
+    }
+
+    switch (response.data[ApiService.keyStatusCode]) {
+      case 200:
+        final hive = Get.find<MemberHiveController>();
+        await hive.signOut();
+
+        Get.offNamed(AppRoutes.home);
+        _showSuccess(Globalization.msgDeleteAccountSuccess.tr);
+
+        break;
+      case 520:
+        _showError(Globalization.msgTokenInvalid.tr);
+        break;
+      default:
+        _showError(Globalization.msgSystemError.tr);
+        break;
+    }
   }
 
   void _showLoading(String message) {

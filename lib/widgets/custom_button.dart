@@ -24,6 +24,20 @@ class CustomFilledButton extends StatelessWidget {
   );
 }
 
+class CustomIconButton extends StatelessWidget {
+  final String assetName;
+  final VoidCallback? onPressed;
+
+  const CustomIconButton({super.key, required this.assetName, this.onPressed});
+
+  @override
+  Widget build(BuildContext context) => ElevatedButton(
+    style: ElevatedButton.styleFrom(backgroundColor: Colors.white, padding: EdgeInsets.all(16.dp), shape: const CircleBorder()),
+    onPressed: onPressed,
+    child: Image.asset(assetName, fit: BoxFit.contain, height: 40.0, width: 40.0),
+  );
+}
+
 class CustomImageTextButton extends StatelessWidget {
   final bool? isCountVisible, isLabelVisible;
   final int? count;

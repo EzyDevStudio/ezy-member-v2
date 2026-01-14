@@ -204,6 +204,17 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     _profileController.uploadMedia(pickedFile, imgType, _hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token);
   }
 
+  void _deleteAccount() async {
+    final bool? result = await MessageHelper.showConfirmationDialog(
+      backgroundColor: Colors.red,
+      icon: Icons.warning_rounded,
+      message: Globalization.msgDeleteAccountConfirmation.tr,
+      title: Globalization.deleteAccount.tr,
+    );
+
+    if (result == true) _profileController.deleteAccount(_hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token);
+  }
+
   @override
   void dispose() {
     _memberControllers.dispose();
@@ -569,6 +580,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               _buildSettingsItem(Globalization.uploadPersonalEInvoice.tr, () => _uploadMedia(2)),
               _buildSettingsItem(Globalization.uploadWorkingEInvoice.tr, () => _uploadMedia(3)),
               _buildSettingsItem(Globalization.changePassword.tr, () => Get.toNamed(AppRoutes.changePassword)),
+              _buildSettingsItem(Globalization.deleteAccount.tr, () => _deleteAccount()),
             ],
           ),
         ),

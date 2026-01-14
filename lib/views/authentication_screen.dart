@@ -6,6 +6,7 @@ import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/phone_detail.dart';
 import 'package:ezy_member_v2/models/profile_model.dart';
+import 'package:ezy_member_v2/services/remote/google_sign_in_service.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_chip.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
@@ -72,6 +73,15 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
     _authController.signIn(data);
   }
 
+  void _signInWithGoogle() async {
+    final userCredential = await GoogleSignInService.signInWithGoogle();
+
+    if (userCredential == null) return;
+    if (userCredential.user == null) return;
+
+    _authController.signInWithGoogle(userCredential.user!.email!);
+  }
+
   void _signUp() {
     FocusScope.of(context).unfocus();
 
@@ -102,7 +112,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
         message = Globalization.msgRequired.trParams({"label": Globalization.username.tr});
       } else if (email.isEmpty) {
         message = Globalization.msgRequired.trParams({"label": Globalization.email.tr});
-      } else if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(email)) {
+      } else if (!RegExp(r"^[^\s@]+@[^\s@]+\.[^\s@]+$").hasMatch(email)) {
         message = Globalization.msgEmailInvalidFormat.tr;
       } else if (phone.isEmpty) {
         message = Globalization.msgRequired.trParams({"label": Globalization.phone.tr});
@@ -206,6 +216,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
                 ),
                 _buildForgotPassword(),
                 CustomFilledButton(label: Globalization.signIn.tr, onTap: _signIn),
+                CustomText("- ${Globalization.or.tr} -", fontSize: 14.0, maxLines: 1, textAlign: TextAlign.center),
+                CustomIconButton(assetName: "assets/icons/google.png", onPressed: () => _signInWithGoogle()),
                 _buildAuthMessage(true),
               ],
             ),

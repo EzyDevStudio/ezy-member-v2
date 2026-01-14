@@ -103,6 +103,55 @@ class AuthenticationController extends GetxController {
     }
   }
 
+  Future<void> signInWithGoogle(String email) async {
+    isSuccess.value = false;
+    memberProfile.value = null;
+
+    _showLoading(Globalization.msgSignInProcessing.tr);
+
+    final response = await _api.post(endPoint: "sign-in-with-google", module: "AuthenticationController - signInWithGoogle", data: {"email": email});
+
+    _hideLoading();
+
+    if (response == null) {
+      _showError(Globalization.msgSystemError.tr);
+      return;
+    }
+
+    switch (response.data[ApiService.keyStatusCode]) {
+      case 200:
+        final json = Map<String, dynamic>.from(response.data[MemberProfileModel.keyMember]);
+        final profile = MemberProfileModel.fromJson(json);
+
+        memberProfile.value = profile;
+        isSuccess.value = true;
+
+        final hive = Get.find<MemberHiveController>();
+        await hive.signIn(
+          MemberProfileHive(
+            id: profile.id,
+            memberCode: profile.memberCode,
+            name: profile.name,
+            token: profile.token,
+            image: profile.image,
+            backgroundImage: profile.backgroundImage,
+            personalInvoice: profile.personalInvoiceImage,
+            workingInvoice: response.data["working_e_invoice"],
+          ),
+        );
+
+        _showSuccess(Globalization.msgSignInSuccess.tr);
+        Get.offAllNamed(AppRoutes.home);
+        break;
+      case 400:
+        _showError(Globalization.msgEmailNotExists.tr);
+        break;
+      default:
+        _showError(Globalization.msgSystemError.tr);
+        break;
+    }
+  }
+
   Future<void> checkToken(String memberCode, String memberToken) async {
     final response = await _api.post(
       endPoint: "check-token",

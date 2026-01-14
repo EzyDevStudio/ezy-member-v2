@@ -40,6 +40,7 @@ class Globalization {
   static const String country = "Country";
   static const String credits = "Credits";
   static const String customDateRange = "Custom Date Range";
+  static const String deleteAccount = "Delete Account";
   static const String discountAmount = "Discount Amount";
   static const String dob = "Date of Birth";
   static const String eInvoice = "E-Invoice";
@@ -77,6 +78,7 @@ class Globalization {
   static const String notifications = "Notifications";
   static const String off = "Off";
   static const String oldPassword = "Old Password";
+  static const String or = "or";
   static const String password = "Password";
   static const String payment = "Payment";
   static const String personal = "Personal";
@@ -141,7 +143,11 @@ class Globalization {
   static const String msgConnectionOff = "You are currently offline.";
   static const String msgContinueGuest = "I’m just exploring, try the app freely and sign up later.";
   static const String msgContinueSignIn = "I have an account, sign in and continue my journey.";
+  static const String msgDeleteAccountConfirmation = "Deleting this account is irreversible. Are you sure you want to continue?";
+  static const String msgDeleteAccountProcessing = "Please wait while we process your account deletion.";
+  static const String msgDeleteAccountSuccess = "We're sorry to see you go. Your account has been successfully deleted. Thank you for being with us!";
   static const String msgEmailExists = "This email is already registered. Please use another email.";
+  static const String msgEmailNotExists = "This email is not registered. Please check or sign up.";
   static const String msgEmailInvalidFormat = "Please enter an email in the correct format (e.g., example@mail.com).";
   static const String msgEmailNotFound = "No account found with this email.";
   static const String msgExpiredTimer = "Expires in @minutes min @seconds sec";

@@ -5,6 +5,7 @@ import 'package:ezy_member_v2/constants/app_themes.dart';
 import 'package:ezy_member_v2/controllers/authentication_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/controllers/settings_controller.dart';
+import 'package:ezy_member_v2/firebase_options.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/language/intl_keys.dart';
@@ -12,6 +13,7 @@ import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/local/member_profile_storage_service.dart';
 import 'package:ezy_member_v2/services/local/notification_service.dart';
 import 'package:ezy_member_v2/services/local/settings_storage_service.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -21,19 +23,19 @@ import 'package:hive_flutter/hive_flutter.dart';
 // quick access "Shops Nearby", "Company Subscribed (See Who’s on Our App / Trusted by These Companies)"
 // combine api - home, member_detail, company_detail
 
-// Possible Features: Payment Gateway (Join or Renew member), soe company don't want expiry
-// Possible Features: Google Sign In or Up
+// Possible Features: Payment Gateway (Join or Renew member), some company don't want expiry
 // Possible Features: Point expires
 // Possible Features: Voucher auto show (new user, birthday)
 // Possible Features: Auto upgrade or downgrade member tier
 // Possible Features: Device sign in another devices
-// Possible Features: User delete account
 
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
+// run php artisan serve --host=0.0.0.0 --port=8000 for API
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Hive.initFlutter();
   await MemberProfileStorageService().init();
   await NotificationService.init();
