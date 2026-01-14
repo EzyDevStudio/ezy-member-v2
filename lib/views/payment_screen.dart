@@ -21,7 +21,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final _hive = Get.find<MemberHiveController>();
   final _companyController = Get.put(CompanyController(), tag: "payment");
 
-  late String _companyID;
+  late String _companyID, _referralCode;
 
   PaymentMethod? _selectedMethod;
 
@@ -30,6 +30,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     super.initState();
 
     _companyID = Get.arguments["company_id"];
+    _referralCode = Get.arguments["referral_code"];
   }
 
   @override
@@ -61,7 +62,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       CustomFilledButton(
         label: Globalization.payment.tr,
         onTap: () async {
-          final result = await _companyController.registerMember(_companyID, _hive.memberProfile.value!.memberCode);
+          final result = await _companyController.registerMember(_companyID, _hive.memberProfile.value!.memberCode, _referralCode);
 
           if (result) Get.offNamedUntil(AppRoutes.companyDetail, (route) => route.isFirst, arguments: {"company_id": _companyID});
         },

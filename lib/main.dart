@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/constants/app_themes.dart';
@@ -22,11 +23,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 // Possible Features: Payment Gateway (Join or Renew member), soe company don't want expiry
 // Possible Features: Google Sign In or Up
-// Possible Features: Referral Program - deep linking (Gain points or voucher)
 // Possible Features: Point expires
 // Possible Features: Voucher auto show (new user, birthday)
 // Possible Features: Auto upgrade or downgrade member tier
 // Possible Features: Device sign in another devices
+// Possible Features: User delete account
 
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
@@ -101,6 +102,22 @@ class _WrapperScreenState extends State<WrapperScreen> with SingleTickerProvider
     } else {
       Get.offAllNamed(AppRoutes.welcome);
     }
+
+    AppLinks appLinks = AppLinks();
+    appLinks.uriLinkStream.listen((uri) {
+      if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == "company_detail") {
+        final companyID = uri.pathSegments.length > 1 ? uri.pathSegments[1] : "";
+        final referralCode = uri.pathSegments.length > 2 ? uri.pathSegments[2] : "";
+
+        if (companyID.isNotEmpty) {
+          Get.offAllNamed(AppRoutes.home);
+          Future.delayed(
+            const Duration(milliseconds: 300),
+            () => Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": companyID, "referral_code": referralCode}),
+          );
+        }
+      }
+    });
   }
 
   @override

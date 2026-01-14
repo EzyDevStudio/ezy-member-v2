@@ -37,7 +37,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
   final _scrollController = ScrollController();
 
   late CompanyModel _company;
-  late String _companyID;
+  late String _companyID, _referralCode;
 
   bool _showFab = false;
 
@@ -46,6 +46,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
     super.initState();
 
     _companyID = Get.arguments["company_id"];
+    _referralCode = Get.arguments["referral_code"] ?? "";
 
     _scrollController.addListener(() {
       if (_scrollController.offset > kBackToTop && !_showFab) {
@@ -69,19 +70,17 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
     MemberModel member = _memberController.members.firstWhere((m) => m.companyID == _companyID, orElse: () => MemberModel.empty());
 
     final box = context.findRenderObject() as RenderBox?;
-    final result = await SharePlus.instance.share(
+
+    SharePlus.instance.share(
       ShareParams(
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         text: Globalization.msgReferralProgram.trParams({
           "company": _company.companyName,
           "member": member.referralCode,
-          "url": "${AppStrings.serverUrl}/${_company.companyName}/${member.referralCode}",
+          "url": "${AppStrings.url}/company_detail/${_company.companyID}/${member.referralCode}",
         }),
       ),
     );
-
-    if (result.status == ShareResultStatus.success) {
-    } else if (result.status == ShareResultStatus.dismissed) {}
   }
 
   void _joinMember() async {
@@ -91,9 +90,9 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
     }
 
     if (_company.memberFee > 0) {
-      Get.toNamed(AppRoutes.payment, arguments: {"company_id": _companyID});
+      Get.toNamed(AppRoutes.payment, arguments: {"company_id": _companyID, "referral_code": _referralCode});
     } else {
-      final result = await _companyController.registerMember(_companyID, _hive.memberProfile.value!.memberCode);
+      final result = await _companyController.registerMember(_companyID, _hive.memberProfile.value!.memberCode, _referralCode);
 
       if (result) _memberController.loadMembers(_hive.memberProfile.value!.memberCode, companyID: _companyID);
     }

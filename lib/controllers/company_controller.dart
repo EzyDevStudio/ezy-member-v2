@@ -31,10 +31,10 @@ class CompanyController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<bool> registerMember(String companyID, String memberCode) async {
+  Future<bool> registerMember(String companyID, String memberCode, String referralCode) async {
     _showLoading(Globalization.msgMemberRegisterProcessing.tr);
 
-    final Map<String, dynamic> data = {"company_id": companyID, "member_code": memberCode};
+    final Map<String, dynamic> data = {"company_id": companyID, "member_code": memberCode, "referral_code": referralCode};
     final response = await _api.post(endPoint: "register-member", module: "CompanyController - registerMember", data: data);
 
     _hideLoading();

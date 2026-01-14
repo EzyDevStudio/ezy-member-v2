@@ -10,8 +10,9 @@ class AppStrings {
 
   // App Server Url
   // static const String serverUrl = "http://127.0.0.1:8000";
-  static const String serverUrl = "http://192.168.0.170:8000";
+  static const String serverUrl = "http://192.168.0.173:8000";
   static const String serverDirectory = "api";
+  static const String url = "https://www.ezymember.com";
 
   Map<HistoryType, String> historyTypes = {
     HistoryType.all: Globalization.all.tr,
