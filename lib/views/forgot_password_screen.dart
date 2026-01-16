@@ -42,11 +42,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(title: Text(Globalization.resetPassword)),
-    body: _buildContent(),
-  );
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(title: Text(Globalization.resetPassword)),
+      body: _buildContent(),
+    );
+  }
 
   Widget _buildContent() => CustomScrollView(
     slivers: <Widget>[

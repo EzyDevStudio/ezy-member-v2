@@ -115,22 +115,9 @@ class CustomNearbyCard extends StatelessWidget {
                           child: Image.network(
                             branch.companyLogo,
                             fit: BoxFit.cover,
-                            errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                              return Center(
-                                child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 70.dp),
-                              );
-                            },
-                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) return child;
-
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
-                                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                      : null,
-                                ),
-                              );
-                            },
+                            errorBuilder: (context, error, stackTrace) => Center(
+                              child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 52.dp),
+                            ),
                           ),
                         ),
                       ),
@@ -213,22 +200,9 @@ class CustomAdvertisementCard extends StatelessWidget {
             child: Image.network(
               advertisement.adsImage,
               fit: BoxFit.cover,
-              errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                return Center(
-                  child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 70.dp),
-                );
-              },
-              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child;
-
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                        : null,
-                  ),
-                );
-              },
+              errorBuilder: (context, error, stackTrace) => Center(
+                child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 52.dp),
+              ),
             ),
           ),
         ),
@@ -334,22 +308,9 @@ class _CustomPromotionCardState extends State<CustomPromotionCard> {
             child: Image.network(
               widget.promotion.promotionImage,
               fit: BoxFit.cover,
-              errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                return Center(
-                  child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 70.dp),
-                );
-              },
-              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child;
-
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                        : null,
-                  ),
-                );
-              },
+              errorBuilder: (context, error, stackTrace) => Center(
+                child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 52.dp),
+              ),
             ),
           ),
         ),

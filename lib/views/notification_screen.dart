@@ -32,11 +32,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(title: Text(Globalization.notifications.tr)),
-    body: RefreshIndicator(onRefresh: _onRefresh, child: _buildVoucherList()),
-  );
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(title: Text(Globalization.notifications.tr)),
+      body: RefreshIndicator(onRefresh: _onRefresh, child: _buildVoucherList()),
+    );
+  }
 
   Widget _buildVoucherList() => Obx(() {
     if (_voucherController.isLoading.value) {

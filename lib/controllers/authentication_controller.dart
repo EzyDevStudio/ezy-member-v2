@@ -4,6 +4,7 @@ import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/hive/member_profile_hive.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/profile_model.dart';
+import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,8 @@ class AuthenticationController extends GetxController {
   var memberProfile = Rx<MemberProfileModel?>(null);
 
   Future<void> signUp(Map<String, dynamic> data) async {
+    if (!await ConnectionService.checkConnection()) return;
+
     isSuccess.value = false;
 
     _showLoading(Globalization.msgSignUpProcessing.tr);
@@ -46,6 +49,8 @@ class AuthenticationController extends GetxController {
   }
 
   Future<void> signIn(Map<String, dynamic> data) async {
+    if (!await ConnectionService.checkConnection()) return;
+
     isSuccess.value = false;
     memberProfile.value = null;
 
@@ -153,6 +158,8 @@ class AuthenticationController extends GetxController {
   }
 
   Future<void> checkToken(String memberCode, String memberToken) async {
+    if (!await ConnectionService.checkConnection()) return;
+
     final response = await _api.post(
       endPoint: "check-token",
       module: "AuthenticationController - checkToken",

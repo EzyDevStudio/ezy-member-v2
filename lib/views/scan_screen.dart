@@ -7,6 +7,8 @@ import 'package:ezy_member_v2/controllers/pin_controller.dart';
 import 'package:ezy_member_v2/helpers/cipher_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
+import 'package:ezy_member_v2/services/local/connection_service.dart';
+import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +29,7 @@ class _ScanScreenState extends State<ScanScreen> {
   late ScanType _type;
   late String? _companyID, _value;
 
+  bool _isConnected = false;
   int _remainingSeconds = 120;
   String _title = Globalization.earnPoints.tr;
   Timer? _timer;
@@ -35,6 +38,8 @@ class _ScanScreenState extends State<ScanScreen> {
   void initState() {
     super.initState();
 
+    _checkConnection();
+
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     final args = Get.arguments ?? {};
@@ -42,13 +47,23 @@ class _ScanScreenState extends State<ScanScreen> {
     _type = args["scan_type"] ?? ScanType.earnPoints;
     _companyID = args["company_id"];
     _value = args["value"];
+  }
 
-    if (_type != ScanType.earnPoints) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
+  void _checkConnection() async {
+    final result = await ConnectionService.checkConnection();
 
-      _title = _type == ScanType.redeemPoints
-          ? Globalization.redeemPoint.tr
-          : (_type == ScanType.redeemVoucher ? Globalization.redeemVoucher.tr : Globalization.redeemCredit.tr);
+    setState(() => _isConnected = result);
+
+    if (result) {
+      if (_type != ScanType.earnPoints) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
+
+        _title = _type == ScanType.redeemPoints
+            ? Globalization.redeemPoint.tr
+            : (_type == ScanType.redeemVoucher ? Globalization.redeemVoucher.tr : Globalization.redeemCredit.tr);
+      }
+    } else {
+      if (Get.isSnackbarOpen) Get.back();
     }
   }
 
@@ -69,8 +84,13 @@ class _ScanScreenState extends State<ScanScreen> {
 
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted) return;
+
       setState(() => _remainingSeconds--);
-      if (_remainingSeconds <= 0) _timer?.cancel();
+
+      if (_remainingSeconds <= 0) {
+        _onRefresh();
+        _timer?.cancel();
+      }
     });
   }
 
@@ -91,16 +111,20 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.primary, title: Text(_title)),
-    body: _buildContent(),
-  );
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.primary, title: Text(_title)),
+      body: _isConnected ? _buildContent() : _buildOffline(),
+    );
+  }
 
   Widget _buildContent() => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
-    mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
+      const Spacer(),
       SizedBox(height: 50.0, child: Image.asset("assets/images/splash_logo.png", fit: BoxFit.scaleDown)),
       LayoutBuilder(
         builder: (context, constraints) {
@@ -132,6 +156,22 @@ class _ScanScreenState extends State<ScanScreen> {
       ),
       if (_type != ScanType.earnPoints)
         CustomText(_formatTime(_remainingSeconds), color: Theme.of(context).colorScheme.error, fontSize: 22.0, textAlign: TextAlign.center),
+      const Spacer(),
+      if (_type == ScanType.earnPoints)
+        Padding(
+          padding: EdgeInsets.all(32.dp),
+          child: CustomFilledButton(backgroundColor: Colors.green, label: Globalization.share.tr, onTap: () {}),
+        ),
+    ],
+  );
+
+  Widget _buildOffline() => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    mainAxisAlignment: MainAxisAlignment.center,
+    spacing: 16.dp,
+    children: <Widget>[
+      Icon(Icons.wifi_off_rounded, color: Colors.grey, size: 150.sp),
+      CustomText(Globalization.msgConnectionOff.tr, color: Colors.black54, fontSize: 24.sp, maxLines: null, textAlign: TextAlign.center),
     ],
   );
 

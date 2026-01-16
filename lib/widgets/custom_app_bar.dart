@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget {
   final String avatarImage, backgroundImage;
   final List<Widget>? actions;
+  final VoidCallback? onTap;
   final Widget child;
 
-  const CustomAppBar({super.key, required this.avatarImage, required this.backgroundImage, this.actions, required this.child});
+  const CustomAppBar({super.key, required this.avatarImage, required this.backgroundImage, this.actions, this.onTap, required this.child});
 
   @override
   Widget build(BuildContext context) => SliverAppBar(
@@ -24,7 +25,24 @@ class CustomAppBar extends StatelessWidget {
           child: Row(
             spacing: 16.dp,
             children: <Widget>[
-              CustomAvatarImage(size: kProfileImgSizeM, networkImage: avatarImage),
+              GestureDetector(
+                onTap: onTap,
+                child: Stack(
+                  children: <Widget>[
+                    CustomAvatarImage(size: kProfileImgSizeM, networkImage: avatarImage),
+                    if (onTap != null)
+                      Positioned(
+                        bottom: kPositionEmpty,
+                        right: kPositionEmpty,
+                        child: Container(
+                          decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                          padding: const EdgeInsets.all(4.0),
+                          child: Icon(Icons.edit_rounded, color: Theme.of(context).colorScheme.primary, size: 15.0),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
               child,
             ],
           ),

@@ -1,6 +1,7 @@
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/company_model.dart';
+import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +33,8 @@ class CompanyController extends GetxController {
   }
 
   Future<bool> registerMember(String companyID, String memberCode, String referralCode) async {
+    if (!await ConnectionService.checkConnection()) return false;
+
     _showLoading(Globalization.msgMemberRegisterProcessing.tr);
 
     final Map<String, dynamic> data = {"company_id": companyID, "member_code": memberCode, "referral_code": referralCode};

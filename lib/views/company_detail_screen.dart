@@ -71,13 +71,14 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
 
     final box = context.findRenderObject() as RenderBox?;
 
+    // TODO: 1. Deep Linking
     SharePlus.instance.share(
       ShareParams(
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         text: Globalization.msgReferralProgram.trParams({
           "company": _company.companyName,
           "member": member.referralCode,
-          "url": "${AppStrings.url}/company_detail/${_company.companyID}/${member.referralCode}",
+          "url": "${AppStrings.deepLinkUrl}/company_detail/${_company.companyID}/${member.referralCode}",
         }),
       ),
     );
@@ -106,21 +107,26 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    body: RefreshIndicator(
-      onRefresh: _onRefresh,
-      child: Obx(() {
-        _company = _companyController.company.value ?? CompanyModel.empty();
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
 
-        return CustomScrollView(
-          controller: _scrollController,
-          slivers: <Widget>[_buildAppBar(), _buildBenefits(), _buildCompanyInfo(), _buildBranchesInfo(), _buildTimeline()],
-        );
-      }),
-    ),
-    floatingActionButton: _showFab ? _buildFAB() : null,
-  );
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: Obx(() {
+          _company = _companyController.company.value ?? CompanyModel.empty();
+
+          return CustomScrollView(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: <Widget>[_buildAppBar(), _buildBenefits(), _buildCompanyInfo(), _buildBranchesInfo(), _buildTimeline()],
+          );
+        }),
+      ),
+      floatingActionButton: _showFab ? _buildFAB() : null,
+    );
+  }
 
   Widget _buildAppBar() => CustomAppBar(
     avatarImage: _company.aboutUs.companyLogo,

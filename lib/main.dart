@@ -19,15 +19,19 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-// Settle AssetImage, NetworkImage, Image.asset, Image.network
-// quick access "Shops Nearby", "Company Subscribed (See Who’s on Our App / Trusted by These Companies)"
 // combine api - home, member_detail, company_detail
 
-// Possible Features: Payment Gateway (Join or Renew member), some company don't want expiry
+// Possible Features: Payment Gateway (Join or Renew member)
 // Possible Features: Point expires
 // Possible Features: Voucher auto show (new user, birthday)
 // Possible Features: Auto upgrade or downgrade member tier
 // Possible Features: Device sign in another devices
+// Possible Features: Timeline infinite scroll
+// Possible Features: Branch setup
+// Possible Features: Share earn point widget, same as share company_detail_screen feature
+// Possible Features: Transfer voucher to another member and set limitation so some of the voucher cannot transfer such as (new user, birthday)
+// Possible Features: Display member card with barcode design in home_screen
+// Possible Features: Change API so that some of the field which rely on Branch will save the data directly such as (Branch ID and Branch Name)
 
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
@@ -107,6 +111,7 @@ class _WrapperScreenState extends State<WrapperScreen> with SingleTickerProvider
 
     AppLinks appLinks = AppLinks();
     appLinks.uriLinkStream.listen((uri) {
+      // TODO: 1. Deep Linking
       if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == "company_detail") {
         final companyID = uri.pathSegments.length > 1 ? uri.pathSegments[1] : "";
         final referralCode = uri.pathSegments.length > 2 ? uri.pathSegments[2] : "";
@@ -143,7 +148,7 @@ class _WrapperScreenState extends State<WrapperScreen> with SingleTickerProvider
               child: Center(
                 child: Container(
                   constraints: BoxConstraints(maxHeight: size.height * 0.5, maxWidth: size.width * 0.5),
-                  decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/splash_logo.png"))),
+                  child: Image.asset("assets/images/splash_logo.png", fit: BoxFit.cover),
                 ),
               ),
             ),

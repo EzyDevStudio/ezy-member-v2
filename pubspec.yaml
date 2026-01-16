@@ -41,7 +41,7 @@ dependencies:
   encrypt: ^5.0.3
   firebase_auth: ^6.1.3
   firebase_core: ^4.3.0
-  flutter_local_notifications: ^19.5.0
+  flutter_local_notifications: ^19.5.0 # web app doesn't allow
   flutter_localization: ^0.3.3
   geocoding: ^4.0.0 # web app doesn't allow
   geolocator: ^14.0.2

@@ -50,6 +50,8 @@ class Globalization {
   static const String expired = "Expired";
   static const String expires = "Expires";
   static const String female = "Female";
+  static const String filter = "Filter";
+  static const String findShop = "Find Shop";
   static const String forgotPassword = "Forgot Password?";
   static const String gallery = "Gallery";
   static const String gender = "Gender";
@@ -100,6 +102,7 @@ class Globalization {
   static const String redeemByCredits = "Redeem By Credits";
   static const String redeemWith = "Redeem With";
   static const String redirecting = "Redirecting";
+  static const String refresh = "Refresh";
   static const String registrationInformation = "Registration Information";
   static const String registrationSchemeID = "Registration Scheme ID";
   static const String requiredEInvoice = "Require E-Invoice";
@@ -112,7 +115,6 @@ class Globalization {
   static const String settings = "Settings";
   static const String share = "Share";
   static const String shops = "Shops";
-  static const String shopsNearby = "Shops Nearby";
   static const String signIn = "Sign In";
   static const String signInAccount = "Sign in with your account";
   static const String signOut = "Sign Out";
@@ -190,7 +192,7 @@ class Globalization {
   static const String msgSignUpProcessing = "Please wait while we create your account.";
   static const String msgSignUpSuccess = "Your account has been successfully created. Please sign in to continue.";
   static const String msgSystemError = "System under maintenance. Please try again later.";
-  static const String msgTokenExpired = "Your session has expired. Please sign in again.";
+  static const String msgTokenExpired = "Your account was signed in on another device. Please sign in again.";
   static const String msgTokenInvalid = "Oops! Something went wrong. Please restart the app and try again.";
   static const String msgVoucherAllCollected = "All vouchers for this batch have been claimed. Better luck next time!";
   static const String msgVoucherCollectSuccess = "Your voucher has been collected. Enjoy your reward!";

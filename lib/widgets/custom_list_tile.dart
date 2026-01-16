@@ -6,6 +6,7 @@ import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/company_model.dart';
 import 'package:ezy_member_v2/models/history_model.dart';
+import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -127,7 +128,11 @@ class CustomBranchExpansion extends StatelessWidget {
               Clipboard.setData(ClipboardData(text: branch.fullAddress));
               MessageHelper.show(Globalization.msgAddressCopied.tr, icon: Icons.content_copy_rounded);
             },
-            onTap: () => LocationHelper.redirectGoogleMap(branch.fullAddress),
+            onTap: () async {
+              if (!await ConnectionService.checkConnection()) return;
+
+              LocationHelper.redirectGoogleMap(branch.fullAddress);
+            },
           );
         }).toList(),
       ),

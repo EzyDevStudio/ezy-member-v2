@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:ezy_member_v2/helpers/connection_helper.dart';
+import 'package:ezy_member_v2/helpers/message_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ConnectionService {
   ConnectionService._internal();
@@ -22,4 +26,19 @@ class ConnectionService {
   });
 
   void dispose() => _controller.close();
+
+  static Future<bool> checkConnection() async {
+    final List<ConnectivityResult> result = await Connectivity().checkConnectivity();
+
+    if (result.contains(ConnectivityResult.none)) {
+      MessageHelper.show(
+        Globalization.msgConnectionOff.tr,
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 10),
+        icon: Icons.wifi_off_rounded,
+      );
+    }
+
+    return !result.contains(ConnectivityResult.none);
+  }
 }

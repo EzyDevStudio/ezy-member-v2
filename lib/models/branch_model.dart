@@ -97,6 +97,8 @@ class BranchModel {
 
   String get fullAddress => [address1, address2, address3, address4, postcode, city, state].where((e) => e.isNotEmpty).join(", ");
 
+  String toCompare() => "$branchName $companyName $fullAddress";
+
   @override
   String toString() =>
       "BranchModel(id: $id, branchCode: $branchCode, branchName: $branchName, branchDescription: $branchDescription, contactNumber: $contactNumber, contactNumber2: $contactNumber2, companyKey: $companyKey, address1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, latitude: $latitude, longitude: $longitude, distanceKm: $distanceKm, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo, categories: $categories)\n";

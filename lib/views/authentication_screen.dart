@@ -6,6 +6,7 @@ import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/phone_detail.dart';
 import 'package:ezy_member_v2/models/profile_model.dart';
+import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/remote/google_sign_in_service.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_chip.dart';
@@ -74,6 +75,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
   }
 
   void _signInWithGoogle() async {
+    if (!await ConnectionService.checkConnection()) return;
+
     final userCredential = await GoogleSignInService.signInWithGoogle();
 
     if (userCredential == null) return;
@@ -147,13 +150,17 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
   }
 
   @override
-  Widget build(BuildContext context) => DefaultTabController(
-    length: TabType.values.length,
-    child: Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()]),
-    ),
-  );
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return DefaultTabController(
+      length: TabType.values.length,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()]),
+      ),
+    );
+  }
 
   Widget _buildAppBar() => SliverAppBar(
     floating: true,
@@ -217,7 +224,11 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
                 _buildForgotPassword(),
                 CustomFilledButton(label: Globalization.signIn.tr, onTap: _signIn),
                 CustomText("- ${Globalization.or.tr} -", fontSize: 14.0, maxLines: 1, textAlign: TextAlign.center),
-                CustomIconButton(assetName: "assets/icons/google.png", onPressed: () => _signInWithGoogle()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 16.dp,
+                  children: <Widget>[CustomIconButton(assetName: "assets/icons/google.png", onPressed: () => _signInWithGoogle())],
+                ),
                 _buildAuthMessage(true),
               ],
             ),

@@ -34,6 +34,7 @@
             <!-- Block default auto routing -->
             <meta-data android:name="flutter_deeplinking_enabled" android:value="false"/>
 
+            <!-- TODO: 1. Deep Linking -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

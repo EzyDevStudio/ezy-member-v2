@@ -61,7 +61,7 @@ class CustomImageTextButton extends StatelessWidget {
     borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusS)),
     onTap: onTap,
     child: Padding(
-      padding: EdgeInsets.all(8.dp),
+      padding: EdgeInsets.all(8.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -76,7 +76,7 @@ class CustomImageTextButton extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 8.dp),
+          SizedBox(height: 8.0),
           if (isLabelVisible!) CustomText(label, fontSize: 14.0),
           if (isLabelVisible! && content != null) CustomText(content!, fontSize: 14.0),
         ],

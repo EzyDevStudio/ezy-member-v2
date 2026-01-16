@@ -9,10 +9,10 @@ class AppStrings {
   static const String appName = "EzyMember";
 
   // App Server Url
-  // static const String serverUrl = "http://127.0.0.1:8000";
   static const String serverUrl = "http://192.168.0.173:8000";
+  // static const String serverUrl = "https://ezymember.sigma-connect.xyz";
   static const String serverDirectory = "api";
-  static const String url = "https://www.ezymember.com";
+  static const String deepLinkUrl = "https://www.ezymember.com"; // TODO: 1. Deep Linking
 
   Map<HistoryType, String> historyTypes = {
     HistoryType.all: Globalization.all.tr,

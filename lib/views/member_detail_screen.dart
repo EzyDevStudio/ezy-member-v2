@@ -203,38 +203,43 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(),
-    body: RefreshIndicator(
-      onRefresh: _onRefresh,
-      child: Obx(() {
-        _member = _memberController.members.isNotEmpty ? _memberController.members.first : MemberModel.empty();
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
 
-        return ListView(
-          controller: _scrollController,
-          children: <Widget>[
-            Center(
-              child: Container(
-                constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.9),
-                padding: EdgeInsets.all(16.dp),
-                child: Column(
-                  spacing: 16.dp,
-                  children: <Widget>[
-                    _buildMemberCard(),
-                    _buildQuickAccess(),
-                    CodeGeneratorHelper.barcode(_hive.memberProfile.value!.memberCode, padding: EdgeInsets.symmetric(horizontal: 16.dp)),
-                  ],
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(),
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: Obx(() {
+          _member = _memberController.members.isNotEmpty ? _memberController.members.first : MemberModel.empty();
+
+          return ListView(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: <Widget>[
+              Center(
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.9),
+                  padding: EdgeInsets.all(16.dp),
+                  child: Column(
+                    spacing: 16.dp,
+                    children: <Widget>[
+                      _buildMemberCard(),
+                      _buildQuickAccess(),
+                      CodeGeneratorHelper.barcode(_hive.memberProfile.value!.memberCode, padding: EdgeInsets.symmetric(horizontal: 16.dp)),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            _buildHistory(),
-          ],
-        );
-      }),
-    ),
-    floatingActionButton: _showFab ? _buildFAB() : null,
-  );
+              _buildHistory(),
+            ],
+          );
+        }),
+      ),
+      floatingActionButton: _showFab ? _buildFAB() : null,
+    );
+  }
 
   Widget _buildMemberCard() => AspectRatio(
     aspectRatio: kCardRatio,

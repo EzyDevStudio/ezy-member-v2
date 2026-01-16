@@ -1,3 +1,4 @@
+import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/timeline_model.dart';
 import 'package:ezy_member_v2/widgets/custom_timeline.dart';
@@ -24,9 +25,13 @@ class _TimelineDetailScreenState extends State<TimelineDetailScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(title: Text(Globalization.timeline.tr)),
-    body: ListView(children: <Widget>[CustomTimeline(timeline: _timeline, isDetail: true)]),
-  );
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(title: Text(Globalization.timeline.tr)),
+      body: ListView(children: <Widget>[CustomTimeline(timeline: _timeline, isDetail: true, isShowMore: false)]),
+    );
+  }
 }

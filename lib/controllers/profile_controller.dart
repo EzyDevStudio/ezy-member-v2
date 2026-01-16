@@ -6,6 +6,7 @@ import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/profile_model.dart';
+import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
 import 'package:ezy_member_v2/views/profile_detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,8 @@ class ProfileController extends GetxController {
   }
 
   Future<void> updateProfile(Map<String, dynamic> json, ProfileType type, String memberToken) async {
+    if (!await ConnectionService.checkConnection()) return;
+
     _showLoading(Globalization.msgProfileUpdating.tr);
 
     final bool isMember = type == ProfileType.member;
@@ -118,6 +121,8 @@ class ProfileController extends GetxController {
   }
 
   Future<void> changePassword(Map<String, dynamic> data, String memberToken) async {
+    if (!await ConnectionService.checkConnection()) return;
+
     isUpdate.value = false;
 
     _showLoading(Globalization.msgPasswordUpdating.tr);
@@ -149,6 +154,8 @@ class ProfileController extends GetxController {
   }
 
   Future<void> forgotPassword(Map<String, dynamic> data) async {
+    if (!await ConnectionService.checkConnection()) return;
+
     _api.post(endPoint: "forgot-password", module: "ProfileController - forgotPassword", data: data);
   }
 

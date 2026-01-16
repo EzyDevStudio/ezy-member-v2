@@ -67,11 +67,15 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(title: Text(Globalization.myVouchers.tr)),
-    body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
-  );
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(title: Text(Globalization.myVouchers.tr)),
+      body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
+    );
+  }
 
   Widget _buildContent() => Obx(() {
     if (_voucherController.isLoading.value) {
@@ -85,7 +89,16 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
       return Padding(
         padding: EdgeInsets.all(16.dp),
         child: Center(
-          child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.vouchers.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.vouchers.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2),
+              InkWell(
+                onTap: _onRefresh,
+                child: CustomText(Globalization.refresh.tr, color: Colors.blue, fontSize: 16.0),
+              ),
+            ],
+          ),
         ),
       );
     }

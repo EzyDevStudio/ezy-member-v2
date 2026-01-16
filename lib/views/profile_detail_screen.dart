@@ -13,6 +13,7 @@ import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/phone_detail.dart';
 import 'package:ezy_member_v2/models/postcode_detail.dart';
 import 'package:ezy_member_v2/models/profile_model.dart';
+import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
 import 'package:ezy_member_v2/widgets/custom_modal.dart';
@@ -188,6 +189,8 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   }
 
   void _uploadMedia(int imgType) async {
+    if (!await ConnectionService.checkConnection()) return;
+
     final pickedSource = await CustomTypePickerDialog.show<ImageSource, String>(
       context: context,
       title: Globalization.selectSource.tr,
@@ -205,6 +208,8 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   }
 
   void _deleteAccount() async {
+    if (!await ConnectionService.checkConnection()) return;
+
     final bool? result = await MessageHelper.showConfirmationDialog(
       backgroundColor: Colors.red,
       icon: Icons.warning_rounded,
@@ -224,13 +229,17 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   }
 
   @override
-  Widget build(BuildContext context) => DefaultTabController(
-    length: ProfileType.values.length,
-    child: Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()]),
-    ),
-  );
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return DefaultTabController(
+      length: ProfileType.values.length,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()]),
+      ),
+    );
+  }
 
   Widget _buildAppBar() => SliverAppBar(
     floating: true,

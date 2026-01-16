@@ -1,6 +1,7 @@
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/voucher_model.dart';
+import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -57,6 +58,8 @@ class VoucherController extends GetxController {
   }
 
   Future<void> collectVoucher(String batchCode, String companyID, String memberCode, String memberToken) async {
+    if (!await ConnectionService.checkConnection()) return;
+
     final Map<String, dynamic> data = {"batch_code": batchCode, "company_id": companyID, "member_code": memberCode};
     final response = await _api.post(endPoint: "collect-voucher", module: "VoucherController - collectVoucher", data: data, memberToken: memberToken);
 
@@ -82,6 +85,8 @@ class VoucherController extends GetxController {
   }
 
   Future<void> redeemVoucher(String batchCode, String companyID, String memberCode, String memberToken) async {
+    if (!await ConnectionService.checkConnection()) return;
+
     final Map<String, dynamic> data = {"batch_code": batchCode, "company_id": companyID, "member_code": memberCode};
     final response = await _api.post(endPoint: "redeem-voucher", module: "VoucherController - redeemVoucher", data: data, memberToken: memberToken);
 

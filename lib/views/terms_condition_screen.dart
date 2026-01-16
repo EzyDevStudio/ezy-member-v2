@@ -33,10 +33,14 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()]),
-  );
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()]),
+    );
+  }
 
   Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text(Globalization.tncLong.tr));
 

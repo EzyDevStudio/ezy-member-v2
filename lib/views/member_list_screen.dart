@@ -50,11 +50,15 @@ class _MemberListScreenState extends State<MemberListScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(title: Text(Globalization.myCards.tr)),
-    body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
-  );
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(title: Text(Globalization.myCards.tr)),
+      body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
+    );
+  }
 
   Widget _buildContent() => Obx(() {
     if (_memberController.isLoading.value) {
@@ -68,11 +72,19 @@ class _MemberListScreenState extends State<MemberListScreen> {
       return Padding(
         padding: EdgeInsets.all(16.dp),
         child: Center(
-          child: CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.member.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CustomText(Globalization.msgNoAvailable.trParams({"label": Globalization.member.tr.toLowerCase()}), fontSize: 16.0, maxLines: 2),
+              InkWell(
+                onTap: _onRefresh,
+                child: CustomText(Globalization.refresh.tr, color: Colors.blue, fontSize: 16.0),
+              ),
+            ],
+          ),
         ),
       );
     }
-
     final members = List.from(_memberController.members);
 
     members.sort((a, b) {

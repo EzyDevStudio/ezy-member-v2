@@ -41,7 +41,11 @@ class CustomVoucher extends StatelessWidget {
         borderRadius: kBorderRadiusS,
         curvePosition: (isCollectable ? ResponsiveHelper().voucherWidth() : constraints.maxWidth) * 0.3,
         curveRadius: kBorderRadiusS * 2,
-        height: isCollectable ? ResponsiveHelper().voucherHeight() : kVoucherDefaultHeight,
+        height: isCollectable
+            ? ResponsiveHelper().voucherHeight()
+            : ResponsiveHelper().deviceType == DeviceType.desktop
+            ? 200.0
+            : kVoucherDefaultHeight,
         width: isCollectable ? ResponsiveHelper().voucherWidth() : null,
         shadow: Shadow(color: shadowColor!, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
         firstChild: _buildFirstChild(context),
@@ -57,9 +61,9 @@ class CustomVoucher extends StatelessWidget {
 
     Widget content = Container(
       color: bgColor,
+      width: double.infinity,
       padding: EdgeInsets.all(4.dp),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           CustomAvatarImage(size: ResponsiveHelper().avatarSize() * (isCollectable ? 1.0 : 1.1), networkImage: voucher.companyLogo),

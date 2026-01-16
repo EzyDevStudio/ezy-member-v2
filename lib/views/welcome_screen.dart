@@ -15,10 +15,14 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    body: CustomScrollView(slivers: <Widget>[_buildContent()]),
-  );
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: CustomScrollView(slivers: <Widget>[_buildContent()]),
+    );
+  }
 
   Widget _buildContent() => SliverFillRemaining(
     hasScrollBody: false,

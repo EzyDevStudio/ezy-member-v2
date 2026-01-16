@@ -34,11 +34,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(title: Text(Globalization.payment.tr)),
-    body: _buildContent(),
-  );
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(title: Text(Globalization.payment.tr)),
+      body: _buildContent(),
+    );
+  }
 
   Widget _buildContent() => ListView(
     padding: EdgeInsets.all(16.dp),

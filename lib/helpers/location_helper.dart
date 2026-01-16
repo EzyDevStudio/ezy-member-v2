@@ -77,7 +77,7 @@ class LocationHelper {
       final Position position = await Geolocator.getCurrentPosition(locationSettings: locationSettings);
       final List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
 
-      if (placemarks.isEmpty && placemarks.first.locality != null) return null;
+      if (placemarks.isEmpty || placemarks.first.locality == null) return null;
 
       return Coordinate(address: "Current Location", city: placemarks.first.locality!, latitude: position.latitude, longitude: position.longitude);
     } catch (e) {

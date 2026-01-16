@@ -82,11 +82,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    appBar: AppBar(title: Text(Globalization.changePassword.tr)),
-    body: _buildContent(),
-  );
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(title: Text(Globalization.changePassword.tr)),
+      body: _buildContent(),
+    );
+  }
 
   Widget _buildContent() => CustomScrollView(
     slivers: <Widget>[

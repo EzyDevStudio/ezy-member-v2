@@ -34,30 +34,34 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
   }
 
   @override
-  Widget build(BuildContext context) => DefaultTabController(
-    length: InvoiceType.values.length,
-    child: Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Theme.of(context).colorScheme.onPrimary,
-          labelColor: Theme.of(context).colorScheme.onPrimary,
-          unselectedLabelColor: Colors.grey,
-          tabs: <Tab>[
-            Tab(text: Globalization.personal.tr),
-            Tab(text: Globalization.working.tr),
-          ],
+  Widget build(BuildContext context) {
+    ResponsiveHelper().init(context);
+
+    return DefaultTabController(
+      length: InvoiceType.values.length,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(
+          bottom: TabBar(
+            controller: _tabController,
+            indicatorColor: Theme.of(context).colorScheme.onPrimary,
+            labelColor: Theme.of(context).colorScheme.onPrimary,
+            unselectedLabelColor: Colors.grey,
+            tabs: <Tab>[
+              Tab(text: Globalization.personal.tr),
+              Tab(text: Globalization.working.tr),
+            ],
+          ),
+          title: Text(Globalization.eInvoice.tr),
         ),
-        title: Text(Globalization.eInvoice.tr),
+        body: TabBarView(
+          controller: _tabController,
+          physics: NeverScrollableScrollPhysics(),
+          children: <Widget>[_buildInvoiceTab(_hive.personalInvoice), _buildInvoiceTab(_hive.workingInvoice)],
+        ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        physics: NeverScrollableScrollPhysics(),
-        children: <Widget>[_buildInvoiceTab(_hive.personalInvoice), _buildInvoiceTab(_hive.workingInvoice)],
-      ),
-    ),
-  );
+    );
+  }
 
   Widget _buildInvoiceTab(String image) => Column(
     spacing: 64.dp,
@@ -72,7 +76,19 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
       ),
       Expanded(
         child: image.isNotEmpty
-            ? InteractiveViewer(maxScale: 5.0, child: Image.network(image, fit: BoxFit.contain))
+            ? InteractiveViewer(
+                maxScale: 5.0,
+                child: Image.network(
+                  image,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.dp),
+                      child: CustomText(Globalization.msgConnectionOff.tr, fontSize: 16.0, maxLines: 2, textAlign: TextAlign.center),
+                    ),
+                  ),
+                ),
+              )
             : Center(
                 child: Padding(
                   padding: EdgeInsets.all(16.dp),

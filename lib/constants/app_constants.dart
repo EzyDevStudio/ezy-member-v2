@@ -1,5 +1,4 @@
 // Aspect Ratio
-const double kAppBarLogoRatio = 0.4;
 const double kSquareRatio = 1.0;
 const double kCardRatio = 1.5857;
 
@@ -32,7 +31,6 @@ const double kPositionEmpty = 0.0;
 const double kPositionLabel = 8.0;
 
 // Profile
-const double kProfileBarcodeHeight = 75.0;
 const double kProfileImgSizeM = 80.0;
 const double kProfileImgSizeL = 100.0;
 
@@ -41,4 +39,3 @@ const double kTimelineHeight = 300.0;
 
 // Voucher
 const double kVoucherDefaultHeight = 150.0;
-const double kVerVoucherDefaultHeight = 350.0;
