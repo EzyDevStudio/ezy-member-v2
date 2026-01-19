@@ -126,20 +126,26 @@ class CustomVoucher extends StatelessWidget {
           ),
           CustomText("${voucher.discountValue.toStringAsFixed(1)} ${Globalization.off.tr}", fontSize: isCollectable ? 12.0 : 14.0),
           const Spacer(),
-          if (isRedeemable)
-            CustomText("${Globalization.redeemWith.tr} ${voucher.usePointRedeem} ${Globalization.points.tr}", fontSize: isCollectable ? 12.0 : 14.0),
-          if (!isRedeemable) CustomText("${Globalization.minSpend.tr} ${voucher.minimumSpend}", fontSize: isCollectable ? 12.0 : 14.0),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             spacing: 8.dp,
             children: <Widget>[
               Expanded(
-                child: CustomText(
-                  "$dateTitle ${FormatterHelper.timestampToString(date)}",
-                  color: Colors.black54,
-                  fontSize: isCollectable ? 11.0 : 14.0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    if (isRedeemable)
+                      CustomText(
+                        "${Globalization.redeemWith.tr} ${voucher.usePointRedeem} ${Globalization.points.tr}",
+                        fontSize: isCollectable ? 12.0 : 14.0,
+                      ),
+                    if (!isRedeemable) CustomText("${Globalization.minSpend.tr} ${voucher.minimumSpend}", fontSize: isCollectable ? 12.0 : 14.0),
+                    CustomText("$dateTitle ${FormatterHelper.timestampToString(date)}", color: Colors.black54, fontSize: isCollectable ? 11.0 : 14.0),
+                  ],
                 ),
               ),
-              InkWell(
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () => Get.toNamed(AppRoutes.termsCondition, arguments: {"voucher": voucher}),
                 child: CustomText(
                   Globalization.tnc.tr,

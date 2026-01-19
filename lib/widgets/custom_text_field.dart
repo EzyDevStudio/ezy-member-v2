@@ -65,6 +65,7 @@ class _CustomOutlinedTextFieldState extends State<CustomOutlinedTextField> {
   @override
   Widget build(BuildContext context) => Material(
     borderRadius: BorderRadius.circular(kBorderRadiusS),
+    color: Colors.white,
     elevation: kElevation,
     child: widget.type == OutlinedType.phone ? _buildPhoneField(context) : _buildNormalField(context),
   );

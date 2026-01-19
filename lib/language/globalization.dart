@@ -109,6 +109,7 @@ class Globalization {
   static const String resetPassword = "Reset Password";
   static const String roc = "ROC";
   static const String saveChanges = "Save Changes";
+  static const String scan = "Scan";
   static const String search = "Search";
   static const String selectPhotos = "Select Photos";
   static const String selectSource = "Select a source";
@@ -156,7 +157,6 @@ class Globalization {
   static const String msgGoogleMapsConfirmation = "Would you like to open Google Maps to start navigation?";
   static const String msgGoogleMapsRedirecting = "Please wait while we redirect you to Google Maps.";
   static const String msgHintText = "Enter your @label";
-  static const String msgHistoryEnd = "You’ve reached the end of the history.";
   static const String msgMemberExpired = "Your membership has expired. Please renew it to continue enjoying our services.";
   static const String msgMemberRegisterProcessing = "Please wait while we process your registration.";
   static const String msgMemberRegisterSuccess = "You have successfully registered as a member. Enjoy our services!";
@@ -183,6 +183,7 @@ class Globalization {
   static const String msgRequiredEInvoice = "Fields marked with * are required.";
   static const String msgResetPassword =
       "A new temporary password will be generated and sent to your email. You can use it to sign in and change your password.";
+  static const String msgResultEnd = "You’ve reached the end!";
   static const String msgSignIn = "Welcome to ${AppStrings.appName}. Please sign in to access your account.";
   static const String msgSignInFail = "Incorrect password. Please try again.";
   static const String msgSignInProcessing = "Please wait while we sign you in.";

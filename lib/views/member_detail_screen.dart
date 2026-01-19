@@ -367,7 +367,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
         ),
         Container(
           padding: EdgeInsets.all(16.dp),
-          child: CustomText(Globalization.msgHistoryEnd.tr, color: Colors.grey, fontSize: 16.0),
+          child: CustomText(Globalization.msgResultEnd.tr, color: Colors.grey, fontSize: 16.0),
         ),
       ],
     );

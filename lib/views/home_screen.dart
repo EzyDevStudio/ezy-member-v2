@@ -14,6 +14,7 @@ import 'package:ezy_member_v2/helpers/permission_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/widgets/custom_app_bar.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
+import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_timeline.dart';
 import 'package:ezy_member_v2/widgets/custom_voucher.dart';
@@ -38,6 +39,49 @@ class _HomeScreenState extends State<HomeScreen> {
   // late StreamSubscription<bool> _subscription;
 
   bool _showFab = false;
+
+  void _showMemberCode() => showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.white,
+    builder: (context) => ListView(
+      shrinkWrap: true,
+      padding: EdgeInsets.all(32.0),
+      children: <Widget>[
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 32.dp,
+          children: <Widget>[
+            CustomText(Globalization.scan.tr, fontSize: 22.0, fontWeight: FontWeight.bold),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+              child: AspectRatio(
+                aspectRatio: kCardRatio,
+                child: CustomBackgroundImage(
+                  isBorderRadius: true,
+                  isShadow: true,
+                  backgroundImage: _hive.backgroundImage,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          CustomAvatarImage(size: kProfileImgSizeM, networkImage: _hive.image),
+                          CustomText(_hive.memberProfile.value!.name, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            CodeGeneratorHelper.barcode(_hive.memberProfile.value!.memberCode, padding: EdgeInsets.zero),
+          ],
+        ),
+      ],
+    ),
+  );
 
   @override
   void initState() {
@@ -74,6 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //   await NotificationService.show(id: 0, title: "EzyMember", body: "2 vouchers will be expired by today.");
     // }
 
+    _timelineController.reset();
     _timelineController.loadTimelines(memberCode: _hive.isSignIn ? _hive.memberProfile.value!.memberCode : null);
 
     if (_hive.isSignIn) {
@@ -116,12 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: CustomScrollView(
             controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
-            slivers: <Widget>[
-              _buildAppBar(),
-              if (_hive.isSignIn) _buildQuickAccess(),
-              if (_hive.isSignIn) _buildVouchers(),
-              _buildTimeline(),
-            ],
+            slivers: <Widget>[_buildAppBar(), if (_hive.isSignIn) _buildQuickAccess(), if (_hive.isSignIn) _buildVouchers(), _buildTimeline()],
           ),
         ),
       ),
@@ -156,9 +196,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Obx(() {
             int totalCount = _voucherController.redeemableCount.value + _voucherController.todayCount.value;
-      
+
             if (!_hive.isSignIn || totalCount <= 0) return SizedBox.shrink();
-      
+
             return IconButton(
               onPressed: () => Get.toNamed(AppRoutes.notification),
               icon: Badge.count(
@@ -224,11 +264,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: Globalization.findShop.tr,
                   onTap: () => Get.toNamed(AppRoutes.branchList),
                 ),
+                CustomImageTextButton(assetName: "assets/icons/scan.png", label: Globalization.scan.tr, onTap: _showMemberCode),
               ],
-            ),
-            CodeGeneratorHelper.barcode(
-              _hive.memberProfile.value!.memberCode,
-              padding: EdgeInsets.only(bottom: 24.dp, left: 32.dp, right: 32.dp),
             ),
           ],
         ),
@@ -302,25 +339,25 @@ class _HomeScreenState extends State<HomeScreen> {
   });
 
   Widget _buildTimeline() => Obx(() {
-    if (_timelineController.timelines.isEmpty) return SliverToBoxAdapter();
+    final timelines = _timelineController.timelines;
 
-    return SliverToBoxAdapter(
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
+    if (timelines.isEmpty) return SliverToBoxAdapter();
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((context, index) {
+        if (index == timelines.length - 1 && _timelineController.hasMore && !_timelineController.isLoading.value) {
+          _timelineController.loadTimelines(isLoadMore: true);
+        }
+
+        return Container(
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
+            ),
           ),
-        ),
-        child: ListView.separated(
-          shrinkWrap: true,
-          padding: EdgeInsets.zero,
-          itemCount: _timelineController.timelines.length,
-          physics: NeverScrollableScrollPhysics(),
-          separatorBuilder: (_, _) => Container(color: Colors.grey.withValues(alpha: 0.7), height: 5.dp),
-          itemBuilder: (context, index) =>
-              CustomTimeline(timeline: _timelineController.timelines[index], isNavigateCompany: true, isNavigateTimeline: true),
-        ),
-      ),
+          child: CustomTimeline(timeline: timelines[index], isNavigateCompany: true, isNavigateTimeline: true),
+        );
+      }, childCount: timelines.length),
     );
   });
 

@@ -102,6 +102,7 @@ class MsMy {
     Globalization.resetPassword: "Reset Password",
     Globalization.roc: "ROC",
     Globalization.saveChanges: "Save Changes",
+    Globalization.scan: "Scan",
     Globalization.search: "Search",
     Globalization.selectPhotos: "Select Photos",
     Globalization.selectSource: "Select a source",
@@ -149,7 +150,6 @@ class MsMy {
     Globalization.msgGoogleMapsConfirmation: "Would you like to open Google Maps to start navigation?",
     Globalization.msgGoogleMapsRedirecting: "Please wait while we redirect you to Google Maps.",
     Globalization.msgHintText: "Enter your @label",
-    Globalization.msgHistoryEnd: "You’ve reached the end of the history.",
     Globalization.msgMemberExpired: "Your membership has expired. Please renew it to continue enjoying our services.",
     Globalization.msgMemberRegisterProcessing: "Please wait while we process your registration.",
     Globalization.msgMemberRegisterSuccess: "You have successfully registered as a member. Enjoy our services!",
@@ -175,6 +175,7 @@ class MsMy {
     Globalization.msgRequiredEInvoice: "Fields marked with * are required.",
     Globalization.msgResetPassword:
         "A new temporary password will be generated and sent to your email. You can use it to sign in and change your password.",
+    Globalization.msgResultEnd: "You’ve reached the end!",
     Globalization.msgSignIn: "Welcome to ${AppStrings.appName}. Please sign in to access your account.",
     Globalization.msgSignInFail: "Incorrect password. Please try again.",
     Globalization.msgSignInProcessing: "Please wait while we sign you in.",

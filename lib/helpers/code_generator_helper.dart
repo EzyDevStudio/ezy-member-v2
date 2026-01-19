@@ -7,19 +7,27 @@ import 'package:qr_bar_code/code/code.dart';
 class CodeGeneratorHelper {
   const CodeGeneratorHelper._();
 
-  static Widget barcode(String data, {EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 32.0)}) => Center(
-    child: ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
-      child: InkWell(
-        onTap: () => Get.toNamed(AppRoutes.scan),
-        child: Padding(
-          padding: padding,
-          child: AspectRatio(
-            aspectRatio: 4 / 1,
-            child: Code(drawText: false, codeType: CodeType.code128(), backgroundColor: Colors.white, data: data),
+  static Widget barcode(String data, {double? radius, EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 32.0), EdgeInsets? margin}) =>
+      Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+          child: InkWell(
+            onTap: () => Get.toNamed(AppRoutes.scan),
+            child: Padding(
+              padding: padding,
+              child: AspectRatio(
+                aspectRatio: 4 / 1,
+                child: Code(
+                  drawText: false,
+                  codeType: CodeType.code128(),
+                  backgroundColor: Colors.white,
+                  decoration: radius != null ? BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(radius)), color: Colors.white) : null,
+                  padding: margin,
+                  data: data,
+                ),
+              ),
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/enum.dart';
@@ -11,9 +12,11 @@ import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:qr_bar_code/code/code.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
@@ -25,6 +28,7 @@ class ScanScreen extends StatefulWidget {
 class _ScanScreenState extends State<ScanScreen> {
   final _hive = Get.find<MemberHiveController>();
   final _pinController = Get.put(PinController(), tag: "scan");
+  final _contentKey = GlobalKey();
 
   late ScanType _type;
   late String? _companyID, _value;
@@ -103,6 +107,18 @@ class _ScanScreenState extends State<ScanScreen> {
     return Globalization.msgExpiredTimer.trParams({"minutes": minutes.toString(), "seconds": seconds.toString().padLeft(2, "0")});
   }
 
+  Future<Uint8List?> _captureContent() async {
+    try {
+      final boundary = _contentKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      final image = await boundary.toImage(pixelRatio: 3.0);
+      final byteData = await image.toByteData(format: ImageByteFormat.png);
+
+      return byteData?.buffer.asUint8List();
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
@@ -125,34 +141,41 @@ class _ScanScreenState extends State<ScanScreen> {
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
       const Spacer(),
-      SizedBox(height: 50.0, child: Image.asset("assets/images/splash_logo.png", fit: BoxFit.scaleDown)),
-      LayoutBuilder(
-        builder: (context, constraints) {
-          final size = constraints.maxWidth < constraints.maxHeight ? constraints.maxWidth : constraints.maxHeight;
+      RepaintBoundary(
+        key: _contentKey,
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 50.0, child: Image.asset("assets/images/splash_logo.png", fit: BoxFit.scaleDown)),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final size = constraints.maxWidth < constraints.maxHeight ? constraints.maxWidth : constraints.maxHeight;
 
-          return Center(
-            child: Container(
-              constraints: BoxConstraints(maxHeight: ResponsiveHelper.mobileBreakpoint, maxWidth: ResponsiveHelper.mobileBreakpoint),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(kBorderRadiusS),
-                color: Colors.white,
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 10)],
-              ),
-              height: size,
-              width: size,
-              margin: EdgeInsets.all(32.dp),
-              padding: EdgeInsets.all(32.dp),
-              child: Center(child: _type == ScanType.earnPoints ? _buildEarnSection() : _buildRedeemSection()),
+                return Center(
+                  child: Container(
+                    constraints: BoxConstraints(maxHeight: ResponsiveHelper.mobileBreakpoint, maxWidth: ResponsiveHelper.mobileBreakpoint),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(kBorderRadiusS),
+                      color: Colors.white,
+                      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 10)],
+                    ),
+                    height: size,
+                    width: size,
+                    margin: EdgeInsets.all(32.dp),
+                    padding: EdgeInsets.all(32.dp),
+                    child: Center(child: _type == ScanType.earnPoints ? _buildEarnSection() : _buildRedeemSection()),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
-      CustomText(
-        _hive.memberProfile.value!.memberCode,
-        color: Theme.of(context).colorScheme.primary,
-        fontSize: 24.0,
-        fontWeight: FontWeight.bold,
-        textAlign: TextAlign.center,
+            CustomText(
+              _hive.memberProfile.value!.memberCode,
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
       if (_type != ScanType.earnPoints)
         CustomText(_formatTime(_remainingSeconds), color: Theme.of(context).colorScheme.error, fontSize: 22.0, textAlign: TextAlign.center),
@@ -160,7 +183,24 @@ class _ScanScreenState extends State<ScanScreen> {
       if (_type == ScanType.earnPoints)
         Padding(
           padding: EdgeInsets.all(32.dp),
-          child: CustomFilledButton(backgroundColor: Colors.green, label: Globalization.share.tr, onTap: () {}),
+          child: CustomFilledButton(
+            backgroundColor: Colors.green,
+            label: Globalization.share.tr,
+            onTap: () async {
+              final imageBytes = await _captureContent();
+
+              if (imageBytes == null || !mounted) return;
+
+              final RenderBox box = context.findRenderObject() as RenderBox;
+
+              await SharePlus.instance.share(
+                ShareParams(
+                  sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+                  files: <XFile>[XFile.fromData(imageBytes, mimeType: "image/png", name: "my_code.png")],
+                ),
+              );
+            },
+          ),
         ),
     ],
   );

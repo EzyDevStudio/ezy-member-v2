@@ -21,17 +21,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 // combine api - home, member_detail, company_detail
 
-// Possible Features: Payment Gateway (Join or Renew member)
-// Possible Features: Point expires
-// Possible Features: Voucher auto show (new user, birthday)
-// Possible Features: Auto upgrade or downgrade member tier
-// Possible Features: Device sign in another devices
-// Possible Features: Timeline infinite scroll
-// Possible Features: Branch setup
-// Possible Features: Share earn point widget, same as share company_detail_screen feature
-// Possible Features: Transfer voucher to another member and set limitation so some of the voucher cannot transfer such as (new user, birthday)
-// Possible Features: Display member card with barcode design in home_screen
-// Possible Features: Change API so that some of the field which rely on Branch will save the data directly such as (Branch ID and Branch Name)
+// Future Features: Point expires
+// Future Features: Auto upgrade or downgrade member tier
+// Pending Features: Payment Gateway (Join or Renew member)
+// Pending Features: Voucher auto show (new user, birthday)
+// Pending Features: Branch setup
+// Pending Features: Change API so that some of the field which rely on Branch will save the data directly such as (Branch ID and Branch Name)
+// Pending Features: If member company expired then block several action
 
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
