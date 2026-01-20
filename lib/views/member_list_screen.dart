@@ -33,13 +33,13 @@ class _MemberListScreenState extends State<MemberListScreen> {
   }
 
   Future<void> _onRefresh() async {
-    _memberController.loadMembers(_hive.memberProfile.value!.memberCode, getBranch: true);
+    _memberController.loadMembers(_hive.memberProfile.value!.memberCode);
   }
 
   void _onSearchChanged() {
     final query = _searchController.text.toLowerCase();
 
-    setState(() => _filteredMembers = _memberController.members.where((member) => member.branch.companyName.toLowerCase().contains(query)).toList());
+    setState(() => _filteredMembers = _memberController.members.where((member) => member.toCompare().toLowerCase().contains(query)).toList());
   }
 
   @override
@@ -86,14 +86,6 @@ class _MemberListScreenState extends State<MemberListScreen> {
       );
     }
     final members = List.from(_memberController.members);
-
-    members.sort((a, b) {
-      final d1 = a.branch.distanceKm ?? double.infinity;
-      final d2 = b.branch.distanceKm ?? double.infinity;
-
-      return d1.compareTo(d2);
-    });
-
     final displayMembers = _searchController.text.isEmpty ? members : _filteredMembers;
 
     return Column(

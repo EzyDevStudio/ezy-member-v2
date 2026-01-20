@@ -10,8 +10,8 @@ class ApiService {
 
   static const String keyStatusCode = "status_code";
 
-  Future<Response?> get<T>({required String endPoint, required String module, Map<String, dynamic>? data}) async {
-    final url = "$_baseUrl/$endPoint";
+  Future<Response?> get<T>({String? baseUrl, required String endPoint, required String module, Map<String, dynamic>? data}) async {
+    final url = "${baseUrl ?? _baseUrl}/$endPoint";
 
     try {
       final response = await _dio.get(

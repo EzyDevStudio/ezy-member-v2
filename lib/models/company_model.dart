@@ -1,5 +1,4 @@
 import 'package:ezy_member_v2/models/about_us_model.dart';
-import 'package:ezy_member_v2/models/branch_model.dart';
 import 'package:ezy_member_v2/models/category_model.dart';
 
 const String fieldID = "id";
@@ -34,7 +33,6 @@ class CompanyModel {
   final String companyNumber;
   final String companyNumber2;
   final List<CategoryModel> categories;
-  final List<BranchModel> branches;
   final AboutUsModel aboutUs;
 
   CompanyModel({
@@ -51,7 +49,6 @@ class CompanyModel {
     this.companyEmail = "",
     this.companyNumber = "",
     this.companyNumber2 = "",
-    this.branches = const [],
     this.categories = const [],
     AboutUsModel? aboutUs,
   }) : aboutUs = aboutUs ?? AboutUsModel.empty();
@@ -72,9 +69,6 @@ class CompanyModel {
     companyEmail: data[fieldCompanyEmail] ?? "",
     companyNumber: data[fieldCompanyNumber] ?? "",
     companyNumber2: data[fieldCompanyNumber2] ?? "",
-    branches: data[BranchModel.keyBranch] != null
-        ? (data[BranchModel.keyBranch] as List).map((json) => BranchModel.fromJson(Map<String, dynamic>.from(json))).toList()
-        : [],
     categories: data[CategoryModel.keyCategory] != null
         ? (data[CategoryModel.keyCategory] as List).map((json) => CategoryModel.fromJson(Map<String, dynamic>.from(json))).toList()
         : [],
@@ -89,6 +83,5 @@ class CompanyModel {
   String toString() =>
       "CompanyModel(id: $id, companyID: $companyID, companyName: $companyName, databaseName: $databaseName, branchQuantity: $branchQuantity, counterQuantity: $counterQuantity, expiredDate: $expiredDate, isExpired: $isExpired, memberFee: $memberFee, companyKey: $companyKey, companyEmail: $companyEmail, companyNumber: $companyNumber, companyNumber2: $companyNumber2"
       "\naboutUs: ${aboutUs.toString()}"
-      "\nbranches: ${branches.toString()}"
       "\ncategories: ${categories.toString()})\n";
 }

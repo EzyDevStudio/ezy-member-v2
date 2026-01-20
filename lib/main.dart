@@ -25,8 +25,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 // Future Features: Auto upgrade or downgrade member tier
 // Pending Features: Payment Gateway (Join or Renew member)
 // Pending Features: Voucher auto show (new user, birthday)
-// Pending Features: Branch setup
-// Pending Features: Change API so that some of the field which rely on Branch will save the data directly such as (Branch ID and Branch Name)
 // Pending Features: If member company expired then block several action
 
 // run "adb devices" to get devices

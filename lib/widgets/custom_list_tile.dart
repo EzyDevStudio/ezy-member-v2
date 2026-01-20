@@ -4,7 +4,7 @@ import 'package:ezy_member_v2/helpers/location_helper.dart';
 import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
-import 'package:ezy_member_v2/models/company_model.dart';
+import 'package:ezy_member_v2/models/branch_model.dart';
 import 'package:ezy_member_v2/models/history_model.dart';
 import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
@@ -36,9 +36,15 @@ class CustomHistoryListTile extends StatelessWidget {
       textColor = history.point!.point < 0 ? Colors.red : Colors.green;
     } else if (history.type == HistoryType.voucher) {
       title = history.voucher!.batchDescription;
-      location = [history.voucher?.branchName, history.voucher?.counterDesc].where((s) => s != null && s.isNotEmpty).join(" - ");
-      value = history.voucher!.redeemDate == 0 ? Globalization.collect.tr : Globalization.redeem.tr;
-      textColor = history.voucher!.redeemDate == 0 ? Colors.green : Colors.red;
+      location = history.voucher!.redeemDate == history.transactionDate
+          ? [history.voucher?.branchName, history.voucher?.counterDesc].where((s) => s != null && s.isNotEmpty).join(" - ")
+          : "";
+      value = history.voucher!.redeemDate == 0
+          ? Globalization.collect.tr
+          : (history.voucher!.redeemDate == history.transactionDate ? Globalization.redeem.tr : Globalization.collect.tr);
+      textColor = history.voucher!.redeemDate == 0
+          ? Colors.green
+          : (history.voucher!.redeemDate == history.transactionDate ? Colors.red : Colors.green);
     }
 
     return ListTile(
@@ -102,9 +108,9 @@ class CustomInfoListTile extends StatelessWidget {
 }
 
 class CustomBranchExpansion extends StatelessWidget {
-  final CompanyModel company;
+  final List<BranchModel> branches;
 
-  const CustomBranchExpansion({super.key, required this.company});
+  const CustomBranchExpansion({super.key, required this.branches});
 
   @override
   Widget build(BuildContext context) => Container(
@@ -118,8 +124,8 @@ class CustomBranchExpansion extends StatelessWidget {
       child: ExpansionTile(
         childrenPadding: EdgeInsets.only(bottom: 16.dp),
         tilePadding: EdgeInsets.all(16.dp),
-        title: CustomText("${Globalization.branches.tr} (${company.branches.length})", fontSize: 18.0, fontWeight: FontWeight.bold),
-        children: company.branches.map((branch) {
+        title: CustomText("${Globalization.branches.tr} (${branches.length})", fontSize: 18.0, fontWeight: FontWeight.bold),
+        children: branches.map((branch) {
           return CustomInfoListTile(
             trailing: Icons.content_copy_rounded,
             title: branch.branchName,

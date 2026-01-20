@@ -1,4 +1,5 @@
 const String fieldID = "id";
+const String fieldCustomerID = "customer_id";
 const String fieldBranchCode = "branch_code";
 const String fieldBranchName = "branch_name";
 const String fieldBranchDescription = "branch_description";
@@ -14,16 +15,12 @@ const String fieldCity = "city";
 const String fieldState = "state";
 const String fieldLatitude = "latitude";
 const String fieldLongitude = "longitude";
-const String fieldDistanceKm = "distance_km";
-const String fieldCompanyID = "company_id";
-const String fieldCompanyName = "company_name";
-const String fieldCompanyLogo = "company_logo";
-const String fieldCategories = "categories";
 
 class BranchModel {
   static const String keyBranch = "branches";
 
   final int id;
+  final String customerID;
   final String branchCode;
   final String branchName;
   final String branchDescription;
@@ -39,14 +36,10 @@ class BranchModel {
   final String state;
   final double? latitude;
   final double? longitude;
-  final double? distanceKm;
-  final String companyID;
-  final String companyName;
-  final String companyLogo;
-  final String categories;
 
   BranchModel({
     this.id = 0,
+    this.customerID = "",
     this.branchCode = "",
     this.branchName = "",
     this.branchDescription = "",
@@ -62,17 +55,13 @@ class BranchModel {
     this.state = "",
     this.latitude,
     this.longitude,
-    this.distanceKm,
-    this.companyID = "",
-    this.companyName = "",
-    this.companyLogo = "",
-    this.categories = "",
   });
 
   BranchModel.empty() : this();
 
   factory BranchModel.fromJson(Map<String, dynamic> data) => BranchModel(
     id: data[fieldID] ?? 0,
+    customerID: data[fieldCustomerID] ?? "",
     branchCode: data[fieldBranchCode] ?? "",
     branchName: data[fieldBranchName] ?? "",
     branchDescription: data[fieldBranchDescription] ?? "",
@@ -88,18 +77,13 @@ class BranchModel {
     state: data[fieldState] ?? "",
     latitude: data[fieldLatitude] != null ? double.tryParse(data[fieldLatitude].toString()) : null,
     longitude: data[fieldLongitude] != null ? double.tryParse(data[fieldLongitude].toString()) : null,
-    distanceKm: data[fieldDistanceKm] != null ? double.tryParse(data[fieldDistanceKm].toString()) : null,
-    companyID: data[fieldCompanyID] ?? "",
-    companyName: data[fieldCompanyName] ?? "",
-    companyLogo: data[fieldCompanyLogo] ?? "",
-    categories: data[fieldCategories] ?? "",
   );
 
   String get fullAddress => [address1, address2, address3, address4, postcode, city, state].where((e) => e.isNotEmpty).join(", ");
 
-  String toCompare() => "$branchName $companyName $fullAddress";
+  String toCompare() => "$branchName $fullAddress";
 
   @override
   String toString() =>
-      "BranchModel(id: $id, branchCode: $branchCode, branchName: $branchName, branchDescription: $branchDescription, contactNumber: $contactNumber, contactNumber2: $contactNumber2, companyKey: $companyKey, address1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, latitude: $latitude, longitude: $longitude, distanceKm: $distanceKm, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo, categories: $categories)\n";
+      "BranchModel(id: $id, customerID: $customerID, branchCode: $branchCode, branchName: $branchName, branchDescription: $branchDescription, contactNumber: $contactNumber, contactNumber2: $contactNumber2, companyKey: $companyKey, address1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, latitude: $latitude, longitude: $longitude)\n";
 }

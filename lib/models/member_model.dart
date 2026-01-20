@@ -8,6 +8,8 @@ const String fieldIsExpired = "is_expired";
 const String fieldCredit = "credit";
 const String fieldPoint = "point";
 const String fieldReferralCode = "referral_code";
+const String fieldCompanyName = "company_name";
+const String fieldCompanyLogo = "company_logo";
 
 class MemberModel {
   static const String keyMember = "members";
@@ -18,6 +20,8 @@ class MemberModel {
   final double credit;
   final int point;
   final String referralCode;
+  final String companyName;
+  final String companyLogo;
   final int normalVoucherCount;
   final int specialVoucherCount;
   MemberCardModel memberCard;
@@ -30,6 +34,8 @@ class MemberModel {
     this.credit = 0.0,
     this.point = 0,
     this.referralCode = "",
+    this.companyName = "",
+    this.companyLogo = "",
     this.normalVoucherCount = 0,
     this.specialVoucherCount = 0,
     MemberCardModel? memberCard,
@@ -46,6 +52,8 @@ class MemberModel {
     credit: (data[fieldCredit] ?? 0).toDouble(),
     point: data[fieldPoint] ?? 0,
     referralCode: data[fieldReferralCode] ?? "",
+    companyName: data[fieldCompanyName] ?? "",
+    companyLogo: data[fieldCompanyLogo] ?? "",
     normalVoucherCount: data[VoucherModel.keyNormalVoucher] ?? 0,
     specialVoucherCount: data[VoucherModel.keySpecialVoucher] ?? 0,
     memberCard: data[MemberCardModel.keyMemberCard] != null
@@ -54,9 +62,11 @@ class MemberModel {
     branch: data[BranchModel.keyBranch] != null ? BranchModel.fromJson(Map<String, dynamic>.from(data[BranchModel.keyBranch])) : BranchModel.empty(),
   );
 
+  String toCompare() => "$companyName ${memberCard.memberCardNumber} ${memberCard.cardDesc}";
+
   @override
   String toString() =>
-      "MemberDetailModel(companyID: $companyID, isMember: $isMember, isExpired: $isExpired, credit: $credit, point: $point, referralCode: $referralCode, normalVoucherCount: $normalVoucherCount, specialVoucherCount: $specialVoucherCount)"
+      "MemberDetailModel(companyID: $companyID, isMember: $isMember, isExpired: $isExpired, credit: $credit, point: $point, referralCode: $referralCode, companyName: $companyName, companyLogo: $companyLogo, normalVoucherCount: $normalVoucherCount, specialVoucherCount: $specialVoucherCount)"
       "\nmemberCard: ${memberCard.toString()}"
       "\nbranch: ${branch.toString()})\n";
 }

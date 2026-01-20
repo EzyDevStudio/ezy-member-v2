@@ -1,10 +1,13 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/controllers/branch_controller.dart';
-import 'package:ezy_member_v2/controllers/category_controller.dart';
+import 'package:ezy_member_v2/controllers/member_controller.dart';
+import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/category_model.dart';
+import 'package:ezy_member_v2/models/company_model.dart';
+import 'package:ezy_member_v2/models/member_model.dart';
 import 'package:ezy_member_v2/widgets/custom_card.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_text_field.dart';
@@ -19,8 +22,9 @@ class BranchListScreen extends StatefulWidget {
 }
 
 class _BranchListScreenState extends State<BranchListScreen> {
+  final _hive = Get.find<MemberHiveController>();
   final _branchController = Get.put(BranchController(), tag: "branchList");
-  final _categoryController = Get.put(CategoryController(), tag: "branchList");
+  final _memberController = Get.put(MemberController(), tag: "branchList");
   final _searchController = TextEditingController();
   final CategoryModel allCategory = CategoryModel(id: 0, categoryID: "", categoryTitle: "All", categoryImage: "");
 
@@ -42,8 +46,8 @@ class _BranchListScreenState extends State<BranchListScreen> {
   Future<void> _onRefresh() async {
     _searchController.clear();
     _selectedCategory = allCategory;
-    _branchController.loadBranches(false);
-    _categoryController.loadCategories();
+    _branchController.loadBranches();
+    _memberController.loadMembers(_hive.memberProfile.value!.memberCode);
   }
 
   void _applyFilters() {
@@ -52,7 +56,13 @@ class _BranchListScreenState extends State<BranchListScreen> {
     setState(() {
       _filteredBranches = _branchController.branches.where((branch) {
         final matchesSearch = query.isEmpty ? true : branch.toCompare().toLowerCase().contains(query);
-        final matchesCategory = _selectedCategory == allCategory ? true : branch.categories.contains(_selectedCategory.categoryTitle);
+        final matchesCategory = _selectedCategory.id == 0
+            ? true
+            : _memberController.companies
+                      .firstWhereOrNull((c) => c.companyID == branch.customerID)
+                      ?.categories
+                      .any((cat) => cat.categoryID == _selectedCategory.categoryID) ??
+                  false;
 
         return matchesSearch && matchesCategory;
       }).toList();
@@ -133,7 +143,7 @@ class _BranchListScreenState extends State<BranchListScreen> {
                           child: PopupMenuButton<CategoryModel>(
                             itemBuilder: (context) => [
                               PopupMenuItem(value: allCategory, child: Text(allCategory.categoryTitle)),
-                              ..._categoryController.categories.map((c) => PopupMenuItem(value: c, child: Text(c.categoryTitle))),
+                              ..._memberController.categories.map((c) => PopupMenuItem(value: c, child: Text(c.categoryTitle))),
                             ],
                             onSelected: (category) {
                               setState(() => _selectedCategory = category);
@@ -171,8 +181,18 @@ class _BranchListScreenState extends State<BranchListScreen> {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
                   child: GestureDetector(
-                    onTap: () => Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": displayBranches[index].companyID}),
-                    child: CustomShopCard(branch: displayBranches[index]),
+                    onTap: () => Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": displayBranches[index].customerID}),
+                    child: CustomNearbyCard(
+                      branch: displayBranches[index],
+                      company: _memberController.companies.firstWhere(
+                        (c) => c.companyID == displayBranches[index].customerID,
+                        orElse: () => CompanyModel.empty(),
+                      ),
+                      member: _memberController.members.firstWhere(
+                        (m) => m.companyID == displayBranches[index].customerID,
+                        orElse: () => MemberModel.empty(),
+                      ),
+                    ),
                   ),
                 ),
               ),

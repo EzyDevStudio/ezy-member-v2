@@ -1,6 +1,7 @@
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/constants/app_routes.dart';
 import 'package:ezy_member_v2/constants/app_strings.dart';
+import 'package:ezy_member_v2/controllers/branch_controller.dart';
 import 'package:ezy_member_v2/constants/enum.dart';
 import 'package:ezy_member_v2/controllers/company_controller.dart';
 import 'package:ezy_member_v2/controllers/member_controller.dart';
@@ -31,6 +32,7 @@ class CompanyDetailScreen extends StatefulWidget {
 
 class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
   final _hive = Get.find<MemberHiveController>();
+  final _branchController = Get.put(BranchController(), tag: "branchDetail");
   final _companyController = Get.put(CompanyController(), tag: "branchDetail");
   final _memberController = Get.put(MemberController(), tag: "branchDetail");
   final _timelineController = Get.put(TimelineController(), tag: "branchDetail");
@@ -60,6 +62,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
   }
 
   Future<void> _onRefresh() async {
+    _branchController.loadBranches(companyID: _companyID);
     _companyController.loadCompany(_companyID);
     _timelineController.loadTimelines(companyID: _companyID);
 
@@ -249,7 +252,13 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
     ),
   );
 
-  Widget _buildBranchesInfo() => SliverToBoxAdapter(child: CustomBranchExpansion(company: _company));
+  Widget _buildBranchesInfo() => SliverToBoxAdapter(
+    child: Obx(() {
+      if (_branchController.branches.isEmpty) return SizedBox();
+
+      return CustomBranchExpansion(branches: _branchController.branches);
+    }),
+  );
 
   Widget _buildTimeline() => Obx(() {
     if (_timelineController.isLoading.value) {

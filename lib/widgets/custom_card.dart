@@ -1,13 +1,10 @@
-import 'dart:async';
-
 import 'package:ezy_member_v2/constants/app_constants.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
-import 'package:ezy_member_v2/models/advertisement_model.dart';
 import 'package:ezy_member_v2/models/branch_model.dart';
+import 'package:ezy_member_v2/models/company_model.dart';
 import 'package:ezy_member_v2/models/member_model.dart';
-import 'package:ezy_member_v2/models/promotion_model.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_chip.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
@@ -39,9 +36,9 @@ class CustomMemberCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    CustomText(member.branch.companyName, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                    CustomText(member.companyName, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
                     const Spacer(),
-                    CustomAvatarImage(size: ResponsiveHelper().avatarSize() * 1.2, networkImage: member.branch.companyLogo),
+                    CustomAvatarImage(size: ResponsiveHelper().avatarSize() * 1.2, networkImage: member.companyLogo),
                     const Spacer(),
                     CustomText(
                       member.memberCard.memberCardNumber.replaceAllMapped(RegExp(r".{4}"), (m) => "${m.group(0)} "),
@@ -83,143 +80,96 @@ class CustomMemberCard extends StatelessWidget {
 
 class CustomNearbyCard extends StatelessWidget {
   final BranchModel branch;
-  final RxList<MemberModel> members;
+  final CompanyModel company;
+  final MemberModel member;
 
-  const CustomNearbyCard({super.key, required this.branch, required this.members});
-
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      final member = members.firstWhere((m) => m.companyID == branch.companyID, orElse: () => MemberModel.empty());
-
-      return InkWell(
-        child: AspectRatio(
-          aspectRatio: kCardRatio,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kBorderRadiusM),
-              color: Colors.white,
-              boxShadow: <BoxShadow>[
-                BoxShadow(color: Theme.of(context).colorScheme.surfaceContainerHigh, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: Stack(
-                    children: <Widget>[
-                      ClipRRect(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(kBorderRadiusM)),
-                        child: SizedBox.expand(
-                          child: Image.network(
-                            branch.companyLogo,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Center(
-                              child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 52.dp),
-                            ),
-                          ),
-                        ),
-                      ),
-                      if (member.isMember) ...[
-                        if (member.isExpired)
-                          Positioned(
-                            right: kPositionLabel,
-                            top: kPositionLabel,
-                            child: CustomLabelChip(label: Globalization.expired.tr),
-                          ),
-                        Positioned(
-                          bottom: kPositionLabel,
-                          right: kPositionLabel,
-                          child: Row(
-                            spacing: 8.dp,
-                            children: <Widget>[
-                              CustomLabelChip(
-                                backgroundColor: Colors.white.withValues(alpha: 0.85),
-                                foregroundColor: Theme.of(context).colorScheme.primary,
-                                label: "${member.point} pts",
-                              ),
-                              CustomLabelChip(
-                                backgroundColor: Colors.white.withValues(alpha: 0.85),
-                                foregroundColor: Theme.of(context).colorScheme.primary,
-                                icon: Icons.card_giftcard_rounded,
-                                label: (member.normalVoucherCount + member.specialVoucherCount).toString(),
-                              ),
-                              CustomLabelChip(
-                                backgroundColor: Colors.white.withValues(alpha: 0.85),
-                                foregroundColor: Theme.of(context).colorScheme.primary,
-                                label: "${member.credit} cr",
-                              ),
-                            ],
-                          ),
-                        ),
-                      ] else ...[
-                        Positioned(
-                          right: kPositionLabel,
-                          top: kPositionLabel,
-                          child: CustomLabelChip(label: Globalization.joinNow.tr),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: 4.dp,
-                    children: <Widget>[
-                      CustomText(branch.branchName, fontSize: 16.0, fontWeight: FontWeight.w700),
-                      CustomText(branch.fullAddress, fontSize: 14.0),
-                      CustomText(branch.categories, color: Colors.black54, fontSize: 12.0),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    });
-  }
-}
-
-class CustomAdvertisementCard extends StatelessWidget {
-  final AdvertisementModel advertisement;
-
-  const CustomAdvertisementCard({super.key, required this.advertisement});
+  const CustomNearbyCard({super.key, required this.branch, required this.company, required this.member});
 
   @override
   Widget build(BuildContext context) => AspectRatio(
     aspectRatio: kCardRatio,
-    child: Stack(
-      children: <Widget>[
-        ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusS)),
-          child: SizedBox.expand(
-            child: Image.network(
-              advertisement.adsImage,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Center(
-                child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 52.dp),
-              ),
+    child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(kBorderRadiusM),
+        color: Colors.white,
+        boxShadow: <BoxShadow>[
+          BoxShadow(color: Theme.of(context).colorScheme.surfaceContainerHigh, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Stack(
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(kBorderRadiusM)),
+                  child: SizedBox.expand(
+                    child: Image.network(
+                      member.companyLogo,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Center(
+                        child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 52.dp),
+                      ),
+                    ),
+                  ),
+                ),
+                if (member.isMember) ...[
+                  if (member.isExpired)
+                    Positioned(
+                      right: kPositionLabel,
+                      top: kPositionLabel,
+                      child: CustomLabelChip(label: Globalization.expired.tr),
+                    ),
+                  Positioned(
+                    bottom: kPositionLabel,
+                    right: kPositionLabel,
+                    child: Row(
+                      spacing: 8.dp,
+                      children: <Widget>[
+                        CustomLabelChip(
+                          backgroundColor: Colors.white.withValues(alpha: 0.85),
+                          foregroundColor: Theme.of(context).colorScheme.primary,
+                          label: "${member.point} pts",
+                        ),
+                        CustomLabelChip(
+                          backgroundColor: Colors.white.withValues(alpha: 0.85),
+                          foregroundColor: Theme.of(context).colorScheme.primary,
+                          icon: Icons.card_giftcard_rounded,
+                          label: (member.normalVoucherCount + member.specialVoucherCount).toString(),
+                        ),
+                        CustomLabelChip(
+                          backgroundColor: Colors.white.withValues(alpha: 0.85),
+                          foregroundColor: Theme.of(context).colorScheme.primary,
+                          label: "${member.credit} cr",
+                        ),
+                      ],
+                    ),
+                  ),
+                ] else ...[
+                  Positioned(
+                    right: kPositionLabel,
+                    top: kPositionLabel,
+                    child: CustomLabelChip(label: Globalization.joinNow.tr),
+                  ),
+                ],
+              ],
             ),
           ),
-        ),
-        Positioned(
-          bottom: kPositionEmpty,
-          left: kPositionEmpty,
-          right: kPositionEmpty,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadiusGeometry.vertical(bottom: Radius.circular(kBorderRadiusS)),
-              color: Colors.black.withValues(alpha: 0.25),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 4.dp,
+              children: <Widget>[
+                CustomText(branch.branchName, fontSize: 16.0, fontWeight: FontWeight.w700),
+                CustomText(branch.fullAddress, fontSize: 14.0),
+                CustomText(company.getCategoryTitles(), color: Colors.black54, fontSize: 12.0),
+              ],
             ),
-            padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 4.dp),
-            child: CustomText(advertisement.adsTitle, color: Colors.white, fontSize: 16.0),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }
@@ -261,82 +211,6 @@ class CustomProfileCard extends StatelessWidget {
   );
 }
 
-class CustomPromotionCard extends StatefulWidget {
-  final PromotionModel promotion;
-
-  const CustomPromotionCard({super.key, required this.promotion});
-
-  @override
-  State<CustomPromotionCard> createState() => _CustomPromotionCardState();
-}
-
-class _CustomPromotionCardState extends State<CustomPromotionCard> {
-  Duration _time = Duration.zero;
-  Timer? _timer;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) => _updateCountdown());
-  }
-
-  void _updateCountdown() {
-    final now = DateTime.now();
-    final end = DateTime.fromMillisecondsSinceEpoch(widget.promotion.expiredDate);
-    final difference = end.difference(now);
-
-    setState(() => _time = difference.isNegative ? Duration.zero : difference);
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => AspectRatio(
-    aspectRatio: kCardRatio,
-    child: Stack(
-      children: <Widget>[
-        ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusS)),
-          child: SizedBox.expand(
-            child: Image.network(
-              widget.promotion.promotionImage,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Center(
-                child: Icon(Icons.broken_image_rounded, color: Colors.grey, size: 52.dp),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          right: kPositionLabel,
-          top: kPositionLabel,
-          child: CustomLabelChip(icon: Icons.timer_rounded, label: FormatterHelper.displayCarousel(_time)),
-        ),
-        Positioned(
-          bottom: kPositionEmpty,
-          left: kPositionEmpty,
-          right: kPositionEmpty,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadiusGeometry.vertical(bottom: Radius.circular(kBorderRadiusS)),
-              color: Colors.black.withValues(alpha: 0.25),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 4.dp),
-            child: CustomText(widget.promotion.promotionTitle, color: Colors.white, fontSize: 16.0),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
 class CustomSectionCard extends StatelessWidget {
   final String title;
   final List<Widget> children;
@@ -370,60 +244,6 @@ class CustomSectionCard extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, spacing: 8.dp, children: children),
           ),
         ],
-      ),
-    ),
-  );
-}
-
-class CustomShopCard extends StatelessWidget {
-  final BranchModel branch;
-
-  const CustomShopCard({super.key, required this.branch});
-
-  @override
-  Widget build(BuildContext context) => InkWell(
-    child: AspectRatio(
-      aspectRatio: kCardRatio,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(kBorderRadiusM),
-          color: Colors.white,
-          boxShadow: <BoxShadow>[
-            BoxShadow(color: Theme.of(context).colorScheme.surfaceContainerHigh, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
-          ],
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          spacing: 8.dp,
-          children: <Widget>[
-            Row(
-              spacing: 16.dp,
-              children: <Widget>[
-                CustomAvatarImage(size: kProfileImgSizeM, networkImage: branch.companyLogo),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      CustomText(branch.branchName, fontSize: 16.0, fontWeight: FontWeight.w700),
-                      CustomText(branch.contactNumber, fontSize: 14.0),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 4.dp,
-              children: <Widget>[
-                CustomText(branch.companyName, fontSize: 14.0, maxLines: 2, fontWeight: FontWeight.bold),
-                CustomText(branch.fullAddress, fontSize: 13.0, maxLines: 2),
-                CustomText(branch.categories, color: Colors.black54, fontSize: 12.0, maxLines: 2),
-              ],
-            ),
-          ],
-        ),
       ),
     ),
   );

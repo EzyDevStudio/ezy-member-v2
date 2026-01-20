@@ -1,4 +1,4 @@
-import 'package:ezy_member_v2/helpers/location_helper.dart';
+import 'package:ezy_member_v2/constants/app_strings.dart';
 import 'package:ezy_member_v2/models/branch_model.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
 import 'package:get/get.dart';
@@ -9,28 +9,24 @@ class BranchController extends GetxController {
   var isLoading = false.obs;
   var branches = <BranchModel>[].obs;
 
-  Future<void> loadBranches(bool checkNearby) async {
+  Future<void> loadBranches({String? companyID}) async {
     isLoading.value = true;
 
-    Map<String, dynamic>? data;
-
-    final Coordinate? current = await LocationHelper.getCurrentCoordinate();
-
-    if (checkNearby && current != null) data = {"city": current.city, "latitude": current.latitude, "longitude": current.longitude};
-
-    final response = await _api.get(endPoint: "get-all-branch", module: "BranchController - loadBranches", data: data);
+    final response = await _api.get(
+      baseUrl: "${AppStrings.serverEzyPos}/${AppStrings.serverDirectory}",
+      endPoint: "get-branch-list",
+      module: "BranchController - loadBranches",
+      data: {"company_id": companyID},
+    );
 
     if (response == null || response.data[BranchModel.keyBranch] == null) {
       isLoading.value = false;
       return;
     }
 
-    if (response.data[ApiService.keyStatusCode] == 200) {
-      final List<dynamic> list = response.data[BranchModel.keyBranch] ?? [];
+    final List<dynamic> list = response.data[BranchModel.keyBranch] ?? [];
 
-      branches.value = list.map((e) => BranchModel.fromJson(Map<String, dynamic>.from(e))).toList();
-    }
-
+    branches.value = list.map((e) => BranchModel.fromJson(Map<String, dynamic>.from(e))).toList();
     isLoading.value = false;
   }
 }
