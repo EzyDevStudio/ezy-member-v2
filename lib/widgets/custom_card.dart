@@ -36,7 +36,13 @@ class CustomMemberCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    CustomText(member.companyName, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                    Row(
+                      spacing: 8.dp,
+                      children: <Widget>[
+                        if (member.memberCard.isFavorite) Icon(Icons.favorite_rounded, color: Colors.red),
+                        CustomText(member.companyName, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ],
+                    ),
                     const Spacer(),
                     CustomAvatarImage(size: ResponsiveHelper().avatarSize() * 1.2, networkImage: member.companyLogo),
                     const Spacer(),

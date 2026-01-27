@@ -16,6 +16,7 @@ import 'package:ezy_member_v2/models/member_model.dart';
 import 'package:ezy_member_v2/widgets/custom_app_bar.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_chip.dart';
+import 'package:ezy_member_v2/widgets/custom_fab.dart';
 import 'package:ezy_member_v2/widgets/custom_list_tile.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_timeline.dart';
@@ -67,6 +68,12 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
     _timelineController.loadTimelines(companyID: _companyID);
 
     if (_hive.isSignIn) _memberController.loadMembers(_hive.memberProfile.value!.memberCode, companyID: _companyID);
+  }
+
+  bool _isExpired(MemberModel member) {
+    if (!member.isExpired) return false;
+    MessageHelper.show(Globalization.msgMemberExpired.tr, backgroundColor: Colors.red, icon: Icons.error_rounded);
+    return true;
   }
 
   void _shareContent(BuildContext context) async {
@@ -127,7 +134,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
           );
         }),
       ),
-      floatingActionButton: _showFab ? _buildFAB() : null,
+      floatingActionButton: _showFab ? CustomFab(controller: _scrollController) : null,
     );
   }
 
@@ -169,7 +176,10 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                         label: member.isMember ? Globalization.myPoints.tr : Globalization.earnPoints.tr,
                         content: member.isMember ? member.point.toString() : null,
                         onTap: member.isMember
-                            ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemPoints, "company_id": _company.companyID})
+                            ? () {
+                                if (_isExpired(member)) return;
+                                Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemPoints, "company_id": _company.companyID});
+                              }
                             : null,
                       ),
                     ),
@@ -179,7 +189,10 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                         label: member.isMember ? Globalization.myVouchers.tr : Globalization.collectVouchers.tr,
                         content: member.isMember ? (member.normalVoucherCount + member.specialVoucherCount).toString() : null,
                         onTap: member.isMember && _hive.memberProfile.value != null
-                            ? () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _company.companyID})
+                            ? () {
+                                if (_isExpired(member)) return;
+                                Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _company.companyID});
+                              }
                             : null,
                       ),
                     ),
@@ -189,7 +202,10 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
                         label: member.isMember ? Globalization.myCredits.tr : Globalization.redeemByCredits.tr,
                         content: member.isMember ? member.credit.toStringAsFixed(1) : null,
                         onTap: member.isMember
-                            ? () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemCredits, "company_id": _company.companyID})
+                            ? () {
+                                if (_isExpired(member)) return;
+                                Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemCredits, "company_id": _company.companyID});
+                              }
                             : null,
                       ),
                     ),
@@ -296,9 +312,4 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
       ),
     );
   });
-
-  Widget _buildFAB() => FloatingActionButton(
-    onPressed: () => _scrollController.animateTo(0.0, duration: const Duration(milliseconds: 400), curve: Curves.easeOut),
-    child: Icon(Icons.keyboard_arrow_up_rounded),
-  );
 }

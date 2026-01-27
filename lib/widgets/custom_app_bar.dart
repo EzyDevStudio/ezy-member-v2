@@ -4,12 +4,21 @@ import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget {
+  final bool isLeading;
   final String avatarImage, backgroundImage;
   final List<Widget>? actions;
   final VoidCallback? onTap;
   final Widget child;
 
-  const CustomAppBar({super.key, required this.avatarImage, required this.backgroundImage, this.actions, this.onTap, required this.child});
+  const CustomAppBar({
+    super.key,
+    this.isLeading = true,
+    required this.avatarImage,
+    required this.backgroundImage,
+    this.actions,
+    this.onTap,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) => SliverAppBar(
@@ -50,5 +59,11 @@ class CustomAppBar extends StatelessWidget {
       ),
     ),
     flexibleSpace: FlexibleSpaceBar(background: CustomBackgroundImage(backgroundImage: backgroundImage)),
+    leading: isLeading
+        ? IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          )
+        : null,
   );
 }

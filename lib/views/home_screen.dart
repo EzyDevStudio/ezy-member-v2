@@ -14,6 +14,7 @@ import 'package:ezy_member_v2/helpers/permission_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/widgets/custom_app_bar.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
+import 'package:ezy_member_v2/widgets/custom_fab.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
 import 'package:ezy_member_v2/widgets/custom_timeline.dart';
@@ -165,11 +166,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      floatingActionButton: _showFab ? _buildFAB() : null,
+      floatingActionButton: _showFab ? CustomFab(controller: _scrollController) : null,
     );
   }
 
   Widget _buildAppBar() => CustomAppBar(
+    isLeading: false,
     avatarImage: _hive.isSignIn ? _hive.memberProfile.value!.image : "",
     backgroundImage: _hive.backgroundImage,
     actions: _buildAppBarAction(),
@@ -339,6 +341,13 @@ class _HomeScreenState extends State<HomeScreen> {
   });
 
   Widget _buildTimeline() => Obx(() {
+    if (_timelineController.isLoading.value) {
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
+      );
+    }
+
     final timelines = _timelineController.timelines;
 
     if (timelines.isEmpty) return SliverToBoxAdapter();
@@ -352,7 +361,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Container(
           decoration: BoxDecoration(
             border: Border(
-              top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
+              top: index == 0 && !_hive.isSignIn ? BorderSide.none : BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
             ),
           ),
           child: CustomTimeline(timeline: timelines[index], isNavigateCompany: true, isNavigateTimeline: true),
@@ -360,9 +369,4 @@ class _HomeScreenState extends State<HomeScreen> {
       }, childCount: timelines.length),
     );
   });
-
-  Widget _buildFAB() => FloatingActionButton(
-    onPressed: () => _scrollController.animateTo(0.0, duration: const Duration(milliseconds: 400), curve: Curves.easeOut),
-    child: Icon(Icons.keyboard_arrow_up_rounded),
-  );
 }

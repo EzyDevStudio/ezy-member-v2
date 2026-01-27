@@ -39,7 +39,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(title: Text(Globalization.payment.tr)),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+        ),
+        title: Text(Globalization.payment.tr),
+      ),
       body: _buildContent(),
     );
   }

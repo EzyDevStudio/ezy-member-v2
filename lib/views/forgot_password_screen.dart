@@ -47,7 +47,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(title: Text(Globalization.resetPassword)),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+        ),
+        title: Text(Globalization.resetPassword),
+      ),
       body: _buildContent(),
     );
   }

@@ -52,6 +52,10 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
               Tab(text: Globalization.working.tr),
             ],
           ),
+          leading: IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          ),
           title: Text(Globalization.eInvoice.tr),
         ),
         body: TabBarView(

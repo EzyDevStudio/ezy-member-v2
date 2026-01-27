@@ -42,7 +42,15 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
     );
   }
 
-  Widget _buildAppBar() => SliverAppBar(floating: true, pinned: true, title: Text(Globalization.tncLong.tr));
+  Widget _buildAppBar() => SliverAppBar(
+    floating: true,
+    pinned: true,
+    leading: IconButton(
+      onPressed: () => Navigator.of(context).pop(),
+      icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+    ),
+    title: Text(Globalization.tncLong.tr),
+  );
 
   Widget _buildContent() => SliverPadding(
     padding: EdgeInsets.only(bottom: 16.dp, left: 16.dp, right: 16.dp, top: 24.dp),

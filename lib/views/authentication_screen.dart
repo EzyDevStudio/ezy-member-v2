@@ -176,6 +176,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
         Tab(text: Globalization.signUp.tr),
       ],
     ),
+    leading: IconButton(
+      onPressed: () => Navigator.of(context).pop(),
+      icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+    ),
     title: Text(Globalization.welcome.tr),
   );
 

@@ -256,6 +256,10 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
         Tab(text: Globalization.settings.tr),
       ],
     ),
+    leading: IconButton(
+      onPressed: () => Navigator.of(context).pop(),
+      icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+    ),
     title: Text(Globalization.profile.tr),
   );
 

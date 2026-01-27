@@ -87,7 +87,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(title: Text(Globalization.changePassword.tr)),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+        ),
+        title: Text(Globalization.changePassword.tr),
+      ),
       body: _buildContent(),
     );
   }

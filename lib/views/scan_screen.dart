@@ -145,7 +145,7 @@ class _ScanScreenState extends State<ScanScreen> {
         key: _contentKey,
         child: Column(
           children: <Widget>[
-            SizedBox(height: 50.0, child: Image.asset("assets/images/splash_logo.png", fit: BoxFit.scaleDown)),
+            SizedBox(height: 50.0, child: Image.asset("assets/images/logo.png", fit: BoxFit.scaleDown)),
             LayoutBuilder(
               builder: (context, constraints) {
                 final size = constraints.maxWidth < constraints.maxHeight ? constraints.maxWidth : constraints.maxHeight;

@@ -7,11 +7,13 @@ import 'package:ezy_member_v2/controllers/member_controller.dart';
 import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
 import 'package:ezy_member_v2/helpers/code_generator_helper.dart';
 import 'package:ezy_member_v2/helpers/formatter_helper.dart';
+import 'package:ezy_member_v2/helpers/message_helper.dart';
 import 'package:ezy_member_v2/helpers/responsive_helper.dart';
 import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/member_model.dart';
 import 'package:ezy_member_v2/widgets/custom_button.dart';
 import 'package:ezy_member_v2/widgets/custom_chip.dart';
+import 'package:ezy_member_v2/widgets/custom_fab.dart';
 import 'package:ezy_member_v2/widgets/custom_image.dart';
 import 'package:ezy_member_v2/widgets/custom_list_tile.dart';
 import 'package:ezy_member_v2/widgets/custom_text.dart';
@@ -58,6 +60,12 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
   Future<void> _onRefresh() async {
     _historyController.loadHistories(_hive.memberProfile.value!.memberCode, companyID: _companyID);
     _memberController.loadMembers(_hive.memberProfile.value!.memberCode, companyID: _companyID);
+  }
+
+  bool _isExpired() {
+    if (!_member.isExpired) return false;
+    MessageHelper.show(Globalization.msgMemberExpired.tr, backgroundColor: Colors.red, icon: Icons.error_rounded);
+    return true;
   }
 
   void _showFilterModal() {
@@ -208,7 +216,12 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+        ),
+      ),
       body: RefreshIndicator(
         onRefresh: _onRefresh,
         child: Obx(() {
@@ -237,7 +250,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
           );
         }),
       ),
-      floatingActionButton: _showFab ? _buildFAB() : null,
+      floatingActionButton: _showFab ? CustomFab(controller: _scrollController) : null,
     );
   }
 
@@ -295,6 +308,27 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                     CustomText(FormatterHelper.timestampToString(_member.memberCard.expiredDate), color: Colors.white, fontSize: 14.0),
                   ],
                 ),
+                const Spacer(),
+                IconButton(
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.white.withValues(alpha: 0.25),
+                    highlightColor: Colors.white.withValues(alpha: 0.5),
+                  ),
+                  onPressed: () async {
+                    final result = await _memberController.favoriteMember(
+                      _member.memberCard.isFavorite ? 0 : 1,
+                      _member.companyID,
+                      _hive.memberProfile.value!.memberCode,
+                      _hive.memberProfile.value!.token,
+                    );
+
+                    if (result) setState(() => _member.memberCard.isFavorite = !_member.memberCard.isFavorite);
+                  },
+                  icon: Icon(
+                    _member.memberCard.isFavorite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
+                    color: _member.memberCard.isFavorite ? Colors.red : Colors.white,
+                  ),
+                ),
               ],
             ),
           ],
@@ -307,34 +341,39 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
     margin: EdgeInsets.all(16.dp),
     child: Row(
       children: <Widget>[
-        Expanded(
-          child: InkWell(
-            onTap: () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemPoints, "company_id": _member.companyID}),
-            child: _buildQuickAccessItem(Globalization.myPoints.tr, _member.point.toString()),
-          ),
+        _buildQuickAccessItem(
+          Globalization.myPoints.tr,
+          _member.point.toString(),
+          () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemPoints, "company_id": _member.companyID}),
         ),
-        Expanded(
-          child: InkWell(
-            onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _member.companyID}),
-            child: _buildQuickAccessItem(Globalization.myVouchers.tr, (_member.normalVoucherCount + _member.specialVoucherCount).toString()),
-          ),
+        _buildQuickAccessItem(
+          Globalization.myVouchers.tr,
+          (_member.normalVoucherCount + _member.specialVoucherCount).toString(),
+          () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _member.companyID}),
         ),
-        Expanded(
-          child: InkWell(
-            onTap: () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemCredits, "company_id": _member.companyID}),
-            child: _buildQuickAccessItem(Globalization.myCredits.tr, _member.credit.toStringAsFixed(1)),
-          ),
+        _buildQuickAccessItem(
+          Globalization.myCredits.tr,
+          _member.credit.toStringAsFixed(1),
+          () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemCredits, "company_id": _member.companyID}),
         ),
       ],
     ),
   );
 
-  Widget _buildQuickAccessItem(String label, String value) => Column(
-    spacing: 8.dp,
-    children: <Widget>[
-      CustomText(value, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
-      CustomText(label, fontSize: 16.0),
-    ],
+  Widget _buildQuickAccessItem(String label, String value, VoidCallback onTap) => Expanded(
+    child: InkWell(
+      onTap: () {
+        if (_isExpired()) return;
+        onTap();
+      },
+      child: Column(
+        spacing: 8.dp,
+        children: <Widget>[
+          CustomText(value, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
+          CustomText(label, fontSize: 16.0),
+        ],
+      ),
+    ),
   );
 
   Widget _buildHistory() => Obx(() {
@@ -396,10 +435,5 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
         ),
       ],
     ),
-  );
-
-  Widget _buildFAB() => FloatingActionButton(
-    onPressed: () => _scrollController.animateTo(0.0, duration: const Duration(milliseconds: 400), curve: Curves.easeOut),
-    child: Icon(Icons.keyboard_arrow_up_rounded),
   );
 }

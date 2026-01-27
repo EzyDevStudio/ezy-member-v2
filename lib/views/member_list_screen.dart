@@ -55,7 +55,13 @@ class _MemberListScreenState extends State<MemberListScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(title: Text(Globalization.myCards.tr)),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+        ),
+        title: Text(Globalization.myCards.tr),
+      ),
       body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
     );
   }
@@ -85,8 +91,11 @@ class _MemberListScreenState extends State<MemberListScreen> {
         ),
       );
     }
+
     final members = List.from(_memberController.members);
     final displayMembers = _searchController.text.isEmpty ? members : _filteredMembers;
+
+    displayMembers.sort((a, b) => (b.memberCard.isFavorite == true ? 1 : 0).compareTo(a.memberCard.isFavorite == true ? 1 : 0));
 
     return Column(
       children: <Widget>[

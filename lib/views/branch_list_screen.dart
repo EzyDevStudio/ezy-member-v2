@@ -82,13 +82,19 @@ class _BranchListScreenState extends State<BranchListScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(title: Text(Globalization.shops.tr)),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+        ),
+        title: Text(Globalization.shops.tr),
+      ),
       body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
     );
   }
 
   Widget _buildContent() => Obx(() {
-    if (_branchController.isLoading.value) {
+    if (_branchController.isLoading.value || _memberController.isLoading.value) {
       return Padding(
         padding: EdgeInsets.all(16.dp),
         child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),

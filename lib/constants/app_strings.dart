@@ -9,8 +9,8 @@ class AppStrings {
   static const String appName = "EzyMember";
 
   // App Server Url
-  static const String serverUrl = "http://192.168.0.170:8000";
-  // static const String serverUrl = "https://ezymember.sigma-connect.xyz";
+  // static const String serverUrl = "http://192.168.0.170:8000";
+  static const String serverUrl = "https://ezymember.sigma-connect.xyz";
   static const String serverEzyPos = "https://ezypos.ezysolutions.com.my";
   static const String serverDirectory = "api";
   static const String deepLinkUrl = "https://www.ezymember.com"; // TODO: 1. Deep Linking

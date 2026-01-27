@@ -72,7 +72,13 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(title: Text(Globalization.myVouchers.tr)),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+        ),
+        title: Text(Globalization.myVouchers.tr),
+      ),
       body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
     );
   }

@@ -1,7 +1,11 @@
+import 'package:ezy_member_v2/helpers/message_helper.dart';
+import 'package:ezy_member_v2/language/globalization.dart';
 import 'package:ezy_member_v2/models/category_model.dart';
 import 'package:ezy_member_v2/models/company_model.dart';
 import 'package:ezy_member_v2/models/member_model.dart';
+import 'package:ezy_member_v2/services/local/connection_service.dart';
 import 'package:ezy_member_v2/services/remote/api_service.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MemberController extends GetxController {
@@ -34,5 +38,32 @@ class MemberController extends GetxController {
     }
 
     isLoading.value = false;
+  }
+
+  Future<bool> favoriteMember(int isFavorite, String companyID, String memberCode, String memberToken) async {
+    if (!await ConnectionService.checkConnection()) return false;
+
+    final Map<String, dynamic> data = {"is_favorite": isFavorite, "company_id": companyID, "member_code": memberCode};
+    final response = await _api.post(endPoint: "favorite-member", module: "MemberController - favoriteMember", data: data, memberToken: memberToken);
+
+    if (response == null) {
+      _showError(Globalization.msgSystemError.tr);
+      return false;
+    }
+
+    switch (response.data[ApiService.keyStatusCode]) {
+      case 200:
+        return true;
+      case 520:
+        _showError(Globalization.msgTokenInvalid.tr);
+        return false;
+      default:
+        _showError(Globalization.msgSystemError.tr);
+        return false;
+    }
+  }
+
+  void _showError(String message) {
+    MessageHelper.show(message, backgroundColor: Colors.red, icon: Icons.error_rounded);
   }
 }

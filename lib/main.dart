@@ -19,13 +19,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-// combine api - home, member_detail, company_detail
-
 // Future Features: Point expires
 // Future Features: Auto upgrade or downgrade member tier
 // Pending Features: Payment Gateway (Join or Renew member)
-// Pending Features: Voucher auto show (new user, birthday)
-// Pending Features: If member company expired then block several action
+// Pending Features: Member code change to member card number
+// Pending Features: App Bar put all logo instead of text
 
 // run "adb devices" to get devices
 // run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
@@ -142,7 +140,7 @@ class _WrapperScreenState extends State<WrapperScreen> with SingleTickerProvider
               child: Center(
                 child: Container(
                   constraints: BoxConstraints(maxHeight: size.height * 0.5, maxWidth: size.width * 0.5),
-                  child: Image.asset("assets/images/splash_logo.png", fit: BoxFit.cover),
+                  child: Image.asset("assets/images/logo.png", fit: BoxFit.cover),
                 ),
               ),
             ),
