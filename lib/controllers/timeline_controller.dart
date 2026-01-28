@@ -1,6 +1,6 @@
-import 'package:ezy_member_v2/helpers/location_helper.dart';
-import 'package:ezy_member_v2/models/timeline_model.dart';
-import 'package:ezy_member_v2/services/remote/api_service.dart';
+import 'package:ezymember/helpers/location_helper.dart';
+import 'package:ezymember/models/timeline_model.dart';
+import 'package:ezymember/services/remote/api_service.dart';
 import 'package:get/get.dart';
 
 class TimelineController extends GetxController {

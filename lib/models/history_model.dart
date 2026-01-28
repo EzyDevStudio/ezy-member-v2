@@ -1,7 +1,7 @@
-import 'package:ezy_member_v2/constants/enum.dart';
-import 'package:ezy_member_v2/models/credit_model.dart';
-import 'package:ezy_member_v2/models/point_model.dart';
-import 'package:ezy_member_v2/models/voucher_model.dart';
+import 'package:ezymember/constants/enum.dart';
+import 'package:ezymember/models/credit_model.dart';
+import 'package:ezymember/models/point_model.dart';
+import 'package:ezymember/models/voucher_model.dart';
 
 class HistoryModel {
   final HistoryType type;

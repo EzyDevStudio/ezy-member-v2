@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:ezy_member_v2/helpers/message_helper.dart';
-import 'package:ezy_member_v2/language/globalization.dart';
-import 'package:ezy_member_v2/models/pin_model.dart';
-import 'package:ezy_member_v2/services/remote/api_service.dart';
+import 'package:ezymember/helpers/message_helper.dart';
+import 'package:ezymember/language/globalization.dart';
+import 'package:ezymember/models/pin_model.dart';
+import 'package:ezymember/services/remote/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

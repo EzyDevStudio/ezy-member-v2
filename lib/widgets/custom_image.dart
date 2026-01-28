@@ -1,4 +1,4 @@
-import 'package:ezy_member_v2/constants/app_constants.dart';
+import 'package:ezymember/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class CustomAvatarImage extends StatelessWidget {

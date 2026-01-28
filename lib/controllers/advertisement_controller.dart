@@ -1,5 +1,5 @@
-import 'package:ezy_member_v2/models/advertisement_model.dart';
-import 'package:ezy_member_v2/services/remote/api_service.dart';
+import 'package:ezymember/models/advertisement_model.dart';
+import 'package:ezymember/services/remote/api_service.dart';
 import 'package:get/get.dart';
 
 class AdvertisementController extends GetxController {

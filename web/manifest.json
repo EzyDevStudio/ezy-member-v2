@@ -1,6 +1,6 @@
 {
-    "name": "ezy_member_v2",
-    "short_name": "ezy_member_v2",
+    "name": "ezymember",
+    "short_name": "ezymember",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

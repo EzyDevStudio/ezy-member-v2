@@ -1,5 +1,5 @@
-import 'package:ezy_member_v2/language/globalization.dart';
-import 'package:ezy_member_v2/services/local/settings_storage_service.dart';
+import 'package:ezymember/language/globalization.dart';
+import 'package:ezymember/services/local/settings_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

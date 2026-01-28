@@ -1,4 +1,4 @@
-import 'package:ezy_member_v2/helpers/formatter_helper.dart';
+import 'package:ezymember/helpers/formatter_helper.dart';
 
 // Common fields
 const String fieldID = "id";

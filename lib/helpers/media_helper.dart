@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:ezy_member_v2/helpers/permission_helper.dart';
+import 'package:ezymember/helpers/permission_helper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MediaHelper {

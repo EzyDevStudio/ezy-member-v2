@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:ezy_member_v2/constants/app_strings.dart';
+import 'package:ezymember/constants/app_strings.dart';
 
 class ApiService {
   final Dio _dio = Dio();

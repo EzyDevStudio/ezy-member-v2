@@ -1,9 +1,9 @@
-import 'package:ezy_member_v2/constants/enum.dart';
-import 'package:ezy_member_v2/models/credit_model.dart';
-import 'package:ezy_member_v2/models/history_model.dart';
-import 'package:ezy_member_v2/models/point_model.dart';
-import 'package:ezy_member_v2/models/voucher_model.dart';
-import 'package:ezy_member_v2/services/remote/api_service.dart';
+import 'package:ezymember/constants/enum.dart';
+import 'package:ezymember/models/credit_model.dart';
+import 'package:ezymember/models/history_model.dart';
+import 'package:ezymember/models/point_model.dart';
+import 'package:ezymember/models/voucher_model.dart';
+import 'package:ezymember/services/remote/api_service.dart';
 import 'package:get/get.dart';
 
 class HistoryController extends GetxController {

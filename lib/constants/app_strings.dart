@@ -1,4 +1,4 @@
-import 'package:ezy_member_v2/language/globalization.dart';
+import 'package:ezymember/language/globalization.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 

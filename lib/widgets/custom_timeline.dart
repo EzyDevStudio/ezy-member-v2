@@ -1,10 +1,10 @@
-import 'package:ezy_member_v2/constants/app_constants.dart';
-import 'package:ezy_member_v2/constants/app_routes.dart';
-import 'package:ezy_member_v2/helpers/formatter_helper.dart';
-import 'package:ezy_member_v2/helpers/responsive_helper.dart';
-import 'package:ezy_member_v2/models/timeline_model.dart';
-import 'package:ezy_member_v2/widgets/custom_image.dart';
-import 'package:ezy_member_v2/widgets/custom_text.dart';
+import 'package:ezymember/constants/app_constants.dart';
+import 'package:ezymember/constants/app_routes.dart';
+import 'package:ezymember/helpers/formatter_helper.dart';
+import 'package:ezymember/helpers/responsive_helper.dart';
+import 'package:ezymember/models/timeline_model.dart';
+import 'package:ezymember/widgets/custom_image.dart';
+import 'package:ezymember/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

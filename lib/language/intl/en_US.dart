@@ -1,5 +1,5 @@
-import 'package:ezy_member_v2/constants/app_strings.dart';
-import 'package:ezy_member_v2/language/globalization.dart';
+import 'package:ezymember/constants/app_strings.dart';
+import 'package:ezymember/language/globalization.dart';
 
 class EnUs {
   static Map<String, String> get keys => {
@@ -116,7 +116,7 @@ class EnUs {
     Globalization.sstRegistration: "SST Registration",
     Globalization.state: "State",
     Globalization.takePhotos: "Take Photos",
-    Globalization.timeline: "timeline",
+    Globalization.timeline: "Timeline",
     Globalization.tin: "TIN",
     Globalization.tnc: "T&C",
     Globalization.tncLong: "Terms & Conditions",
@@ -167,6 +167,7 @@ class EnUs {
     Globalization.msgPhoneInvalidFormat: "Please enter a valid phone number.",
     Globalization.msgPhoneNotFound: "No account found with this phone number.",
     Globalization.msgPointNotEnough: "You don't have enough points to redeem this voucher.",
+    Globalization.msgPressBackAgain: "Press back again to exit.",
     Globalization.msgProfileRetrieving: "Please wait while we retrieve your profile.",
     Globalization.msgProfileSuccess: "Your profile has been updated successfully.",
     Globalization.msgProfileUpdating: "Please wait while we update your profile.",

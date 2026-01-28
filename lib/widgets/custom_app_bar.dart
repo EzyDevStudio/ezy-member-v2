@@ -1,6 +1,6 @@
-import 'package:ezy_member_v2/constants/app_constants.dart';
-import 'package:ezy_member_v2/helpers/responsive_helper.dart';
-import 'package:ezy_member_v2/widgets/custom_image.dart';
+import 'package:ezymember/constants/app_constants.dart';
+import 'package:ezymember/helpers/responsive_helper.dart';
+import 'package:ezymember/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget {

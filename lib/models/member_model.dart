@@ -1,6 +1,6 @@
-import 'package:ezy_member_v2/models/branch_model.dart';
-import 'package:ezy_member_v2/models/member_card_model.dart';
-import 'package:ezy_member_v2/models/voucher_model.dart';
+import 'package:ezymember/models/branch_model.dart';
+import 'package:ezymember/models/member_card_model.dart';
+import 'package:ezymember/models/voucher_model.dart';
 
 const String fieldCompanyID = "company_id";
 const String fieldIsMember = "is_member";

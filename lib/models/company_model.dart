@@ -1,5 +1,5 @@
-import 'package:ezy_member_v2/models/about_us_model.dart';
-import 'package:ezy_member_v2/models/category_model.dart';
+import 'package:ezymember/models/about_us_model.dart';
+import 'package:ezymember/models/category_model.dart';
 
 const String fieldID = "id";
 const String fieldCompanyID = "company_id";

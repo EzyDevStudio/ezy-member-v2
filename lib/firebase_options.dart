@@ -48,17 +48,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyBxHSxAZOWhB1RONdZLEITiw1297auhXT0',
-    appId: '1:551410384420:web:e0f43b771d90d8c2dae2b1',
+    appId: '1:551410384420:web:a9b56df81a2c002bdae2b1',
     messagingSenderId: '551410384420',
     projectId: 'ezymember-1a58c',
     authDomain: 'ezymember-1a58c.firebaseapp.com',
     storageBucket: 'ezymember-1a58c.firebasestorage.app',
-    measurementId: 'G-6C21ZDJTL0',
+    measurementId: 'G-9R1ZCK87FY',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAHnw5Ir3rbyAc81U_IZPSs-trozReFong',
-    appId: '1:551410384420:android:6e3e45fef7261d08dae2b1',
+    appId: '1:551410384420:android:d6eeae5871be623adae2b1',
     messagingSenderId: '551410384420',
     projectId: 'ezymember-1a58c',
     storageBucket: 'ezymember-1a58c.firebasestorage.app',
@@ -66,10 +66,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAuo0-omo8j0RpN00HtChjFlzTFDzgbifE',
-    appId: '1:551410384420:ios:174ac1b238fa7489dae2b1',
+    appId: '1:551410384420:ios:dca4ac0711125fdcdae2b1',
     messagingSenderId: '551410384420',
     projectId: 'ezymember-1a58c',
     storageBucket: 'ezymember-1a58c.firebasestorage.app',
-    iosBundleId: 'com.example.ezyMemberV2',
+    androidClientId: '551410384420-61lqmqeorptdvp5pr5ih01mt0sns6njc.apps.googleusercontent.com',
+    iosClientId: '551410384420-99t7srl8sq7udcn9313f22hu1nns4pag.apps.googleusercontent.com',
+    iosBundleId: 'com.ezysolutions.ezymember',
   );
 }

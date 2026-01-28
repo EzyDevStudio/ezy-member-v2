@@ -1,5 +1,5 @@
-import 'package:ezy_member_v2/hive/member_profile_hive.dart';
-import 'package:ezy_member_v2/services/local/member_profile_storage_service.dart';
+import 'package:ezymember/hive/member_profile_hive.dart';
+import 'package:ezymember/services/local/member_profile_storage_service.dart';
 import 'package:get/get.dart';
 
 class MemberHiveController extends GetxController {

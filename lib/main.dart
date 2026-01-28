@@ -1,18 +1,18 @@
 import 'package:app_links/app_links.dart';
-import 'package:ezy_member_v2/constants/app_routes.dart';
-import 'package:ezy_member_v2/constants/app_strings.dart';
-import 'package:ezy_member_v2/constants/app_themes.dart';
-import 'package:ezy_member_v2/controllers/authentication_controller.dart';
-import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
-import 'package:ezy_member_v2/controllers/settings_controller.dart';
-import 'package:ezy_member_v2/firebase_options.dart';
-import 'package:ezy_member_v2/helpers/responsive_helper.dart';
-import 'package:ezy_member_v2/language/globalization.dart';
-import 'package:ezy_member_v2/language/intl_keys.dart';
-import 'package:ezy_member_v2/services/local/connection_service.dart';
-import 'package:ezy_member_v2/services/local/member_profile_storage_service.dart';
-import 'package:ezy_member_v2/services/local/notification_service.dart';
-import 'package:ezy_member_v2/services/local/settings_storage_service.dart';
+import 'package:ezymember/constants/app_routes.dart';
+import 'package:ezymember/constants/app_strings.dart';
+import 'package:ezymember/constants/app_themes.dart';
+import 'package:ezymember/controllers/authentication_controller.dart';
+import 'package:ezymember/controllers/member_hive_controller.dart';
+import 'package:ezymember/controllers/settings_controller.dart';
+import 'package:ezymember/firebase_options.dart';
+import 'package:ezymember/helpers/responsive_helper.dart';
+import 'package:ezymember/language/globalization.dart';
+import 'package:ezymember/language/intl_keys.dart';
+import 'package:ezymember/services/local/connection_service.dart';
+import 'package:ezymember/services/local/member_profile_storage_service.dart';
+import 'package:ezymember/services/local/notification_service.dart';
+import 'package:ezymember/services/local/settings_storage_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -44,6 +44,7 @@ void main() async {
 
   runApp(
     GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       builder: (context, child) {
         ResponsiveHelper().init(context);
         return child!;

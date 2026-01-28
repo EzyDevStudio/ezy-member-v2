@@ -1,9 +1,9 @@
-import 'package:ezy_member_v2/constants/app_constants.dart';
-import 'package:ezy_member_v2/helpers/responsive_helper.dart';
-import 'package:ezy_member_v2/language/globalization.dart';
-import 'package:ezy_member_v2/models/phone_detail.dart';
-import 'package:ezy_member_v2/widgets/custom_modal.dart';
-import 'package:ezy_member_v2/widgets/custom_text.dart';
+import 'package:ezymember/constants/app_constants.dart';
+import 'package:ezymember/helpers/responsive_helper.dart';
+import 'package:ezymember/language/globalization.dart';
+import 'package:ezymember/models/phone_detail.dart';
+import 'package:ezymember/widgets/custom_modal.dart';
+import 'package:ezymember/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';

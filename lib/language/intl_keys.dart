@@ -1,6 +1,6 @@
-import 'package:ezy_member_v2/language/intl/en_US.dart';
-import 'package:ezy_member_v2/language/intl/ms_MY.dart';
-import 'package:ezy_member_v2/language/intl/zh_CN.dart';
+import 'package:ezymember/language/intl/en_US.dart';
+import 'package:ezymember/language/intl/ms_MY.dart';
+import 'package:ezymember/language/intl/zh_CN.dart';
 import 'package:get/get_navigation/src/root/internacionalization.dart';
 
 class IntlKeys extends Translations {

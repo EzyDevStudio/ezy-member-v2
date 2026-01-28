@@ -1,4 +1,4 @@
-import 'package:ezy_member_v2/hive/member_profile_hive.dart';
+import 'package:ezymember/hive/member_profile_hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class MemberProfileStorageService {

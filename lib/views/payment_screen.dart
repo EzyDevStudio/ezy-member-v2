@@ -1,10 +1,10 @@
-import 'package:ezy_member_v2/constants/app_constants.dart';
-import 'package:ezy_member_v2/constants/app_routes.dart';
-import 'package:ezy_member_v2/controllers/company_controller.dart';
-import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
-import 'package:ezy_member_v2/helpers/responsive_helper.dart';
-import 'package:ezy_member_v2/language/globalization.dart';
-import 'package:ezy_member_v2/widgets/custom_button.dart';
+import 'package:ezymember/constants/app_constants.dart';
+import 'package:ezymember/constants/app_routes.dart';
+import 'package:ezymember/controllers/company_controller.dart';
+import 'package:ezymember/controllers/member_hive_controller.dart';
+import 'package:ezymember/helpers/responsive_helper.dart';
+import 'package:ezymember/language/globalization.dart';
+import 'package:ezymember/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:ezy_member_v2/constants/app_constants.dart';
-import 'package:ezy_member_v2/constants/enum.dart';
-import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
-import 'package:ezy_member_v2/controllers/pin_controller.dart';
-import 'package:ezy_member_v2/helpers/cipher_helper.dart';
-import 'package:ezy_member_v2/helpers/responsive_helper.dart';
-import 'package:ezy_member_v2/language/globalization.dart';
-import 'package:ezy_member_v2/services/local/connection_service.dart';
-import 'package:ezy_member_v2/widgets/custom_button.dart';
-import 'package:ezy_member_v2/widgets/custom_text.dart';
+import 'package:ezymember/constants/app_constants.dart';
+import 'package:ezymember/constants/enum.dart';
+import 'package:ezymember/controllers/member_hive_controller.dart';
+import 'package:ezymember/controllers/pin_controller.dart';
+import 'package:ezymember/helpers/cipher_helper.dart';
+import 'package:ezymember/helpers/responsive_helper.dart';
+import 'package:ezymember/language/globalization.dart';
+import 'package:ezymember/services/local/connection_service.dart';
+import 'package:ezymember/widgets/custom_button.dart';
+import 'package:ezymember/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -132,7 +132,14 @@ class _ScanScreenState extends State<ScanScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.primary, title: Text(_title)),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+        ),
+        title: Text(_title),
+      ),
       body: _isConnected ? _buildContent() : _buildOffline(),
     );
   }

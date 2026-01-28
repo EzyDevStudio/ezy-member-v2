@@ -1,14 +1,14 @@
 import 'dart:io';
 
-import 'package:ezy_member_v2/constants/app_routes.dart';
-import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
-import 'package:ezy_member_v2/helpers/formatter_helper.dart';
-import 'package:ezy_member_v2/helpers/message_helper.dart';
-import 'package:ezy_member_v2/language/globalization.dart';
-import 'package:ezy_member_v2/models/profile_model.dart';
-import 'package:ezy_member_v2/services/local/connection_service.dart';
-import 'package:ezy_member_v2/services/remote/api_service.dart';
-import 'package:ezy_member_v2/views/profile_detail_screen.dart';
+import 'package:ezymember/constants/app_routes.dart';
+import 'package:ezymember/controllers/member_hive_controller.dart';
+import 'package:ezymember/helpers/formatter_helper.dart';
+import 'package:ezymember/helpers/message_helper.dart';
+import 'package:ezymember/language/globalization.dart';
+import 'package:ezymember/models/profile_model.dart';
+import 'package:ezymember/services/local/connection_service.dart';
+import 'package:ezymember/services/remote/api_service.dart';
+import 'package:ezymember/views/profile_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

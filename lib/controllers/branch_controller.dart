@@ -1,6 +1,6 @@
-import 'package:ezy_member_v2/constants/app_strings.dart';
-import 'package:ezy_member_v2/models/branch_model.dart';
-import 'package:ezy_member_v2/services/remote/api_service.dart';
+import 'package:ezymember/constants/app_strings.dart';
+import 'package:ezymember/models/branch_model.dart';
+import 'package:ezymember/services/remote/api_service.dart';
 import 'package:get/get.dart';
 
 class BranchController extends GetxController {

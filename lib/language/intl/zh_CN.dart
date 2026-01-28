@@ -1,5 +1,5 @@
-import 'package:ezy_member_v2/constants/app_strings.dart';
-import 'package:ezy_member_v2/language/globalization.dart';
+import 'package:ezymember/constants/app_strings.dart';
+import 'package:ezymember/language/globalization.dart';
 
 class ZhCn {
   static Map<String, String> get keys => {
@@ -166,6 +166,7 @@ class ZhCn {
     Globalization.msgPhoneInvalidFormat: "请输入有效的手机号码。",
     Globalization.msgPhoneNotFound: "未找到与该手机号注册的账号。",
     Globalization.msgPointNotEnough: "您的积分不足，无法兑换此优惠券。",
+    Globalization.msgPressBackAgain: "再按一次返回键退出应用。",
     Globalization.msgProfileRetrieving: "正在获取您的个人资料，请稍候。",
     Globalization.msgProfileSuccess: "您的个人资料已成功更新。",
     Globalization.msgProfileUpdating: "正在更新您的个人资料，请稍候。",

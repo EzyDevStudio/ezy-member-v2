@@ -1,5 +1,5 @@
-import 'package:ezy_member_v2/helpers/message_helper.dart';
-import 'package:ezy_member_v2/language/globalization.dart';
+import 'package:ezymember/helpers/message_helper.dart';
+import 'package:ezymember/language/globalization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';

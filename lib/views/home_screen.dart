@@ -1,25 +1,26 @@
 import 'dart:async';
 
-import 'package:ezy_member_v2/constants/app_constants.dart';
-import 'package:ezy_member_v2/constants/app_routes.dart';
-import 'package:ezy_member_v2/controllers/settings_controller.dart';
-import 'package:ezy_member_v2/controllers/member_controller.dart';
-import 'package:ezy_member_v2/controllers/member_hive_controller.dart';
-import 'package:ezy_member_v2/controllers/timeline_controller.dart';
-import 'package:ezy_member_v2/controllers/voucher_controller.dart';
-import 'package:ezy_member_v2/helpers/code_generator_helper.dart';
-import 'package:ezy_member_v2/helpers/message_helper.dart';
-import 'package:ezy_member_v2/helpers/responsive_helper.dart';
-import 'package:ezy_member_v2/helpers/permission_helper.dart';
-import 'package:ezy_member_v2/language/globalization.dart';
-import 'package:ezy_member_v2/widgets/custom_app_bar.dart';
-import 'package:ezy_member_v2/widgets/custom_button.dart';
-import 'package:ezy_member_v2/widgets/custom_fab.dart';
-import 'package:ezy_member_v2/widgets/custom_image.dart';
-import 'package:ezy_member_v2/widgets/custom_text.dart';
-import 'package:ezy_member_v2/widgets/custom_timeline.dart';
-import 'package:ezy_member_v2/widgets/custom_voucher.dart';
+import 'package:ezymember/constants/app_constants.dart';
+import 'package:ezymember/constants/app_routes.dart';
+import 'package:ezymember/controllers/settings_controller.dart';
+import 'package:ezymember/controllers/member_controller.dart';
+import 'package:ezymember/controllers/member_hive_controller.dart';
+import 'package:ezymember/controllers/timeline_controller.dart';
+import 'package:ezymember/controllers/voucher_controller.dart';
+import 'package:ezymember/helpers/code_generator_helper.dart';
+import 'package:ezymember/helpers/message_helper.dart';
+import 'package:ezymember/helpers/responsive_helper.dart';
+import 'package:ezymember/helpers/permission_helper.dart';
+import 'package:ezymember/language/globalization.dart';
+import 'package:ezymember/widgets/custom_app_bar.dart';
+import 'package:ezymember/widgets/custom_button.dart';
+import 'package:ezymember/widgets/custom_fab.dart';
+import 'package:ezymember/widgets/custom_image.dart';
+import 'package:ezymember/widgets/custom_text.dart';
+import 'package:ezymember/widgets/custom_timeline.dart';
+import 'package:ezymember/widgets/custom_voucher.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // late StreamSubscription<bool> _subscription;
 
   bool _showFab = false;
+  DateTime? _lastBackTime;
 
   void _showMemberCode() => showModalBottomSheet(
     context: context,
@@ -154,19 +156,35 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     ResponsiveHelper().init(context);
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Obx(
-        () => RefreshIndicator(
-          onRefresh: _onRefresh,
-          child: CustomScrollView(
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            slivers: <Widget>[_buildAppBar(), if (_hive.isSignIn) _buildQuickAccess(), if (_hive.isSignIn) _buildVouchers(), _buildTimeline()],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
+        final now = DateTime.now();
+
+        if (_lastBackTime == null || now.difference(_lastBackTime!) > const Duration(seconds: 2)) {
+          _lastBackTime = now;
+
+          MessageHelper.show(Globalization.msgPressBackAgain.tr, duration: const Duration(seconds: 2), icon: Icons.info_rounded);
+
+          return;
+        }
+
+        SystemNavigator.pop();
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        body: Obx(
+          () => RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: CustomScrollView(
+              controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: <Widget>[_buildAppBar(), if (_hive.isSignIn) _buildQuickAccess(), if (_hive.isSignIn) _buildVouchers(), _buildTimeline()],
+            ),
           ),
         ),
+        floatingActionButton: _showFab ? CustomFab(controller: _scrollController) : null,
       ),
-      floatingActionButton: _showFab ? CustomFab(controller: _scrollController) : null,
     );
   }
 

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:ezy_member_v2/constants/app_strings.dart';
+import 'package:ezymember/constants/app_strings.dart';
 
 class Globalization {
   static const Locale defaultLocale = Locale("en", "US");
@@ -123,7 +123,7 @@ class Globalization {
   static const String sstRegistration = "SST Registration";
   static const String state = "State";
   static const String takePhotos = "Take Photos";
-  static const String timeline = "timeline";
+  static const String timeline = "Timeline";
   static const String tin = "TIN";
   static const String tnc = "T&C";
   static const String tncLong = "Terms & Conditions";
@@ -175,6 +175,7 @@ class Globalization {
   static const String msgPhoneInvalidFormat = "Please enter a valid phone number.";
   static const String msgPhoneNotFound = "No account found with this phone number.";
   static const String msgPointNotEnough = "You don't have enough points to redeem this voucher.";
+  static const String msgPressBackAgain = "Press back again to exit.";
   static const String msgProfileRetrieving = "Please wait while we retrieve your profile.";
   static const String msgProfileSuccess = "Your profile has been updated successfully.";
   static const String msgProfileUpdating = "Please wait while we update your profile.";

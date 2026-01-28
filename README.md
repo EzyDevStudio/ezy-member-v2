@@ -1,4 +1,4 @@
-# ezy_member_v2
+# ezymember
 
 A new Flutter project.
 

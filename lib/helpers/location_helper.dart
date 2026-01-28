@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'dart:math' hide log;
 
-import 'package:ezy_member_v2/helpers/message_helper.dart';
-import 'package:ezy_member_v2/language/globalization.dart';
+import 'package:ezymember/helpers/message_helper.dart';
+import 'package:ezymember/language/globalization.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
