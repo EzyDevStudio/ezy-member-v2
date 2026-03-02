@@ -150,6 +150,7 @@ class ZhCn {
     Globalization.msgGoogleMapsConfirmation: "是否要打开 Google 地图开始导航？",
     Globalization.msgGoogleMapsRedirecting: "正在为您打开 Google 地图，请稍候。",
     Globalization.msgHintText: "请输入您的@label",
+    Globalization.msgImageSizeExceed: "图片大小不能超过 5 MB。",
     Globalization.msgMemberExpired: "您的会员已失效，请续费以继续享受我们的服务。",
     Globalization.msgMemberRegisterProcessing: "正在为您处理注册，请稍候。",
     Globalization.msgMemberRegisterSuccess: "您已成功注册为会员。尽情享受我们的服务吧！",

@@ -1,15 +1,10 @@
 import 'package:ezymember/constants/enum.dart';
 import 'package:ezymember/helpers/formatter_helper.dart';
-import 'package:ezymember/helpers/location_helper.dart';
-import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/language/globalization.dart';
-import 'package:ezymember/models/branch_model.dart';
 import 'package:ezymember/models/history_model.dart';
-import 'package:ezymember/services/local/connection_service.dart';
 import 'package:ezymember/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class CustomHistoryListTile extends StatelessWidget {
@@ -26,18 +21,20 @@ class CustomHistoryListTile extends StatelessWidget {
 
     if (history.type == HistoryType.credit) {
       title = history.credit!.creditDescription;
-      location = [history.credit?.branchName, history.credit?.counterDesc].where((s) => s != null && s.isNotEmpty).join(" - ");
+      location = [history.credit?.branchName, history.credit?.counterName].where((s) => s != null && s.isNotEmpty).join(" - ");
       value = history.credit!.credit.toStringAsFixed(1);
       textColor = history.credit!.credit < 0 ? Colors.red : Colors.green;
     } else if (history.type == HistoryType.point) {
       title = history.point!.pointDescription;
-      location = [history.point?.branchName, history.point?.counterDesc].where((s) => s != null && s.isNotEmpty).join(" - ");
+      location = [history.point?.branchName, history.point?.counterName].where((s) => s != null && s.isNotEmpty).join(" - ");
       value = history.point!.point.toStringAsFixed(1);
       textColor = history.point!.point < 0 ? Colors.red : Colors.green;
     } else if (history.type == HistoryType.voucher) {
       title = history.voucher!.batchDescription;
       location = history.voucher!.redeemDate == history.transactionDate
-          ? [history.voucher?.branchName, history.voucher?.counterDesc].where((s) => s != null && s.isNotEmpty).join(" - ")
+          ? history.voucher != null
+                ? history.voucher!.branchName
+                : ""
           : "";
       value = history.voucher!.redeemDate == 0
           ? Globalization.collect.tr
@@ -59,11 +56,7 @@ class CustomHistoryListTile extends StatelessWidget {
           if (location.isNotEmpty) CustomText(location, color: Colors.black54, fontSize: 12.0),
         ],
       ),
-      title: CustomText(
-        FormatterHelper.timestampToString(history.transactionDate, format: FormatterHelper.formatDateTime),
-        color: Colors.black54,
-        fontSize: 12.0,
-      ),
+      title: CustomText(history.transactionDate.tsToStrDateTime, color: Colors.black54, fontSize: 12.0),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -90,58 +83,16 @@ class CustomInfoListTile extends StatelessWidget {
   const CustomInfoListTile({super.key, this.icon, this.trailing, required this.title, this.subtitle, this.subWidget, this.onTap, this.onTapCopy});
 
   @override
-  Widget build(BuildContext context) => Container(
-    color: Colors.white,
-    child: ListTile(
-      leading: icon != null ? Icon(icon, size: 24.sp) : null,
-      subtitle: subtitle != null ? CustomText(subtitle!, fontSize: 14.0, maxLines: null) : subWidget,
-      title: CustomText(title, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold, maxLines: null),
-      trailing: trailing != null
-          ? GestureDetector(
-              onTap: onTapCopy,
-              child: Icon(trailing, size: 24.sp),
-            )
-          : null,
-      onTap: onTap,
-    ),
-  );
-}
-
-class CustomBranchExpansion extends StatelessWidget {
-  final List<BranchModel> branches;
-
-  const CustomBranchExpansion({super.key, required this.branches});
-
-  @override
-  Widget build(BuildContext context) => Container(
-    decoration: BoxDecoration(
-      border: Border(
-        top: BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
-      ),
-    ),
-    child: Material(
-      elevation: 1.0,
-      child: ExpansionTile(
-        childrenPadding: EdgeInsets.only(bottom: 16.dp),
-        tilePadding: EdgeInsets.all(16.dp),
-        title: CustomText("${Globalization.branches.tr} (${branches.length})", fontSize: 18.0, fontWeight: FontWeight.bold),
-        children: branches.map((branch) {
-          return CustomInfoListTile(
-            trailing: Icons.content_copy_rounded,
-            title: branch.branchName,
-            subtitle: "${branch.fullAddress}\n(${branch.contactNumber})",
-            onTapCopy: () {
-              Clipboard.setData(ClipboardData(text: branch.fullAddress));
-              MessageHelper.show(Globalization.msgAddressCopied.tr, icon: Icons.content_copy_rounded);
-            },
-            onTap: () async {
-              if (!await ConnectionService.checkConnection()) return;
-
-              LocationHelper.redirectGoogleMap(branch.fullAddress);
-            },
-          );
-        }).toList(),
-      ),
-    ),
+  Widget build(BuildContext context) => ListTile(
+    leading: icon != null ? Icon(icon, size: 24.sp) : null,
+    subtitle: subtitle != null ? CustomText(subtitle!, fontSize: 14.0, maxLines: null) : subWidget,
+    title: CustomText(title, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold, maxLines: null),
+    trailing: trailing != null
+        ? GestureDetector(
+            onTap: onTapCopy,
+            child: Icon(trailing, size: 24.sp),
+          )
+        : null,
+    onTap: onTap,
   );
 }

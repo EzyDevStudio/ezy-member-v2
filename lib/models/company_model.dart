@@ -1,20 +1,27 @@
-import 'package:ezymember/models/about_us_model.dart';
-import 'package:ezymember/models/category_model.dart';
+import 'package:ezymember/constants/app_strings.dart';
 
 const String fieldID = "id";
 const String fieldCompanyID = "company_id";
+const String fieldCustomerID = "customer_id";
 const String fieldCompanyName = "company_name";
+const String fieldCompanyLogo = "company_logo";
+const String fieldCompanyDescription = "company_description";
+const String fieldCompanyVision = "company_vision";
+const String fieldCompanyMission = "company_mission";
+const String fieldCompanyValue = "company_value";
+const String fieldStatus = "status";
+const String fieldContactNumber = "contact_number";
+const String fieldEmail = "email";
+const String fieldAddress1 = "address1";
+const String fieldAddress2 = "address2";
+const String fieldAddress3 = "address3";
+const String fieldAddress4 = "address4";
+const String fieldPostcode = "postcode";
+const String fieldCity = "city";
+const String fieldState = "state";
+const String fieldCategories = "business_category";
 const String fieldDatabaseName = "database_name";
-const String fieldBranchQuantity = "branch_quantity";
-const String fieldCounterQuantity = "counter_quantity";
-const String fieldAccessKey = "access_key";
-const String fieldExpiredDate = "expired_date";
-const String fieldIsExpired = "is_expired";
-const String fieldMemberFee = "member_fee";
-const String fieldCompanyKey = "company_key";
-const String fieldCompanyEmail = "company_email";
-const String fieldCompanyNumber = "contact_number";
-const String fieldCompanyNumber2 = "contact_number2";
+const String fieldExpiredDate = "ezymember_expired_date";
 
 class CompanyModel {
   static const String keyCompany = "companies";
@@ -22,66 +29,96 @@ class CompanyModel {
   final int id;
   final String companyID;
   final String companyName;
+  final String companyLogo;
+  final String companyDescription;
+  final String companyVision;
+  final String companyMission;
+  final String companyValue;
+  final int status;
+  final String contactNumber;
+  final String email;
+  final String address1;
+  final String address2;
+  final String address3;
+  final String address4;
+  final String postcode;
+  final String city;
+  final String state;
+  final String categories;
   final String databaseName;
-  final String branchQuantity;
-  final String counterQuantity;
   final int expiredDate;
-  final bool isExpired;
-  final double memberFee;
-  final String companyKey;
-  final String companyEmail;
-  final String companyNumber;
-  final String companyNumber2;
-  final List<CategoryModel> categories;
-  final AboutUsModel aboutUs;
 
   CompanyModel({
     this.id = 0,
     this.companyID = "",
     this.companyName = "",
+    this.companyLogo = "",
+    this.companyDescription = "",
+    this.companyVision = "",
+    this.companyMission = "",
+    this.companyValue = "",
+    this.status = 0,
+    this.contactNumber = "",
+    this.email = "",
+    this.address1 = "",
+    this.address2 = "",
+    this.address3 = "",
+    this.address4 = "",
+    this.postcode = "",
+    this.city = "",
+    this.state = "",
+    this.categories = "",
     this.databaseName = "",
-    this.branchQuantity = "",
-    this.counterQuantity = "",
     this.expiredDate = 0,
-    this.isExpired = true,
-    this.memberFee = 0.00,
-    this.companyKey = "",
-    this.companyEmail = "",
-    this.companyNumber = "",
-    this.companyNumber2 = "",
-    this.categories = const [],
-    AboutUsModel? aboutUs,
-  }) : aboutUs = aboutUs ?? AboutUsModel.empty();
+  });
 
   CompanyModel.empty() : this();
 
-  factory CompanyModel.fromJson(Map<String, dynamic> data) => CompanyModel(
-    id: data[fieldID] ?? 0,
-    companyID: data[fieldCompanyID] ?? "",
-    companyName: data[fieldCompanyName] ?? "",
-    databaseName: data[fieldDatabaseName] ?? "",
-    branchQuantity: data[fieldBranchQuantity] ?? "",
-    counterQuantity: data[fieldCounterQuantity] ?? "",
-    expiredDate: data[fieldExpiredDate] != null ? DateTime.tryParse(data[fieldExpiredDate])?.millisecondsSinceEpoch ?? 0 : 0,
-    isExpired: data[fieldIsExpired] ?? true,
-    memberFee: (data[fieldMemberFee] ?? 0).toDouble(),
-    companyKey: data[fieldCompanyKey] ?? "",
-    companyEmail: data[fieldCompanyEmail] ?? "",
-    companyNumber: data[fieldCompanyNumber] ?? "",
-    companyNumber2: data[fieldCompanyNumber2] ?? "",
-    categories: data[CategoryModel.keyCategory] != null
-        ? (data[CategoryModel.keyCategory] as List).map((json) => CategoryModel.fromJson(Map<String, dynamic>.from(json))).toList()
-        : [],
-    aboutUs: data[AboutUsModel.keyAboutUs] != null
-        ? AboutUsModel.fromJson(Map<String, dynamic>.from(data[AboutUsModel.keyAboutUs]))
-        : AboutUsModel.empty(),
+  factory CompanyModel.fromJson(Map<String, dynamic> data1, Map<String, dynamic> data2) => CompanyModel(
+    id: data2[fieldID] ?? 0,
+    companyID: data2[fieldCompanyID] ?? (data1[fieldCustomerID] ?? ""),
+    companyName: data2[fieldCompanyName] ?? (data1[fieldCompanyName] ?? ""),
+    companyLogo: data2[fieldCompanyLogo] ?? (data1[fieldCompanyLogo] ?? ""),
+    companyDescription: data2[fieldCompanyDescription] ?? "",
+    companyVision: data2[fieldCompanyVision] ?? "",
+    companyMission: data2[fieldCompanyMission] ?? "",
+    companyValue: data2[fieldCompanyValue] ?? "",
+    status: data2[fieldStatus] ?? 0,
+    contactNumber: data1[fieldContactNumber] ?? "",
+    email: data1[fieldEmail] ?? "",
+    address1: data1[fieldAddress1] ?? "",
+    address2: data1[fieldAddress2] ?? "",
+    address3: data1[fieldAddress3] ?? "",
+    address4: data1[fieldAddress4] ?? "",
+    postcode: data1[fieldPostcode] ?? "",
+    city: data1[fieldCity] ?? "",
+    state: data1[fieldState] ?? "",
+    categories: data1[fieldCategories] ?? "",
+    databaseName: data1[fieldDatabaseName] ?? "",
+    expiredDate: data1[fieldExpiredDate] != null ? DateTime.tryParse(data1[fieldExpiredDate])?.millisecondsSinceEpoch ?? 0 : 0,
   );
 
-  String getCategoryTitles() => categories.map((c) => c.categoryTitle).join(", ");
+  String get fullAddress => [address1, address2, address3, address4, postcode, city, state].where((e) => e.isNotEmpty).join(", ");
+
+  String get categoryImage {
+    if (categories.isEmpty) return AppStrings.categories.last.image;
+
+    final code = categories.split(", ").first.trim();
+    final selectedCategory = AppStrings.categories.firstWhere((c) => c.code == code, orElse: () => AppStrings.categories.last);
+
+    return selectedCategory.image;
+  }
+
+  List<String> get categoryTitle {
+    if (categories.isEmpty) return [];
+
+    final codes = categories.split(",").map((e) => e.trim()).toList();
+    final selectedCategories = AppStrings.categories.where((c) => codes.contains(c.code)).toList();
+
+    return selectedCategories.map((c) => c.title).toList();
+  }
 
   @override
   String toString() =>
-      "CompanyModel(id: $id, companyID: $companyID, companyName: $companyName, databaseName: $databaseName, branchQuantity: $branchQuantity, counterQuantity: $counterQuantity, expiredDate: $expiredDate, isExpired: $isExpired, memberFee: $memberFee, companyKey: $companyKey, companyEmail: $companyEmail, companyNumber: $companyNumber, companyNumber2: $companyNumber2"
-      "\naboutUs: ${aboutUs.toString()}"
-      "\ncategories: ${categories.toString()})\n";
+      "CompanyModel(id: $id, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo, companyDescription: $companyDescription, companyVision: $companyVision, companyMission: $companyMission, companyValue: $companyValue, status: $status, contactNumber: $contactNumber, email: $email, address1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, categories: $categories, databaseName: $databaseName, expiredDate: $expiredDate)\n";
 }

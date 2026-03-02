@@ -102,11 +102,12 @@ class ProfileController extends GetxController {
     switch (response.data[ApiService.keyStatusCode]) {
       case 200:
         final hive = Get.find<MemberHiveController>();
+        final bytes = await file.readAsBytes();
 
-        if (imgType == 0) hive.updateImage(response.data["filename"]);
-        if (imgType == 1) hive.updateBackgroundImage(response.data["filename"]);
-        if (imgType == 2) hive.updatePersonalInvoiceImage(response.data["filename"]);
-        if (imgType == 3) hive.updateCompanyInvoiceImage(response.data["filename"]);
+        if (imgType == 0) hive.updateImage(bytes);
+        if (imgType == 1) hive.updateBackgroundImage(bytes);
+        if (imgType == 2) hive.updatePersonalInvoiceImage(bytes);
+        if (imgType == 3) hive.updateCompanyInvoiceImage(bytes);
 
         _showSuccess(Globalization.msgProfileSuccess.tr);
 
@@ -236,7 +237,7 @@ class ProfileDetailControllers {
       _controllers[fieldName] = TextEditingController(text: profile.name);
       _controllers[fieldEmail] = TextEditingController(text: profile.email);
       _controllers[fieldGender] = TextEditingController(text: profile.gender);
-      _controllers[fieldDOB] = TextEditingController(text: profile.dob == 0 ? "" : FormatterHelper.timestampToString(profile.dob));
+      _controllers[fieldDOB] = TextEditingController(text: profile.dob == 0 ? "" : profile.dob.tsToStr);
       _controllers[fieldAccountCode] = TextEditingController(text: profile.accountCode);
     }
 

@@ -64,10 +64,12 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
 
     if (!_isFieldValid(true)) return;
 
+    int contactNumber = int.parse(_phoneController.text.trim());
+
     final Map<String, dynamic> data = MemberProfileModel.toJsonSignIn(
       _selectedType == AuthType.email ? _emailController.text.trim() : "",
       _phone.dialCode,
-      _selectedType == AuthType.phone ? _phoneController.text.trim() : "",
+      _selectedType == AuthType.phone ? contactNumber.toString() : "",
       _passwordController.text.trim(),
     );
 
@@ -180,7 +182,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
       onPressed: () => Navigator.of(context).pop(),
       icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
     ),
-    title: Text(Globalization.welcome.tr),
+    title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
   );
 
   Widget _buildContent() => SliverFillRemaining(

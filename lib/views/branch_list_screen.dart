@@ -1,13 +1,13 @@
 import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/constants/app_routes.dart';
+import 'package:ezymember/constants/app_strings.dart';
 import 'package:ezymember/controllers/branch_controller.dart';
-import 'package:ezymember/controllers/member_controller.dart';
-import 'package:ezymember/controllers/member_hive_controller.dart';
+import 'package:ezymember/controllers/company_controller.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/language/globalization.dart';
 import 'package:ezymember/models/category_model.dart';
 import 'package:ezymember/models/company_model.dart';
-import 'package:ezymember/models/member_model.dart';
+import 'package:ezymember/models/shop_model.dart';
 import 'package:ezymember/widgets/custom_card.dart';
 import 'package:ezymember/widgets/custom_text.dart';
 import 'package:ezymember/widgets/custom_text_field.dart';
@@ -22,51 +22,26 @@ class BranchListScreen extends StatefulWidget {
 }
 
 class _BranchListScreenState extends State<BranchListScreen> {
-  final _hive = Get.find<MemberHiveController>();
   final _branchController = Get.put(BranchController(), tag: "branchList");
-  final _memberController = Get.put(MemberController(), tag: "branchList");
+  final _companyController = Get.put(CompanyController(), tag: "branchList");
   final _searchController = TextEditingController();
-  final CategoryModel allCategory = CategoryModel(id: 0, categoryID: "", categoryTitle: "All", categoryImage: "");
+  final List<CategoryModel> _categories = AppStrings.categories;
+  final CategoryModel _allCategory = CategoryModel(title: "All", description: "", image: "");
 
   late CategoryModel _selectedCategory;
-
-  List<dynamic> _filteredBranches = [];
 
   @override
   void initState() {
     super.initState();
 
-    _searchController.addListener(_applyFilters);
-
-    ever(_branchController.branches, (_) => _applyFilters());
-
     WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
   }
 
-  Future<void> _onRefresh() async {
+  Future<void> _onRefresh({String? category}) async {
+    if (category == null) _selectedCategory = _allCategory;
     _searchController.clear();
-    _selectedCategory = allCategory;
-    _branchController.loadBranches();
-    _memberController.loadMembers(_hive.memberProfile.value!.memberCode);
-  }
-
-  void _applyFilters() {
-    final query = _searchController.text.trim().toLowerCase();
-
-    setState(() {
-      _filteredBranches = _branchController.branches.where((branch) {
-        final matchesSearch = query.isEmpty ? true : branch.toCompare().toLowerCase().contains(query);
-        final matchesCategory = _selectedCategory.id == 0
-            ? true
-            : _memberController.companies
-                      .firstWhereOrNull((c) => c.companyID == branch.customerID)
-                      ?.categories
-                      .any((cat) => cat.categoryID == _selectedCategory.categoryID) ??
-                  false;
-
-        return matchesSearch && matchesCategory;
-      }).toList();
-    });
+    _branchController.loadBranches(filterLocation: true);
+    _companyController.loadCompanies(category: category);
   }
 
   @override
@@ -87,21 +62,42 @@ class _BranchListScreenState extends State<BranchListScreen> {
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
         ),
-        title: Text(Globalization.shops.tr),
+        title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
       ),
       body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
     );
   }
 
   Widget _buildContent() => Obx(() {
-    if (_branchController.isLoading.value || _memberController.isLoading.value) {
+    if (_branchController.isLoading.value || _companyController.isLoading.value) {
       return Padding(
         padding: EdgeInsets.all(16.dp),
         child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
       );
     }
 
-    if (_branchController.branches.isEmpty) {
+    List<ShopModel> displayShops = [];
+
+    for (var company in _companyController.companies) {
+      displayShops.add(ShopModel.combination(null, company));
+    }
+
+    for (var branch in _branchController.branches) {
+      displayShops.add(
+        ShopModel.combination(
+          branch,
+          _companyController.companies.firstWhere((c) => c.companyID == branch.customerID, orElse: () => CompanyModel.empty()),
+        ),
+      );
+    }
+
+    displayShops = displayShops.where((s) => s.categories.isNotEmpty).toList();
+    displayShops.sort((a, b) => a.name.compareTo(b.name));
+
+    final query = _searchController.text.trim().toLowerCase();
+    final filteredShops = displayShops.where((s) => query.isEmpty || s.toCompare().toLowerCase().contains(query)).toList();
+
+    if (displayShops.isEmpty) {
       return Padding(
         padding: EdgeInsets.all(16.dp),
         child: Center(
@@ -119,9 +115,6 @@ class _BranchListScreenState extends State<BranchListScreen> {
       );
     }
 
-    final displayBranches = _filteredBranches;
-    displayBranches.sort((a, b) => a.branchName.compareTo(b.branchName));
-
     return Column(
       children: <Widget>[
         Padding(
@@ -136,7 +129,7 @@ class _BranchListScreenState extends State<BranchListScreen> {
                   spacing: 16.dp,
                   children: <Widget>[
                     Expanded(
-                      child: CustomSearchTextField(controller: _searchController, onChanged: (String value) => _applyFilters()),
+                      child: CustomSearchTextField(controller: _searchController, onChanged: (_) => setState(() {})),
                     ),
                     AspectRatio(
                       aspectRatio: kSquareRatio,
@@ -148,12 +141,12 @@ class _BranchListScreenState extends State<BranchListScreen> {
                           padding: EdgeInsets.all(8.dp),
                           child: PopupMenuButton<CategoryModel>(
                             itemBuilder: (context) => [
-                              PopupMenuItem(value: allCategory, child: Text(allCategory.categoryTitle)),
-                              ..._memberController.categories.map((c) => PopupMenuItem(value: c, child: Text(c.categoryTitle))),
+                              PopupMenuItem(value: _allCategory, child: Text(_allCategory.title)),
+                              ..._categories.map((c) => PopupMenuItem(value: c, child: Text(c.title))),
                             ],
                             onSelected: (category) {
                               setState(() => _selectedCategory = category);
-                              _applyFilters();
+                              category.title == "All" ? _onRefresh() : _onRefresh(category: category.code);
                             },
                             child: Center(child: Icon(Icons.filter_alt_rounded, color: Colors.blue)),
                           ),
@@ -163,14 +156,14 @@ class _BranchListScreenState extends State<BranchListScreen> {
                   ],
                 ),
               ),
-              if (_selectedCategory != allCategory)
+              if (_selectedCategory != _allCategory)
                 GestureDetector(
                   onTap: () => setState(() {
-                    _selectedCategory = allCategory;
-                    _applyFilters();
+                    _selectedCategory = _allCategory;
+                    _onRefresh();
                   }),
                   child: CustomText(
-                    "${Globalization.filter.tr}: ${_selectedCategory.categoryTitle} (${Globalization.clear.tr})",
+                    "${Globalization.filter.tr}: ${_selectedCategory.title} (${Globalization.clear.tr})",
                     color: Colors.lightBlue,
                     fontSize: 16.0,
                   ),
@@ -180,25 +173,15 @@ class _BranchListScreenState extends State<BranchListScreen> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: displayBranches.length,
+            itemCount: filteredShops.length,
             itemBuilder: (context, index) => Padding(
-              padding: EdgeInsetsGeometry.only(bottom: index == displayBranches.length - 1 ? 16.dp : 0.0, left: 16.dp, right: 16.dp, top: 16.dp),
+              padding: EdgeInsetsGeometry.only(bottom: index == filteredShops.length - 1 ? 16.dp : 0.0, left: 16.dp, right: 16.dp, top: 16.dp),
               child: Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
                   child: GestureDetector(
-                    onTap: () => Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": displayBranches[index].customerID}),
-                    child: CustomNearbyCard(
-                      branch: displayBranches[index],
-                      company: _memberController.companies.firstWhere(
-                        (c) => c.companyID == displayBranches[index].customerID,
-                        orElse: () => CompanyModel.empty(),
-                      ),
-                      member: _memberController.members.firstWhere(
-                        (m) => m.companyID == displayBranches[index].customerID,
-                        orElse: () => MemberModel.empty(),
-                      ),
-                    ),
+                    onTap: () => Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": filteredShops[index].companyID}),
+                    child: CustomShopCard(shop: filteredShops[index]),
                   ),
                 ),
               ),

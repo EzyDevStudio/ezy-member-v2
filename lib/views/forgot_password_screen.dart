@@ -52,7 +52,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
         ),
-        title: Text(Globalization.resetPassword),
+        title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
       ),
       body: _buildContent(),
     );

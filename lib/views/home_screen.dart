@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/constants/app_routes.dart';
 import 'package:ezymember/controllers/settings_controller.dart';
-import 'package:ezymember/controllers/member_controller.dart';
 import 'package:ezymember/controllers/member_hive_controller.dart';
 import 'package:ezymember/controllers/timeline_controller.dart';
 import 'package:ezymember/controllers/voucher_controller.dart';
 import 'package:ezymember/helpers/code_generator_helper.dart';
+import 'package:ezymember/helpers/formatter_helper.dart';
 import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/helpers/permission_helper.dart';
@@ -33,7 +33,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _hive = Get.find<MemberHiveController>();
   final _settingsController = Get.find<SettingsController>();
-  final _memberController = Get.put(MemberController(), tag: "home");
   final _timelineController = Get.put(TimelineController(), tag: "home");
   final _voucherController = Get.put(VoucherController(), tag: "home");
   final _scrollController = ScrollController();
@@ -63,14 +62,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: CustomBackgroundImage(
                   isBorderRadius: true,
                   isShadow: true,
-                  backgroundImage: _hive.backgroundImage,
+                  cacheImage: _hive.backgroundImage,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          CustomAvatarImage(size: kProfileImgSizeM, networkImage: _hive.image),
+                          CustomAvatarImage(size: kProfileImgSizeM, cacheImage: _hive.image),
                           CustomText(_hive.memberProfile.value!.name, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
                         ],
                       ),
@@ -125,7 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _timelineController.loadTimelines(memberCode: _hive.isSignIn ? _hive.memberProfile.value!.memberCode : null);
 
     if (_hive.isSignIn) {
-      _memberController.loadMembers(_hive.memberProfile.value!.memberCode);
       _voucherController.loadOverview(_hive.memberProfile.value!.memberCode);
     }
   }
@@ -138,10 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
       title: Globalization.signOut.tr,
     );
 
-    if (result == true) {
-      _hive.signOut();
-      _memberController.members.clear();
-    }
+    if (result == true) _hive.signOut();
   }
 
   @override
@@ -190,8 +185,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildAppBar() => CustomAppBar(
     isLeading: false,
-    avatarImage: _hive.isSignIn ? _hive.memberProfile.value!.image : "",
-    backgroundImage: _hive.backgroundImage,
+    cacheAvatar: _hive.image,
+    cacheBackground: _hive.backgroundImage,
     actions: _buildAppBarAction(),
     onTap: () => Get.toNamed(_hive.isSignIn ? AppRoutes.profileDetail : AppRoutes.authentication),
     child: Expanded(
@@ -210,7 +205,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontWeight: FontWeight.bold,
                 ),
                 if (_hive.isSignIn)
-                  CustomText(_hive.memberProfile.value!.memberCode, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                  CustomText(
+                    _hive.memberProfile.value!.memberCode.displayMemberCode,
+                    color: Colors.white,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
               ],
             ),
           ),
@@ -246,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildQuickAccess() => Obx(
     () => SliverToBoxAdapter(
       child: Container(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         child: Column(
           children: <Widget>[
             GridView(
@@ -269,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 CustomImageTextButton(
                   isCountVisible: true,
-                  count: _memberController.members.length,
+                  count: _voucherController.memberCount.value,
                   assetName: "assets/icons/my_members.png",
                   label: Globalization.myCards.tr,
                   onTap: () => Get.toNamed(AppRoutes.memberList),
@@ -379,7 +379,9 @@ class _HomeScreenState extends State<HomeScreen> {
         return Container(
           decoration: BoxDecoration(
             border: Border(
-              top: index == 0 && !_hive.isSignIn ? BorderSide.none : BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
+              top: index == 0 && (!_hive.isSignIn ? true : _voucherController.vouchers.isNotEmpty)
+                  ? BorderSide.none
+                  : BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
             ),
           ),
           child: CustomTimeline(timeline: timelines[index], isNavigateCompany: true, isNavigateTimeline: true),

@@ -10,6 +10,7 @@ class VoucherController extends GetxController {
   final ApiService _api = ApiService();
 
   var isLoading = false.obs;
+  var memberCount = 0.obs;
   var todayCount = 0.obs;
   var redeemedCount = 0.obs;
   var redeemableCount = 0.obs;
@@ -24,6 +25,7 @@ class VoucherController extends GetxController {
     if (response.data[ApiService.keyStatusCode] == 200) {
       final List<dynamic> list = response.data["collectables"] ?? [];
 
+      memberCount.value = response.data["member_count"];
       todayCount.value = response.data["today_count"];
       redeemedCount.value = response.data["redeemed_count"];
       redeemableCount.value = response.data["redeemable_count"];

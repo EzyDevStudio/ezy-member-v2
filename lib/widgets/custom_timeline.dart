@@ -22,8 +22,7 @@ class CustomTimeline extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Container(
-    color: Colors.white,
+  Widget build(BuildContext context) => Padding(
     padding: EdgeInsets.symmetric(vertical: 16.dp),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +37,7 @@ class CustomTimeline extends StatelessWidget {
                 onTap: () => isDetail
                     ? null
                     : (isNavigateCompany ? Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": timeline.companyID}) : null),
-                child: CustomAvatarImage(size: ResponsiveHelper().avatarSize(), networkImage: timeline.companyLogo),
+                child: CustomAvatarImage(size: ResponsiveHelper().avatarSize(), networkImage: timeline.companyLogo, name: timeline.companyName),
               ),
               Expanded(
                 child: Column(
@@ -46,7 +45,7 @@ class CustomTimeline extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CustomText(timeline.companyName, fontSize: 18.0, fontWeight: FontWeight.bold),
-                    CustomText(FormatterHelper.timestampToString(timeline.createdAt), fontSize: 14.0),
+                    CustomText(timeline.createdAt.tsToStr, fontSize: 14.0),
                   ],
                 ),
               ),

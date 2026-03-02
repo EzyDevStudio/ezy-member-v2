@@ -214,7 +214,7 @@ class MemberProfileModel extends ProfileModel {
     fieldTTXRegistrationNo: ttxRegistrationNo,
     fieldName: name,
     fieldGender: gender,
-    fieldDOB: dob.isNotEmpty ? FormatterHelper.stringToDateTime(dob).toIso8601String() : null,
+    fieldDOB: dob.isNotEmpty ? dob.strToDT.toIso8601String() : null,
     fieldAccountCode: accountCode,
   };
 

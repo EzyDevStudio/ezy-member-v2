@@ -49,7 +49,7 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
       onPressed: () => Navigator.of(context).pop(),
       icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
     ),
-    title: Text(Globalization.tncLong.tr),
+    title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
   );
 
   Widget _buildContent() => SliverPadding(
@@ -60,10 +60,7 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
         children: <Widget>[
           CustomText(_voucher.batchDescription, fontSize: 24.0, fontWeight: FontWeight.bold),
           SizedBox(height: 16.dp),
-          _buildListTile(
-            subtitle: "${FormatterHelper.timestampToString(_voucher.startDate)} - ${FormatterHelper.timestampToString(_voucher.expiredDate)}",
-            title: Globalization.validPeriod.tr,
-          ),
+          _buildListTile(subtitle: "${_voucher.startDate.tsToStr} - ${_voucher.expiredDate.tsToStr}", title: Globalization.validPeriod.tr),
           _buildListTile(subtitle: "${_voucher.discountValue.toStringAsFixed(1)} ${Globalization.off.tr}", title: Globalization.discountAmount.tr),
           _buildListTile(subtitle: _voucher.minimumSpend.toStringAsFixed(1), title: Globalization.minSpend.tr),
           _buildListTile(subtitle: _voucher.termsCondition, title: Globalization.more.tr),

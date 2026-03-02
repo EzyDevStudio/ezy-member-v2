@@ -33,7 +33,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
   }
 
   Future<void> _onRefresh() async {
-    _memberController.loadMembers(_hive.memberProfile.value!.memberCode);
+    _memberController.loadMemberDetail(_hive.memberProfile.value!.memberCode);
   }
 
   void _onSearchChanged() {
@@ -60,7 +60,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
         ),
-        title: Text(Globalization.myCards.tr),
+        title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
       ),
       body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
     );
@@ -113,7 +113,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
                   constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.7),
                   child: CustomMemberCard(
                     member: displayMembers[index],
-                    onTap: () => Get.toNamed(AppRoutes.memberDetail, arguments: {"company_id": displayMembers[index].companyID}),
+                    onTap: () => Get.toNamed(AppRoutes.memberDetail, arguments: {"company_id": displayMembers[index].company.companyID}),
                   ),
                 ),
               ),

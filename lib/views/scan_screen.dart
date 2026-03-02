@@ -6,6 +6,7 @@ import 'package:ezymember/constants/enum.dart';
 import 'package:ezymember/controllers/member_hive_controller.dart';
 import 'package:ezymember/controllers/pin_controller.dart';
 import 'package:ezymember/helpers/cipher_helper.dart';
+import 'package:ezymember/helpers/formatter_helper.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/language/globalization.dart';
 import 'package:ezymember/services/local/connection_service.dart';
@@ -175,7 +176,7 @@ class _ScanScreenState extends State<ScanScreen> {
               },
             ),
             CustomText(
-              _hive.memberProfile.value!.memberCode,
+              _hive.memberProfile.value!.memberCode.displayMemberCode,
               color: Theme.of(context).colorScheme.primary,
               fontSize: 24.0,
               fontWeight: FontWeight.bold,

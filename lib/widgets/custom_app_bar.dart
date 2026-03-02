@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/widgets/custom_image.dart';
@@ -7,16 +9,19 @@ class CustomAppBar extends StatelessWidget {
   final bool isLeading;
   final String avatarImage, backgroundImage;
   final List<Widget>? actions;
+  final Uint8List? cacheAvatar, cacheBackground;
   final VoidCallback? onTap;
   final Widget child;
 
   const CustomAppBar({
     super.key,
     this.isLeading = true,
-    required this.avatarImage,
-    required this.backgroundImage,
+    this.avatarImage = "",
+    this.backgroundImage = "",
     this.actions,
     this.onTap,
+    this.cacheAvatar,
+    this.cacheBackground,
     required this.child,
   });
 
@@ -38,7 +43,7 @@ class CustomAppBar extends StatelessWidget {
                 onTap: onTap,
                 child: Stack(
                   children: <Widget>[
-                    CustomAvatarImage(size: kProfileImgSizeM, networkImage: avatarImage),
+                    CustomAvatarImage(size: kProfileImgSizeM, networkImage: avatarImage, cacheImage: cacheAvatar),
                     if (onTap != null)
                       Positioned(
                         bottom: kPositionEmpty,
@@ -58,7 +63,9 @@ class CustomAppBar extends StatelessWidget {
         ),
       ),
     ),
-    flexibleSpace: FlexibleSpaceBar(background: CustomBackgroundImage(backgroundImage: backgroundImage)),
+    flexibleSpace: FlexibleSpaceBar(
+      background: CustomBackgroundImage(backgroundImage: backgroundImage, cacheImage: cacheBackground),
+    ),
     leading: isLeading
         ? IconButton(
             onPressed: () => Navigator.of(context).pop(),

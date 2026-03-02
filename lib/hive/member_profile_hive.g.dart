@@ -13,16 +13,18 @@ class MemberProfileHiveAdapter extends TypeAdapter<MemberProfileHive> {
   @override
   MemberProfileHive read(BinaryReader reader) {
     final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read()};
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
     return MemberProfileHive(
       id: fields[0] as int,
       memberCode: fields[1] as String,
       name: fields[2] as String,
       token: fields[3] as String,
-      image: fields[4] as String,
-      backgroundImage: fields[5] as String,
-      personalInvoice: fields[6] as String,
-      workingInvoice: fields[7] as String,
+      image: fields[4] as Uint8List?,
+      backgroundImage: fields[5] as Uint8List?,
+      personalInvoice: fields[6] as Uint8List?,
+      workingInvoice: fields[7] as Uint8List?,
     );
   }
 
@@ -53,5 +55,8 @@ class MemberProfileHiveAdapter extends TypeAdapter<MemberProfileHive> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is MemberProfileHiveAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      identical(this, other) ||
+      other is MemberProfileHiveAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

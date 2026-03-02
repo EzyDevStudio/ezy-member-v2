@@ -1,3 +1,5 @@
+import 'package:ezymember/constants/app_strings.dart';
+import 'package:ezymember/helpers/location_helper.dart';
 import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/language/globalization.dart';
 import 'package:ezymember/models/company_model.dart';
@@ -10,25 +12,53 @@ class CompanyController extends GetxController {
   final ApiService _api = ApiService();
 
   var isLoading = false.obs;
-  var company = Rx<CompanyModel?>(null);
+  var company = CompanyModel.empty().obs;
+  var companies = <CompanyModel>[].obs;
 
   Future<void> loadCompany(String companyID) async {
     isLoading.value = true;
 
-    final Map<String, dynamic> data = {"company_id": companyID};
-    final response = await _api.get(endPoint: "get-company", module: "CompanyController - loadCompany", data: data);
+    final responsePOS = await _api.get(
+      baseUrl: "${AppStrings.serverEzyPos}/${AppStrings.serverDirectory}",
+      endPoint: "get-company-information/$companyID",
+      module: "CompanyController - loadCompany",
+    );
 
-    if (response == null || response.data[CompanyModel.keyCompany] == null) {
+    if (responsePOS == null) return;
+
+    if (responsePOS.data[ApiService.keyStatusCode] == 200) {
+      final response = await _api.get(endPoint: "get-company", module: "CompanyController - loadCompany", data: {"company_id": companyID});
+
+      if (response == null) return;
+
+      if (response.data[ApiService.keyStatusCode] == 200) {
+        company.value = CompanyModel.fromJson(responsePOS.data["company_info"], response.data[CompanyModel.keyCompany] ?? {});
+      }
+    }
+
+    isLoading.value = false;
+  }
+
+  Future<void> loadCompanies({String? category}) async {
+    isLoading.value = true;
+
+    final Coordinate? c = await LocationHelper.getCurrentCoordinate();
+
+    final responsePOS = await _api.get(
+      baseUrl: "${AppStrings.serverEzyPos}/${AppStrings.serverDirectory}",
+      endPoint: "get-company-list",
+      module: "CompanyController - loadCompanies",
+      data: {if (category != null) "business_category": category, if (c != null) "city": c.city},
+    );
+
+    if (responsePOS == null || responsePOS.data["company_list"] == null) {
       isLoading.value = false;
       return;
     }
 
-    if (response.data[ApiService.keyStatusCode] == 200) {
-      final json = Map<String, dynamic>.from(response.data[CompanyModel.keyCompany]);
+    final List<dynamic> list = responsePOS.data["company_list"] ?? [];
 
-      company.value = CompanyModel.fromJson(json);
-    }
-
+    companies.value = list.map((e) => CompanyModel.fromJson(Map<String, dynamic>.from(e), {})).toList();
     isLoading.value = false;
   }
 

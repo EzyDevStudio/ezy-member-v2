@@ -5,7 +5,6 @@ const String fieldBranchName = "branch_name";
 const String fieldBranchDescription = "branch_description";
 const String fieldContactNumber = "contact_number";
 const String fieldContactNumber2 = "contact_number2";
-const String fieldCompanyKey = "company_key";
 const String fieldAddress1 = "address1";
 const String fieldAddress2 = "address2";
 const String fieldAddress3 = "address3";
@@ -26,7 +25,6 @@ class BranchModel {
   final String branchDescription;
   final String contactNumber;
   final String contactNumber2;
-  final String companyKey;
   final String address1;
   final String address2;
   final String address3;
@@ -45,7 +43,6 @@ class BranchModel {
     this.branchDescription = "",
     this.contactNumber = "",
     this.contactNumber2 = "",
-    this.companyKey = "",
     this.address1 = "",
     this.address2 = "",
     this.address3 = "",
@@ -67,7 +64,6 @@ class BranchModel {
     branchDescription: data[fieldBranchDescription] ?? "",
     contactNumber: data[fieldContactNumber] ?? "",
     contactNumber2: data[fieldContactNumber2] ?? "",
-    companyKey: data[fieldCompanyKey] ?? "",
     address1: data[fieldAddress1] ?? "",
     address2: data[fieldAddress2] ?? "",
     address3: data[fieldAddress3] ?? "",
@@ -85,5 +81,5 @@ class BranchModel {
 
   @override
   String toString() =>
-      "BranchModel(id: $id, customerID: $customerID, branchCode: $branchCode, branchName: $branchName, branchDescription: $branchDescription, contactNumber: $contactNumber, contactNumber2: $contactNumber2, companyKey: $companyKey, address1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, latitude: $latitude, longitude: $longitude)\n";
+      "BranchModel(id: $id, customerID: $customerID, branchCode: $branchCode, branchName: $branchName, branchDescription: $branchDescription, contactNumber: $contactNumber, contactNumber2: $contactNumber2, address1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, latitude: $latitude, longitude: $longitude)\n";
 }

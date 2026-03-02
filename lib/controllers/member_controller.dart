@@ -1,7 +1,5 @@
 import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/language/globalization.dart';
-import 'package:ezymember/models/category_model.dart';
-import 'package:ezymember/models/company_model.dart';
 import 'package:ezymember/models/member_model.dart';
 import 'package:ezymember/services/local/connection_service.dart';
 import 'package:ezymember/services/remote/api_service.dart';
@@ -12,15 +10,13 @@ class MemberController extends GetxController {
   final ApiService _api = ApiService();
 
   var isLoading = false.obs;
-  var categories = <CategoryModel>[].obs;
-  var companies = <CompanyModel>[].obs;
   var members = <MemberModel>[].obs;
 
-  Future<void> loadMembers(String memberCode, {String? companyID}) async {
+  Future<void> loadMemberDetail(String memberCode, {String? companyID}) async {
     isLoading.value = true;
 
     final Map<String, dynamic> data = {"member_code": memberCode, if (companyID != null) "company_id": companyID};
-    final response = await _api.get(endPoint: "get-member-detail", module: "MemberController - loadMembers", data: data);
+    final response = await _api.get(endPoint: "get-member-detail", module: "MemberController - loadMemberDetail", data: data);
 
     if (response == null) {
       isLoading.value = false;
@@ -28,13 +24,9 @@ class MemberController extends GetxController {
     }
 
     if (response.data[ApiService.keyStatusCode] == 200) {
-      final List<dynamic> categoryList = response.data[CategoryModel.keyCategory] ?? [];
-      final List<dynamic> companyList = response.data[CompanyModel.keyCompany] ?? [];
-      final List<dynamic> memberList = response.data[MemberModel.keyMember] ?? [];
+      final List<dynamic> list = response.data[MemberModel.keyMember] ?? [];
 
-      categories.value = categoryList.map((e) => CategoryModel.fromJson(Map<String, dynamic>.from(e))).toList();
-      companies.value = companyList.map((e) => CompanyModel.fromJson(Map<String, dynamic>.from(e))).toList();
-      members.value = memberList.map((e) => MemberModel.fromJson(Map<String, dynamic>.from(e))).toList();
+      members.value = list.map((e) => MemberModel.fromJson(Map<String, dynamic>.from(e))).toList();
     }
 
     isLoading.value = false;

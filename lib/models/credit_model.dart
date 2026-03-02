@@ -5,13 +5,11 @@ const String fieldDocAmount = "doc_amount";
 const String fieldCreditDescription = "credit_description";
 const String fieldCredit = "credit";
 const String fieldRemainingCredit = "remaining_credit";
-const String fieldBranchCode = "branch_code";
-const String fieldCounterCode = "counter_code";
-const String fieldAdminID = "admin_id";
-const String fieldCompanyKey = "company_key";
-const String fieldTransactionDate = "transaction_date";
 const String fieldBranchName = "branch_name";
-const String fieldCounterDesc = "counter_desc";
+const String fieldCounterName = "counter_name";
+const String fieldUserID = "user_id";
+const String fieldCompanyID = "company_id";
+const String fieldTransactionDate = "transaction_date";
 
 class CreditModel {
   static const String keyCredit = "credits";
@@ -23,13 +21,11 @@ class CreditModel {
   final String creditDescription;
   final double credit;
   final double remainingCredit;
-  final String branchCode;
-  final String counterCode;
-  final String adminID;
-  final String companyKey;
-  final int transactionDate;
   final String branchName;
-  final String counterDesc;
+  final String counterName;
+  final String userID;
+  final String companyID;
+  final int transactionDate;
 
   CreditModel({
     this.id = 0,
@@ -39,13 +35,11 @@ class CreditModel {
     this.creditDescription = "",
     this.credit = 0.0,
     this.remainingCredit = 0.0,
-    this.branchCode = "",
-    this.counterCode = "",
-    this.adminID = "",
-    this.companyKey = "",
-    this.transactionDate = 0,
     this.branchName = "",
-    this.counterDesc = "",
+    this.counterName = "",
+    this.userID = "",
+    this.companyID = "",
+    this.transactionDate = 0,
   });
 
   CreditModel.empty() : this();
@@ -58,16 +52,14 @@ class CreditModel {
     creditDescription: data[fieldCreditDescription] ?? "",
     credit: (data[fieldCredit] ?? 0).toDouble(),
     remainingCredit: (data[fieldRemainingCredit] ?? 0).toDouble(),
-    branchCode: data[fieldBranchCode] ?? "",
-    counterCode: data[fieldCounterCode] ?? "",
-    adminID: data[fieldAdminID] ?? "",
-    companyKey: data[fieldCompanyKey] ?? "",
-    transactionDate: data[fieldTransactionDate] != null ? DateTime.tryParse(data[fieldTransactionDate])?.millisecondsSinceEpoch ?? 0 : 0,
     branchName: data[fieldBranchName] ?? "",
-    counterDesc: data[fieldCounterDesc] ?? "",
+    counterName: data[fieldCounterName] ?? "",
+    userID: data[fieldUserID] ?? "",
+    companyID: data[fieldCompanyID] ?? "",
+    transactionDate: data[fieldTransactionDate] != null ? DateTime.tryParse(data[fieldTransactionDate])?.millisecondsSinceEpoch ?? 0 : 0,
   );
 
   @override
   String toString() =>
-      "CreditModel(id: $id, memberCode: $memberCode, docNo: $docNo, docAmount: $docAmount, creditDescription: $creditDescription, credit: $credit, remainingCredit: $remainingCredit, branchCode: $branchCode, counterCode: $counterCode, adminID: $adminID, companyKey: $companyKey, transactionDate: $transactionDate, branchName: $branchName, counterDesc: $counterDesc)\n";
+      "CreditModel(id: $id, memberCode: $memberCode, docNo: $docNo, docAmount: $docAmount, creditDescription: $creditDescription, credit: $credit, remainingCredit: $remainingCredit, branchName: $branchName, counterName: $counterName, userID: $userID, companyID: $companyID, transactionDate: $transactionDate)\n";
 }

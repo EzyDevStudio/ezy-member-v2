@@ -5,13 +5,11 @@ const String fieldDocAmount = "doc_amount";
 const String fieldPointDescription = "point_description";
 const String fieldPoint = "point";
 const String fieldRemainingPoint = "remaining_point";
-const String fieldBranchCode = "branch_code";
-const String fieldCounterCode = "counter_code";
-const String fieldAdminID = "admin_id";
-const String fieldCompanyKey = "company_key";
-const String fieldTransactionDate = "transaction_date";
 const String fieldBranchName = "branch_name";
-const String fieldCounterDesc = "counter_desc";
+const String fieldCounterName = "counter_name";
+const String fieldUserID = "user_id";
+const String fieldCompanyID = "company_id";
+const String fieldTransactionDate = "transaction_date";
 
 class PointModel {
   static const String keyPoint = "points";
@@ -21,15 +19,13 @@ class PointModel {
   final String docNo;
   final double docAmount;
   final String pointDescription;
-  final double point;
-  final double remainingPoint;
-  final String branchCode;
-  final String counterCode;
-  final String adminID;
-  final String companyKey;
-  final int transactionDate;
+  final int point;
+  final int remainingPoint;
   final String branchName;
-  final String counterDesc;
+  final String counterName;
+  final String userID;
+  final String companyID;
+  final int transactionDate;
 
   PointModel({
     this.id = 0,
@@ -37,15 +33,13 @@ class PointModel {
     this.docNo = "",
     this.docAmount = 0.0,
     this.pointDescription = "",
-    this.point = 0.0,
-    this.remainingPoint = 0.0,
-    this.branchCode = "",
-    this.counterCode = "",
-    this.adminID = "",
-    this.companyKey = "",
-    this.transactionDate = 0,
+    this.point = 0,
+    this.remainingPoint = 0,
     this.branchName = "",
-    this.counterDesc = "",
+    this.counterName = "",
+    this.userID = "",
+    this.companyID = "",
+    this.transactionDate = 0,
   });
 
   PointModel.empty() : this();
@@ -56,18 +50,16 @@ class PointModel {
     docNo: data[fieldDocNo] ?? "",
     docAmount: (data[fieldDocAmount] ?? 0).toDouble(),
     pointDescription: data[fieldPointDescription] ?? "",
-    point: (data[fieldPoint] ?? 0).toDouble(),
-    remainingPoint: (data[fieldRemainingPoint] ?? 0).toDouble(),
-    branchCode: data[fieldBranchCode] ?? "",
-    counterCode: data[fieldCounterCode] ?? "",
-    adminID: data[fieldAdminID] ?? "",
-    companyKey: data[fieldCompanyKey] ?? "",
-    transactionDate: data[fieldTransactionDate] != null ? DateTime.tryParse(data[fieldTransactionDate])?.millisecondsSinceEpoch ?? 0 : 0,
+    point: data[fieldPoint] ?? 0,
+    remainingPoint: data[fieldRemainingPoint] ?? 0,
     branchName: data[fieldBranchName] ?? "",
-    counterDesc: data[fieldCounterDesc] ?? "",
+    counterName: data[fieldCounterName] ?? "",
+    userID: data[fieldUserID] ?? "",
+    companyID: data[fieldCompanyID] ?? "",
+    transactionDate: data[fieldTransactionDate] != null ? DateTime.tryParse(data[fieldTransactionDate])?.millisecondsSinceEpoch ?? 0 : 0,
   );
 
   @override
   String toString() =>
-      "PointModel(id: $id, memberCode: $memberCode, docNo: $docNo, docAmount: $docAmount, pointDescription: $pointDescription, point: $point, remainingPoint: $remainingPoint, branchCode: $branchCode, counterCode: $counterCode, adminID: $adminID, companyKey: $companyKey, transactionDate: $transactionDate, branchName: $branchName, counterDesc: $counterDesc)\n";
+      "PointModel(id: $id, memberCode: $memberCode, docNo: $docNo, docAmount: $docAmount, pointDescription: $pointDescription, point: $point, remainingPoint: $remainingPoint, branchName: $branchName, counterName: $counterName, userID: $userID, companyID: $companyID, transactionDate: $transactionDate)\n";
 }

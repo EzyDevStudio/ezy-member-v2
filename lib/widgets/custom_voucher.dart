@@ -66,7 +66,11 @@ class CustomVoucher extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          CustomAvatarImage(size: ResponsiveHelper().avatarSize() * (isCollectable ? 1.0 : 1.1), networkImage: voucher.companyLogo),
+          CustomAvatarImage(
+            size: ResponsiveHelper().avatarSize() * (isCollectable ? 1.0 : 1.1),
+            networkImage: voucher.companyLogo,
+            name: voucher.companyName,
+          ),
           CustomText(
             voucher.companyName,
             color: Theme.of(context).colorScheme.onPrimary,
@@ -113,12 +117,14 @@ class CustomVoucher extends StatelessWidget {
                 ),
               ),
               if (isCollectable)
-                InkWell(
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: onTapCollect,
                   child: CustomText(Globalization.collect.tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 12.0),
                 ),
               if (isRedeemable)
-                InkWell(
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: onTapRedeem,
                   child: CustomText(Globalization.redeem.tr, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 12.0),
                 ),
@@ -134,13 +140,13 @@ class CustomVoucher extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    if (isRedeemable)
+                    if (isRedeemable && voucher.usePointRedeem > 0)
                       CustomText(
                         "${Globalization.redeemWith.tr} ${voucher.usePointRedeem} ${Globalization.points.tr}",
                         fontSize: isCollectable ? 12.0 : 14.0,
                       ),
                     if (!isRedeemable) CustomText("${Globalization.minSpend.tr} ${voucher.minimumSpend}", fontSize: isCollectable ? 12.0 : 14.0),
-                    CustomText("$dateTitle ${FormatterHelper.timestampToString(date)}", color: Colors.black54, fontSize: isCollectable ? 11.0 : 14.0),
+                    CustomText("$dateTitle ${date.tsToStr}", color: Colors.black54, fontSize: isCollectable ? 11.0 : 14.0),
                   ],
                 ),
               ),

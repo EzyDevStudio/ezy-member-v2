@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:hive/hive.dart';
 
 part 'member_profile_hive.g.dart';
@@ -19,26 +21,26 @@ class MemberProfileHive extends HiveObject {
   final String token;
 
   @HiveField(4)
-  final String image;
+  final Uint8List? image;
 
   @HiveField(5)
-  final String backgroundImage;
+  final Uint8List? backgroundImage;
 
   @HiveField(6)
-  final String personalInvoice;
+  final Uint8List? personalInvoice;
 
   @HiveField(7)
-  final String workingInvoice;
+  final Uint8List? workingInvoice;
 
   MemberProfileHive({
     required this.id,
     required this.memberCode,
     required this.name,
     required this.token,
-    required this.image,
-    required this.backgroundImage,
-    required this.personalInvoice,
-    required this.workingInvoice,
+    this.image,
+    this.backgroundImage,
+    this.personalInvoice,
+    this.workingInvoice,
   });
 
   MemberProfileHive copyWith({
@@ -46,10 +48,10 @@ class MemberProfileHive extends HiveObject {
     String? memberCode,
     String? name,
     String? token,
-    String? image,
-    String? backgroundImage,
-    String? personalInvoice,
-    String? workingInvoice,
+    Uint8List? image,
+    Uint8List? backgroundImage,
+    Uint8List? personalInvoice,
+    Uint8List? workingInvoice,
   }) => MemberProfileHive(
     id: id ?? this.id,
     memberCode: memberCode ?? this.memberCode,

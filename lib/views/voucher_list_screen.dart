@@ -77,7 +77,7 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
         ),
-        title: Text(Globalization.myVouchers.tr),
+        title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
       ),
       body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
     );

@@ -4,10 +4,11 @@ const String fieldCardCode = "card_code";
 const String fieldMemberCardNumber = "member_card_number";
 const String fieldExpiredDate = "expired_date";
 const String fieldIsFavorite = "is_favorite";
-const String fieldCardDesc = "card_desc";
+const String fieldCardTier = "card_tier";
+const String fieldCardDesc = "card_description";
 const String fieldCardMagnification = "card_magnification";
 const String fieldCardImage = "card_image";
-const String fieldIsDefault = "isDefault";
+const String fieldIsDefault = "is_default";
 const String fieldCreatedAt = "created_at";
 
 class MemberCardModel {
@@ -15,6 +16,7 @@ class MemberCardModel {
 
   final int id;
   final String memberCode;
+  final String cardTier;
   final String cardCode;
   final String memberCardNumber;
   final int expiredDate;
@@ -29,6 +31,7 @@ class MemberCardModel {
   MemberCardModel({
     this.id = 0,
     this.memberCode = "",
+    this.cardTier = "",
     this.cardCode = "",
     this.memberCardNumber = "",
     this.expiredDate = 0,
@@ -45,12 +48,13 @@ class MemberCardModel {
   factory MemberCardModel.fromJson(Map<String, dynamic> data) => MemberCardModel(
     id: data[fieldID] ?? 0,
     memberCode: data[fieldMemberCode] ?? "",
+    cardTier: data[fieldCardTier] ?? "",
     cardCode: data[fieldCardCode] ?? "",
     memberCardNumber: data[fieldMemberCardNumber] ?? "",
     expiredDate: data[fieldExpiredDate] != null ? DateTime.tryParse(data[fieldExpiredDate])?.millisecondsSinceEpoch ?? 0 : 0,
     isFavorite: data[fieldIsFavorite] != null ? (data[fieldIsFavorite] == 1 ? true : false) : false,
     cardDesc: data[fieldCardDesc] ?? "",
-    cardMagnification: (data[fieldCardMagnification] ?? 0).toDouble(),
+    cardMagnification: (data[fieldCardMagnification] ?? 1).toDouble(),
     cardImage: data[fieldCardImage] ?? "",
     isDefault: data[fieldIsDefault] != null ? (data[fieldIsDefault] == 1 ? true : false) : false,
     createdAt: data[fieldCreatedAt] != null ? DateTime.tryParse(data[fieldCreatedAt])?.millisecondsSinceEpoch ?? 0 : 0,
@@ -58,5 +62,5 @@ class MemberCardModel {
 
   @override
   String toString() =>
-      "MemberCardModel(id: $id, memberCode: $memberCode, cardCode: $cardCode, memberCardNumber: $memberCardNumber, expiredDate: $expiredDate, isFavorite: $isFavorite, cardDesc: $cardDesc, cardMagnification: $cardMagnification, cardImage: $cardImage, isDefault: $isDefault, createdAt: $createdAt)\n";
+      "MemberCardModel(id: $id, memberCode: $memberCode, cardTier: $cardTier, cardCode: $cardCode, memberCardNumber: $memberCardNumber, expiredDate: $expiredDate, isFavorite: $isFavorite, cardDesc: $cardDesc, cardMagnification: $cardMagnification, cardImage: $cardImage, isDefault: $isDefault, createdAt: $createdAt)\n";
 }

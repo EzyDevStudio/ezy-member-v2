@@ -150,6 +150,7 @@ class MsMy {
     Globalization.msgGoogleMapsConfirmation: "Would you like to open Google Maps to start navigation?",
     Globalization.msgGoogleMapsRedirecting: "Please wait while we redirect you to Google Maps.",
     Globalization.msgHintText: "Enter your @label",
+    Globalization.msgImageSizeExceed: "The selected image exceeds the maximum allowed size of 5 MB.",
     Globalization.msgMemberExpired: "Your membership has expired. Please renew it to continue enjoying our services.",
     Globalization.msgMemberRegisterProcessing: "Please wait while we process your registration.",
     Globalization.msgMemberRegisterSuccess: "You have successfully registered as a member. Enjoy our services!",

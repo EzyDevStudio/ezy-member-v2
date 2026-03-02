@@ -6,6 +6,7 @@ const String fieldStatus = "status";
 const String fieldRedeemMember = "redeem_member";
 const String fieldRedeemDate = "redeem_date";
 const String fieldRedeemCounter = "redeem_counter";
+const String fieldBranchName = "branch_name";
 const String fieldDocNo = "doc_no";
 const String fieldCreatedAt = "created_at";
 const String fieldUsePointRedeem = "use_point_redeem";
@@ -20,8 +21,6 @@ const String fieldTermsCondition = "terms_condition";
 const String fieldCompanyID = "company_id";
 const String fieldCompanyName = "company_name";
 const String fieldCompanyLogo = "company_logo";
-const String fieldBranchName = "branch_name";
-const String fieldCounterDesc = "counter_desc";
 
 class VoucherModel {
   static const String keyNormalVoucher = "normal_voucher";
@@ -35,6 +34,7 @@ class VoucherModel {
   final String redeemMember;
   final int redeemDate;
   final String redeemCounter;
+  final String branchName;
   final String docNo;
   final int createdAt;
   final int usePointRedeem;
@@ -49,8 +49,6 @@ class VoucherModel {
   final String companyID;
   final String companyName;
   final String companyLogo;
-  final String branchName;
-  final String counterDesc;
 
   VoucherModel({
     this.id = 0,
@@ -61,6 +59,7 @@ class VoucherModel {
     this.redeemMember = "",
     this.redeemDate = 0,
     this.redeemCounter = "",
+    this.branchName = "",
     this.docNo = "",
     this.createdAt = 0,
     this.usePointRedeem = 0,
@@ -75,8 +74,6 @@ class VoucherModel {
     this.companyID = "",
     this.companyName = "",
     this.companyLogo = "",
-    this.branchName = "",
-    this.counterDesc = "",
   });
 
   VoucherModel.empty() : this();
@@ -90,6 +87,7 @@ class VoucherModel {
     redeemMember: data[fieldRedeemMember] ?? "",
     redeemDate: data[fieldRedeemDate] != null ? DateTime.tryParse(data[fieldRedeemDate])?.millisecondsSinceEpoch ?? 0 : 0,
     redeemCounter: data[fieldRedeemCounter] ?? "",
+    branchName: data[fieldBranchName] ?? "",
     docNo: data[fieldDocNo] ?? "",
     createdAt: data[fieldCreatedAt] != null ? DateTime.tryParse(data[fieldCreatedAt])?.millisecondsSinceEpoch ?? 0 : 0,
     usePointRedeem: data[fieldUsePointRedeem] ?? 0,
@@ -104,11 +102,9 @@ class VoucherModel {
     companyID: data[fieldCompanyID] ?? "",
     companyName: data[fieldCompanyName] ?? "",
     companyLogo: data[fieldCompanyLogo] ?? "",
-    branchName: data[fieldBranchName] ?? "",
-    counterDesc: data[fieldCounterDesc] ?? "",
   );
 
   @override
   String toString() =>
-      "VoucherModel(id: $id, batchCode: $batchCode, voucherCode: $voucherCode, holder: $holder, status: $status, redeemMember: $redeemMember, redeemDate: $redeemDate, redeemCounter: $redeemCounter, docNo: $docNo, createdAt: $createdAt, usePointRedeem: $usePointRedeem, batchDescription: $batchDescription, discountValue: $discountValue, minimumSpend: $minimumSpend, startDate: $startDate, expiredDate: $expiredDate, endCollectDate: $endCollectDate, quantity: $quantity, termsCondition: $termsCondition, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo, branchName: $branchName, counterDesc: $counterDesc)\n";
+      "VoucherModel(id: $id, batchCode: $batchCode, voucherCode: $voucherCode, holder: $holder, status: $status, redeemMember: $redeemMember, redeemDate: $redeemDate, redeemCounter: $redeemCounter, branchName: $branchName, docNo: $docNo, createdAt: $createdAt, usePointRedeem: $usePointRedeem, batchDescription: $batchDescription, discountValue: $discountValue, minimumSpend: $minimumSpend, startDate: $startDate, expiredDate: $expiredDate, endCollectDate: $endCollectDate, quantity: $quantity, termsCondition: $termsCondition, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo)\n";
 }

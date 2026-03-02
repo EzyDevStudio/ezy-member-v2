@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:ezymember/constants/app_strings.dart';
+import 'package:flutter/material.dart';
 
 class ApiService {
   final Dio _dio = Dio();
@@ -19,6 +21,8 @@ class ApiService {
         queryParameters: data,
         options: Options(headers: {"Content-Type": "application/json"}),
       );
+
+      debugPrint(response.toString());
 
       return response;
     } on DioException catch (e) {
@@ -39,6 +43,8 @@ class ApiService {
         data: data,
         options: Options(headers: {"Authorization": "Bearer $memberToken", "Content-Type": "application/json"}),
       );
+
+      debugPrint(response.toString());
 
       return response;
     } on DioException catch (e) {
@@ -72,12 +78,26 @@ class ApiService {
         options: Options(headers: {"Authorization": "Bearer $memberToken", "Content-Type": "multipart/form-data"}),
       );
 
+      debugPrint(response.toString());
+
       return response;
     } on DioException catch (e) {
       _showLog(e, "Dio Error", module, url);
       return null;
     } catch (e) {
       _showLog(e, "Unknown Error", module, url);
+      return null;
+    }
+  }
+
+  Future<Uint8List?> downloadImageAsBytes(String url) async {
+    if (url.isEmpty) return null;
+
+    try {
+      final response = await Dio().get(url, options: Options(responseType: ResponseType.bytes));
+
+      return Uint8List.fromList(response.data);
+    } catch (e) {
       return null;
     }
   }

@@ -80,10 +80,10 @@ class AuthenticationController extends GetxController {
             memberCode: profile.memberCode,
             name: profile.name,
             token: profile.token,
-            image: profile.image,
-            backgroundImage: profile.backgroundImage,
-            personalInvoice: profile.personalInvoiceImage,
-            workingInvoice: response.data["working_e_invoice"],
+            image: await _api.downloadImageAsBytes(profile.image),
+            backgroundImage: await _api.downloadImageAsBytes(profile.backgroundImage),
+            personalInvoice: await _api.downloadImageAsBytes(profile.personalInvoiceImage),
+            workingInvoice: await _api.downloadImageAsBytes(response.data["working_e_invoice"]),
           ),
         );
 
@@ -138,10 +138,10 @@ class AuthenticationController extends GetxController {
             memberCode: profile.memberCode,
             name: profile.name,
             token: profile.token,
-            image: profile.image,
-            backgroundImage: profile.backgroundImage,
-            personalInvoice: profile.personalInvoiceImage,
-            workingInvoice: response.data["working_e_invoice"],
+            image: await _api.downloadImageAsBytes(profile.image),
+            backgroundImage: await _api.downloadImageAsBytes(profile.backgroundImage),
+            personalInvoice: await _api.downloadImageAsBytes(profile.personalInvoiceImage),
+            workingInvoice: await _api.downloadImageAsBytes(response.data["working_e_invoice"]),
           ),
         );
 

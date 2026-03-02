@@ -1,5 +1,4 @@
 import 'package:ezymember/helpers/responsive_helper.dart';
-import 'package:ezymember/language/globalization.dart';
 import 'package:ezymember/models/timeline_model.dart';
 import 'package:ezymember/widgets/custom_timeline.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +34,7 @@ class _TimelineDetailScreenState extends State<TimelineDetailScreen> {
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
         ),
-        title: Text(Globalization.timeline.tr),
+        title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
       ),
       body: ListView(children: <Widget>[CustomTimeline(timeline: _timeline, isDetail: true, isShowMore: false)]),
     );

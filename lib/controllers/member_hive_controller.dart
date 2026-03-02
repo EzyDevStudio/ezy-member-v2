@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:ezymember/hive/member_profile_hive.dart';
 import 'package:ezymember/services/local/member_profile_storage_service.dart';
 import 'package:get/get.dart';
@@ -8,10 +10,10 @@ class MemberHiveController extends GetxController {
   var memberProfile = Rxn<MemberProfileHive>();
 
   bool get isSignIn => memberProfile.value?.memberCode.isNotEmpty == true;
-  String get backgroundImage => memberProfile.value != null ? memberProfile.value!.backgroundImage : "";
-  String get image => memberProfile.value != null ? memberProfile.value!.image : "";
-  String get personalInvoice => memberProfile.value != null ? memberProfile.value!.personalInvoice : "";
-  String get workingInvoice => memberProfile.value != null ? memberProfile.value!.workingInvoice : "";
+  Uint8List? get image => memberProfile.value?.image;
+  Uint8List? get backgroundImage => memberProfile.value?.backgroundImage;
+  Uint8List? get personalInvoice => memberProfile.value?.personalInvoice;
+  Uint8List? get workingInvoice => memberProfile.value?.workingInvoice;
 
   @override
   void onInit() {
@@ -34,30 +36,30 @@ class MemberHiveController extends GetxController {
     memberProfile.value = null;
   }
 
-  Future<void> updateImage(String image) async {
+  Future<void> updateImage(Uint8List bytes) async {
     if (memberProfile.value == null) return;
-    final updatedProfile = memberProfile.value!.copyWith(image: image);
+    final updatedProfile = memberProfile.value!.copyWith(image: bytes);
     await _storage.saveMemberProfile(updatedProfile);
     memberProfile.value = updatedProfile;
   }
 
-  Future<void> updateBackgroundImage(String image) async {
+  Future<void> updateBackgroundImage(Uint8List bytes) async {
     if (memberProfile.value == null) return;
-    final updatedProfile = memberProfile.value!.copyWith(backgroundImage: image);
+    final updatedProfile = memberProfile.value!.copyWith(backgroundImage: bytes);
     await _storage.saveMemberProfile(updatedProfile);
     memberProfile.value = updatedProfile;
   }
 
-  Future<void> updatePersonalInvoiceImage(String image) async {
+  Future<void> updatePersonalInvoiceImage(Uint8List bytes) async {
     if (memberProfile.value == null) return;
-    final updatedProfile = memberProfile.value!.copyWith(personalInvoice: image);
+    final updatedProfile = memberProfile.value!.copyWith(personalInvoice: bytes);
     await _storage.saveMemberProfile(updatedProfile);
     memberProfile.value = updatedProfile;
   }
 
-  Future<void> updateCompanyInvoiceImage(String image) async {
+  Future<void> updateCompanyInvoiceImage(Uint8List bytes) async {
     if (memberProfile.value == null) return;
-    final updatedProfile = memberProfile.value!.copyWith(workingInvoice: image);
+    final updatedProfile = memberProfile.value!.copyWith(workingInvoice: bytes);
     await _storage.saveMemberProfile(updatedProfile);
     memberProfile.value = updatedProfile;
   }

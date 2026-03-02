@@ -7,7 +7,6 @@ import 'package:ezymember/controllers/member_controller.dart';
 import 'package:ezymember/controllers/member_hive_controller.dart';
 import 'package:ezymember/helpers/code_generator_helper.dart';
 import 'package:ezymember/helpers/formatter_helper.dart';
-import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/language/globalization.dart';
 import 'package:ezymember/models/member_model.dart';
@@ -59,13 +58,13 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
 
   Future<void> _onRefresh() async {
     _historyController.loadHistories(_hive.memberProfile.value!.memberCode, companyID: _companyID);
-    _memberController.loadMembers(_hive.memberProfile.value!.memberCode, companyID: _companyID);
+    _memberController.loadMemberDetail(_hive.memberProfile.value!.memberCode, companyID: _companyID);
   }
 
-  bool _isExpired() {
-    if (!_member.isExpired) return false;
-    MessageHelper.show(Globalization.msgMemberExpired.tr, backgroundColor: Colors.red, icon: Icons.error_rounded);
-    return true;
+  void _isExpired(MemberModel member, String page, Map<String, dynamic> arguments) {
+    if (member.memberCard.expiredDate.isExpiredMsg) return;
+    arguments.addAll({"company_id": _companyID});
+    Get.toNamed(page, arguments: arguments);
   }
 
   void _showFilterModal() {
@@ -107,11 +106,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                         final pickedDate = await _selectDate(context, startDate);
                         setModalState(() => startDate = pickedDate);
                       },
-                      child: CustomText(
-                        FormatterHelper.dateTimeToString(startDate),
-                        color: Theme.of(context).colorScheme.onSecondaryContainer,
-                        fontSize: 16.0,
-                      ),
+                      child: CustomText(startDate.dtToStr, color: Theme.of(context).colorScheme.onSecondaryContainer, fontSize: 16.0),
                     ),
                   ),
                   CustomText("-", fontSize: 16.0),
@@ -125,11 +120,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                         final pickedDate = await _selectDate(context, endDate);
                         setModalState(() => endDate = pickedDate);
                       },
-                      child: CustomText(
-                        FormatterHelper.dateTimeToString(endDate),
-                        color: Theme.of(context).colorScheme.onSecondaryContainer,
-                        fontSize: 16.0,
-                      ),
+                      child: CustomText(endDate.dtToStr, color: Theme.of(context).colorScheme.onSecondaryContainer, fontSize: 16.0),
                     ),
                   ),
                 ],
@@ -221,6 +212,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
         ),
+        title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
       ),
       body: RefreshIndicator(
         onRefresh: _onRefresh,
@@ -268,26 +260,21 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                CustomAvatarImage(size: ResponsiveHelper().avatarSize() * 1.2, networkImage: _hive.image),
+                CustomAvatarImage(size: ResponsiveHelper().avatarSize() * 1.2, cacheImage: _hive.image),
                 const Spacer(),
                 CustomLabelChip(
-                  backgroundColor: _member.isExpired ? Colors.red : Colors.green,
+                  backgroundColor: _member.memberCard.expiredDate.isExpired ? Colors.red : Colors.green,
                   foregroundColor: Colors.white,
-                  label: _member.isExpired ? Globalization.expired.tr : Globalization.active.tr,
+                  label: _member.memberCard.expiredDate.isExpired ? Globalization.expired.tr : Globalization.active.tr,
                 ),
               ],
-            ),
-            CustomText(
-              _member.memberCard.memberCardNumber.replaceAllMapped(RegExp(r".{4}"), (m) => "${m.group(0)} "),
-              color: Colors.white,
-              fontSize: 22.0,
             ),
             const Spacer(),
             Row(
               spacing: 16.dp,
               children: <Widget>[
                 Expanded(child: CustomText(_hive.memberProfile.value!.name, color: Colors.white, fontSize: 18.0)),
-                CustomText(_member.memberCard.cardDesc, color: Colors.white, fontSize: 18.0),
+                CustomText(_member.memberCard.cardTier, color: Colors.white, fontSize: 18.0),
               ],
             ),
             const Spacer(),
@@ -298,14 +285,14 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     CustomText(Globalization.joined.tr, color: Colors.white, fontSize: 14.0),
-                    CustomText(FormatterHelper.timestampToString(_member.memberCard.createdAt), color: Colors.white, fontSize: 14.0),
+                    CustomText(_member.memberCard.createdAt.tsToStr, color: Colors.white, fontSize: 14.0),
                   ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     CustomText(Globalization.expires.tr, color: Colors.white, fontSize: 14.0),
-                    CustomText(FormatterHelper.timestampToString(_member.memberCard.expiredDate), color: Colors.white, fontSize: 14.0),
+                    CustomText(_member.memberCard.expiredDate.tsToStr, color: Colors.white, fontSize: 14.0),
                   ],
                 ),
                 const Spacer(),
@@ -317,7 +304,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                   onPressed: () async {
                     final result = await _memberController.favoriteMember(
                       _member.memberCard.isFavorite ? 0 : 1,
-                      _member.companyID,
+                      _member.company.companyID,
                       _hive.memberProfile.value!.memberCode,
                       _hive.memberProfile.value!.token,
                     );
@@ -337,43 +324,35 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
     ),
   );
 
-  Widget _buildQuickAccess() => Container(
-    margin: EdgeInsets.all(16.dp),
-    child: Row(
-      children: <Widget>[
-        _buildQuickAccessItem(
-          Globalization.myPoints.tr,
-          _member.point.toString(),
-          () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemPoints, "company_id": _member.companyID}),
-        ),
-        _buildQuickAccessItem(
-          Globalization.myVouchers.tr,
-          (_member.normalVoucherCount + _member.specialVoucherCount).toString(),
-          () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 1, "company_id": _member.companyID}),
-        ),
-        _buildQuickAccessItem(
-          Globalization.myCredits.tr,
-          _member.credit.toStringAsFixed(1),
-          () => Get.toNamed(AppRoutes.scan, arguments: {"scan_type": ScanType.redeemCredits, "company_id": _member.companyID}),
-        ),
-      ],
+  Widget _buildQuickAccess() => GridView(
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisSpacing: 16.dp,
+      mainAxisExtent: ResponsiveHelper().quickAccessHeight(),
+      mainAxisSpacing: 16.dp,
+      crossAxisCount: 3,
     ),
-  );
-
-  Widget _buildQuickAccessItem(String label, String value, VoidCallback onTap) => Expanded(
-    child: InkWell(
-      onTap: () {
-        if (_isExpired()) return;
-        onTap();
-      },
-      child: Column(
-        spacing: 8.dp,
-        children: <Widget>[
-          CustomText(value, color: Theme.of(context).colorScheme.primary, fontSize: 20.0, fontWeight: FontWeight.bold),
-          CustomText(label, fontSize: 16.0),
-        ],
+    children: <Widget>[
+      CustomImageTextButton(
+        assetName: "assets/icons/my_points.png",
+        label: _member.isMember ? Globalization.myPoints.tr : Globalization.earnPoints.tr,
+        content: _member.isMember ? _member.point.toString() : null,
+        onTap: _member.isMember ? () => _isExpired(_member, AppRoutes.scan, {"scan_type": ScanType.redeemPoints}) : null,
       ),
-    ),
+      CustomImageTextButton(
+        assetName: "assets/icons/my_vouchers.png",
+        label: _member.isMember ? Globalization.myVouchers.tr : Globalization.collectVouchers.tr,
+        content: _member.isMember ? (_member.normalCount + _member.specialCount).toString() : null,
+        onTap: _member.isMember && _hive.memberProfile.value != null ? () => _isExpired(_member, AppRoutes.voucherList, {"check_start": 1}) : null,
+      ),
+      CustomImageTextButton(
+        assetName: "assets/icons/my_credits.png",
+        label: _member.isMember ? Globalization.myCredits.tr : Globalization.redeemByCredits.tr,
+        content: _member.isMember ? _member.credit.toStringAsFixed(1) : null,
+        onTap: _member.isMember ? () => _isExpired(_member, AppRoutes.scan, {"scan_type": ScanType.redeemCredits}) : null,
+      ),
+    ],
   );
 
   Widget _buildHistory() => Obx(() {

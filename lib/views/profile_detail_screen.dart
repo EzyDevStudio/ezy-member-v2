@@ -99,7 +99,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     DateTime? pickedDate = await showDatePicker(
       context: context,
       firstDate: DateTime(1900),
-      initialDate: controller.text.isEmpty ? DateTime.now() : FormatterHelper.stringToDateTime(controller.text),
+      initialDate: controller.text.isEmpty ? DateTime.now() : controller.text.strToDT,
       lastDate: DateTime.now(),
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
@@ -115,7 +115,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       ),
     );
 
-    if (pickedDate != null) controller.text = FormatterHelper.timestampToString(pickedDate.millisecondsSinceEpoch);
+    if (pickedDate != null) controller.text = pickedDate.dtToStr;
   }
 
   void _updateMemberProfile() async {
@@ -130,10 +130,12 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       return;
     }
 
+    int contactNumber = int.parse(_memberControllers[fieldContactNumber].text.trim());
+
     final Map<String, dynamic> data = MemberProfileModel.toJsonUpdate(
       memberCode: _memberProfile.memberCode,
       countryCode: _phoneMember.dialCode,
-      contactNumber: _memberControllers[fieldContactNumber].text.trim(),
+      contactNumber: contactNumber.toString(),
       address1: _memberControllers[fieldAddress1].text.trim(),
       address2: _memberControllers[fieldAddress2].text.trim(),
       address3: _memberControllers[fieldAddress3].text.trim(),
@@ -190,6 +192,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
 
   void _uploadMedia(int imgType) async {
     if (!await ConnectionService.checkConnection()) return;
+    if (!mounted) return;
 
     final pickedSource = await CustomTypePickerDialog.show<ImageSource, String>(
       context: context,
@@ -260,7 +263,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       onPressed: () => Navigator.of(context).pop(),
       icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
     ),
-    title: Text(Globalization.profile.tr),
+    title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
   );
 
   Widget _buildContent() => SliverFillRemaining(
@@ -276,8 +279,8 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
           children: <Widget>[
             Obx(
               () => CustomProfileCard(
-                backgroundImage: _hive.isSignIn ? _hive.memberProfile.value!.backgroundImage : "",
-                image: _hive.isSignIn ? _hive.memberProfile.value!.image : "",
+                backgroundImage: _hive.backgroundImage,
+                image: _hive.image,
                 memberCode: _memberProfile.memberCode,
                 name: _memberProfile.name,
               ),

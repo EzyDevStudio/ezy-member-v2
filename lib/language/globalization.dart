@@ -157,6 +157,7 @@ class Globalization {
   static const String msgGoogleMapsConfirmation = "Would you like to open Google Maps to start navigation?";
   static const String msgGoogleMapsRedirecting = "Please wait while we redirect you to Google Maps.";
   static const String msgHintText = "Enter your @label";
+  static const String msgImageSizeExceed = "The selected image exceeds the maximum allowed size of 5 MB.";
   static const String msgMemberExpired = "Your membership has expired. Please renew it to continue enjoying our services.";
   static const String msgMemberRegisterProcessing = "Please wait while we process your registration.";
   static const String msgMemberRegisterSuccess = "You have successfully registered as a member. Enjoy our services!";
