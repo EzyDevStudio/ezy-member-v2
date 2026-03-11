@@ -22,8 +22,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 // Future Features: Point expires
 // Future Features: Auto upgrade or downgrade member tier
 // Pending Features: Payment Gateway (Join or Renew member)
-// Pending Features: Member code change to member card number
-// Pending Features: Move constant image such as avatar to local device
 // Pending Features: When user spend money meet requirement then provide a voucher for future use
 
 // run "adb devices" to get devices
