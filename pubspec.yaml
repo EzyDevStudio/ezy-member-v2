@@ -85,8 +85,3 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/jsons/
-
-  fonts:
-    - family: AlibabaPuHuiTi
-      fonts:
-        - asset: assets/fonts/AlibabaPuHuiTi-3-55-Regular.ttf

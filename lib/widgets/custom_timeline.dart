@@ -55,10 +55,7 @@ class CustomTimeline extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.dp),
           child: isShowMore
-              ? CustomReadMore(
-                  text: timeline.timelineCaption,
-                  style: const TextStyle(fontFamily: "AlibabaPuHuiTi", fontSize: 16.0),
-                )
+              ? CustomReadMore(text: timeline.timelineCaption, style: const TextStyle(fontSize: 16.0))
               : CustomText(timeline.timelineCaption, fontSize: 16.0, maxLines: null),
         ),
         GestureDetector(

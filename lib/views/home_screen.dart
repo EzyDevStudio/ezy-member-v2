@@ -280,7 +280,11 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
   Widget _buildVouchers() => Obx(() {
-    if (_voucherController.vouchers.isEmpty) return SliverToBoxAdapter();
+    if (_voucherController.vouchers.isEmpty) {
+      return SliverToBoxAdapter(
+        child: Divider(color: Colors.grey.withValues(alpha: 0.7), thickness: 5.dp),
+      );
+    }
 
     final vouchers = _voucherController.vouchers;
 
@@ -334,8 +338,8 @@ class _HomeScreenState extends State<HomeScreen> {
             margin: EdgeInsets.only(bottom: 16.dp),
             decoration: BoxDecoration(
               boxShadow: <BoxShadow>[
-                BoxShadow(color: Colors.black38, blurRadius: 6.0, spreadRadius: 2.0, offset: Offset(0.0, -4.0)),
-                BoxShadow(color: Colors.black38, blurRadius: 10.0, spreadRadius: 2.0, offset: Offset(0.0, -4.0)),
+                BoxShadow(color: Colors.black54, blurRadius: 6.0, spreadRadius: 2.0, offset: Offset(0.0, -4.0)),
+                BoxShadow(color: Colors.black54, blurRadius: 10.0, spreadRadius: 2.0, offset: Offset(0.0, -4.0)),
               ],
             ),
           ),
@@ -365,9 +369,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Container(
           decoration: BoxDecoration(
             border: Border(
-              top: index == 0 && (!_hive.isSignIn ? true : _voucherController.vouchers.isNotEmpty)
-                  ? BorderSide.none
-                  : BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
+              top: index == 0 ? BorderSide.none : BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
             ),
           ),
           child: CustomTimeline(timeline: timelines[index], isNavigateCompany: true, isNavigateTimeline: true),

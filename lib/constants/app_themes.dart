@@ -55,6 +55,5 @@ class AppThemes {
       iconTheme: IconThemeData(color: AppColors.lightOnPrimary),
       titleTextStyle: TextStyle(color: AppColors.lightOnPrimary, fontSize: 20.0, fontWeight: FontWeight.bold),
     ),
-    fontFamily: "AlibabaPuHuiTi",
   );
 }
