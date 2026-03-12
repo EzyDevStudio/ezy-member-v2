@@ -3,7 +3,6 @@ import 'package:ezymember/language/globalization.dart';
 import 'package:ezymember/models/member_model.dart';
 import 'package:ezymember/services/local/connection_service.dart';
 import 'package:ezymember/services/remote/api_service.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MemberController extends GetxController {
@@ -56,6 +55,6 @@ class MemberController extends GetxController {
   }
 
   void _showError(String message) {
-    MessageHelper.show(message, backgroundColor: Colors.red, icon: Icons.error_rounded);
+    MessageHelper.error(message: message);
   }
 }

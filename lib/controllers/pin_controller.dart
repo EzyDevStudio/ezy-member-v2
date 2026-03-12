@@ -4,7 +4,6 @@ import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/language/globalization.dart';
 import 'package:ezymember/models/pin_model.dart';
 import 'package:ezymember/services/remote/api_service.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PinController {
@@ -50,6 +49,6 @@ class PinController {
   }
 
   void _showError(String message) {
-    MessageHelper.show(message, backgroundColor: Colors.red, icon: Icons.error_rounded);
+    MessageHelper.error(message: message);
   }
 }

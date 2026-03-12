@@ -1,12 +1,14 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:math' hide log;
 
 import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/language/globalization.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 class LocationHelper {
@@ -75,11 +77,28 @@ class LocationHelper {
     try {
       final LocationSettings locationSettings = const LocationSettings(distanceFilter: 0, accuracy: LocationAccuracy.high);
       final Position position = await Geolocator.getCurrentPosition(locationSettings: locationSettings);
-      final List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
 
-      if (placemarks.isEmpty || placemarks.first.locality == null) return null;
+      String city = "Unknow City";
 
-      return Coordinate(address: "Current Location", city: placemarks.first.locality!, latitude: position.latitude, longitude: position.longitude);
+      if (kIsWeb) {
+        final url = Uri.parse("https://nominatim.openstreetmap.org/reverse?lat=${position.latitude}&lon=${position.longitude}&format=json");
+        final response = await http.get(url, headers: {'User-Agent': 'EzyMemberApp'});
+
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          final address = data["address"];
+
+          city = address["district"];
+        } else {
+          return null;
+        }
+      } else {
+        final List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+
+        if (placemarks.isNotEmpty) city = placemarks.first.locality ?? city;
+      }
+
+      return Coordinate(address: "Current Location", city: city, latitude: position.latitude, longitude: position.longitude);
     } catch (e) {
       log("LocationHelper - getCurrentCoordinate", time: DateTime.now(), error: e, name: "Unknown Error");
       return null;
@@ -87,9 +106,7 @@ class LocationHelper {
   }
 
   static Future<void> redirectGoogleMap(String fullAddress) async {
-    bool? result = await MessageHelper.showConfirmationDialog(
-      backgroundColor: Colors.blue,
-      icon: Icons.info_rounded,
+    bool? result = await MessageHelper.confirmation(
       message: Globalization.msgGoogleMapsConfirmation.tr,
       title: Globalization.confirmation.tr,
       confirmText: Globalization.goNow.tr,
@@ -97,16 +114,24 @@ class LocationHelper {
 
     if (result == null || !result) return;
 
-    MessageHelper.showDialog(type: DialogType.loading, message: Globalization.msgGoogleMapsRedirecting.tr, title: Globalization.redirecting.tr);
+    MessageHelper.loading(message: Globalization.redirecting.tr);
 
-    Coordinate? c = await LocationHelper.getCurrentCoordinate();
-    Coordinate? t = await LocationHelper.getCoordinate(fullAddress);
+    if (kIsWeb) {
+      final encodedAddress = Uri.encodeComponent(fullAddress);
+      final url = "https://www.google.com/maps/search/?api=1&query=$encodedAddress";
+      final Uri uri = Uri.parse(url);
 
-    if (c == null || t == null) return;
+      if (await canLaunchUrl(uri)) await launchUrl(uri, webOnlyWindowName: "_blank");
+    } else {
+      Coordinate? c = await LocationHelper.getCurrentCoordinate();
+      Coordinate? t = await LocationHelper.getCoordinate(fullAddress);
 
-    await LocationHelper._navigateToGoogleMap(targetLat: t.latitude, targetLong: t.longitude, originLat: c.latitude, originLong: c.longitude);
+      if (c == null || t == null) return;
 
-    if (Get.isDialogOpen == true) Navigator.of(Get.overlayContext!).pop();
+      await LocationHelper._navigateToGoogleMap(targetLat: t.latitude, targetLong: t.longitude, originLat: c.latitude, originLong: c.longitude);
+    }
+
+    if (Get.isDialogOpen ?? false) Get.back();
   }
 }
 

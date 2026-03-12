@@ -67,7 +67,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       message = Globalization.msgPasswordMismatch.tr;
     }
 
-    if (message != null) MessageHelper.show(message, icon: Icons.warning_rounded);
+    if (message != null) MessageHelper.warning(message: message);
 
     return message == null;
   }
@@ -89,7 +89,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
         ),
         title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),

@@ -57,7 +57,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
         ),
         title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),

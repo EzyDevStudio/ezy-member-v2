@@ -64,12 +64,14 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
 
     if (!_isFieldValid(true)) return;
 
-    int contactNumber = int.parse(_phoneController.text.trim());
+    String contactNumber = "";
+
+    if (_phoneController.text.trim().isNotEmpty) contactNumber = int.parse(_phoneController.text.trim()).toString();
 
     final Map<String, dynamic> data = MemberProfileModel.toJsonSignIn(
       _selectedType == AuthType.email ? _emailController.text.trim() : "",
       _phone.dialCode,
-      _selectedType == AuthType.phone ? contactNumber.toString() : "",
+      _selectedType == AuthType.phone ? contactNumber : "",
       _passwordController.text.trim(),
     );
 
@@ -135,7 +137,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
       }
     }
 
-    if (message != null) MessageHelper.show(message, icon: Icons.warning_rounded);
+    if (message != null) MessageHelper.warning(message: message);
     // If there is any error message then "false"
     return message == null;
   }
@@ -179,7 +181,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
       ],
     ),
     leading: IconButton(
-      onPressed: () => Navigator.of(context).pop(),
+      onPressed: () => Get.back(),
       icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
     ),
     title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),

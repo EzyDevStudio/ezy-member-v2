@@ -25,7 +25,6 @@ import 'package:ezymember/widgets/custom_list_tile.dart';
 import 'package:ezymember/widgets/custom_text.dart';
 import 'package:ezymember/widgets/custom_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -98,7 +97,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
 
   void _joinMember() async {
     if (_hive.memberProfile.value == null) {
-      MessageHelper.show(Globalization.msgNoAccount.tr, icon: Icons.info_rounded);
+      MessageHelper.warning(message: Globalization.msgNoAccount.tr);
       return;
     }
 
@@ -287,14 +286,10 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
           title: CustomText("${Globalization.branches.tr} (${branches.length})", fontSize: 18.0, fontWeight: FontWeight.bold),
           children: branches.map((branch) {
             return CustomInfoListTile(
-              trailing: Icons.content_copy_rounded,
               title: branch.branchName,
+              emoji: "\u{1F4CD}",
               subtitle: "${branch.fullAddress}\n(${branch.contactNumber})",
-              onTapCopy: () {
-                Clipboard.setData(ClipboardData(text: branch.fullAddress));
-                MessageHelper.show(Globalization.msgAddressCopied.tr, icon: Icons.content_copy_rounded);
-              },
-              onTap: () async {
+              onTapCopy: () async {
                 if (!await ConnectionService.checkConnection()) return;
 
                 LocationHelper.redirectGoogleMap(branch.fullAddress);

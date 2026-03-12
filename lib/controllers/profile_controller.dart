@@ -192,19 +192,19 @@ class ProfileController extends GetxController {
   }
 
   void _showLoading(String message) {
-    MessageHelper.showDialog(type: DialogType.loading, message: message, title: Globalization.processing.tr);
+    MessageHelper.loading(message: message);
   }
 
   void _hideLoading() {
-    if (Get.isDialogOpen == true) Navigator.of(Get.overlayContext!).pop();
+    if (Get.isDialogOpen ?? false) Get.back();
   }
 
   void _showError(String message) {
-    MessageHelper.show(message, backgroundColor: Colors.red, icon: Icons.error_rounded);
+    MessageHelper.error(message: message);
   }
 
   void _showSuccess(String message) {
-    MessageHelper.show(message, backgroundColor: Colors.green, icon: Icons.check_circle_rounded);
+    MessageHelper.success(message: message);
   }
 
   @override

@@ -24,14 +24,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     FocusScope.of(context).unfocus();
 
     if (_emailController.text.trim().isEmpty) {
-      MessageHelper.show(Globalization.msgRequired.trParams({"label": Globalization.email.tr}), icon: Icons.warning_rounded);
+      MessageHelper.warning(message: Globalization.msgRequired.trParams({"label": Globalization.email.tr}));
       return;
     }
 
     _profileController.forgotPassword({"email": _emailController.text.trim()});
     _emailController.clear();
 
-    MessageHelper.show(Globalization.msgPasswordEmailSent.tr, duration: Duration(seconds: 10), icon: Icons.check_circle_rounded);
+    MessageHelper.success(message: Globalization.msgPasswordEmailSent.tr);
   }
 
   @override
@@ -49,7 +49,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
         ),
         title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),

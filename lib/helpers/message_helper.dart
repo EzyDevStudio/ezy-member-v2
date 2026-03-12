@@ -1,198 +1,58 @@
-import 'package:ezymember/constants/app_constants.dart';
-import 'package:ezymember/constants/app_strings.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/language/globalization.dart';
-import 'package:ezymember/widgets/custom_text.dart';
+import 'package:ezymember/widgets/custom_loading.dart';
+import 'package:ezymember/widgets/custom_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-enum DialogType { success, warning, alert, information, loading }
-
 class MessageHelper {
-  static void show(String message, {Color? backgroundColor, Color? foregroundColor, Duration duration = const Duration(seconds: 5), IconData? icon}) {
-    if (Get.isSnackbarOpen) Get.back();
+  static Future<bool?> confirmation({required String message, String? confirmText, String? title}) async {
+    if (Get.isDialogOpen ?? false) Get.back();
 
-    Get.snackbar(
-      "",
-      "",
-      shouldIconPulse: false,
-      backgroundColor: backgroundColor ?? Get.theme.colorScheme.primary,
-      borderRadius: kBorderRadiusS,
-      animationDuration: const Duration(milliseconds: 300),
-      duration: duration,
-      margin: EdgeInsets.all(16.dp),
-      padding: EdgeInsets.symmetric(horizontal: 24.dp, vertical: 16.dp),
-      snackPosition: SnackPosition.BOTTOM,
-      snackStyle: SnackStyle.FLOATING,
-      icon: Icon(icon, color: foregroundColor ?? Get.theme.colorScheme.onPrimary, size: 32.sp),
-      messageText: CustomText(message, color: foregroundColor ?? Get.theme.colorScheme.onPrimary, fontSize: 14.0, maxLines: null),
-      titleText: CustomText(
-        AppStrings.appName,
-        color: foregroundColor ?? Get.theme.colorScheme.onPrimary,
-        fontSize: 12.0,
-        fontWeight: FontWeight.bold,
-        maxLines: null,
-      ),
+    return Get.dialog<bool>(
+      CustomDialog(type: DialogType.confirmation, content: message, confirmText: confirmText, title: title, onConfirm: () => Get.back(result: true)),
     );
   }
 
-  static void showDialog({required DialogType type, required String message, required String title, Duration duration = const Duration(seconds: 5)}) {
+  static void disconnected() {
     if (Get.isDialogOpen ?? false) Get.back();
 
-    Color backgroundColor;
-    IconData iconData;
+    Get.dialog(CustomDialog(type: DialogType.disconnected, content: Globalization.msgConnectionOff.tr));
+  }
 
-    switch (type) {
-      case DialogType.success:
-        backgroundColor = Colors.green;
-        iconData = Icons.check_circle_rounded;
-        break;
-      case DialogType.warning:
-        backgroundColor = Colors.orange;
-        iconData = Icons.warning_rounded;
-        break;
-      case DialogType.alert:
-        backgroundColor = Colors.red;
-        iconData = Icons.error_rounded;
-        break;
-      case DialogType.information:
-        backgroundColor = Colors.blue;
-        iconData = Icons.info_rounded;
-        break;
-      case DialogType.loading:
-        backgroundColor = Colors.green;
-        iconData = Icons.autorenew_rounded;
-        break;
-    }
+  static void error({required String message, String? title}) {
+    if (Get.isDialogOpen ?? false) Get.back();
+
+    Get.dialog(CustomDialog(type: DialogType.error, content: message, title: title));
+  }
+
+  static void success({required String message, String? title}) {
+    if (Get.isDialogOpen ?? false) Get.back();
+
+    Get.dialog(CustomDialog(type: DialogType.success, content: message, title: title));
+  }
+
+  static void warning({required String message, String? title}) {
+    if (Get.isDialogOpen ?? false) Get.back();
+
+    Get.dialog(CustomDialog(type: DialogType.warning, content: message, title: title));
+  }
+
+  static void loading({required String message}) {
+    if (Get.isDialogOpen ?? false) Get.back();
 
     Get.dialog(
       PopScope(
-        canPop: type != DialogType.loading,
-        child: Dialog(
+        canPop: false,
+        child: AlertDialog(
+          insetPadding: EdgeInsets.all(16.dp),
           backgroundColor: Colors.transparent,
-          child: Container(
-            constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusM)),
-            padding: const EdgeInsets.all(kBorderRadiusM),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(kBorderRadiusM)),
-                    color: backgroundColor,
-                  ),
-                  height: kDialogHeight,
-                  padding: EdgeInsets.all(type == DialogType.loading ? kBorderRadiusL : kBorderRadiusM),
-                  child: FittedBox(
-                    fit: BoxFit.fitHeight,
-                    child: type == DialogType.loading
-                        ? const Center(child: CircularProgressIndicator(color: Colors.white, strokeWidth: 5.0))
-                        : Icon(iconData, color: Colors.white),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(kBorderRadiusM)),
-                    color: Colors.white,
-                  ),
-                  padding: const EdgeInsets.all(kBorderRadiusM),
-                  child: Column(
-                    spacing: kBorderRadiusM,
-                    children: <Widget>[
-                      CustomText(title, fontSize: 24.0, fontWeight: FontWeight.bold, textAlign: TextAlign.center),
-                      CustomText(message, fontSize: 18.0, textAlign: TextAlign.center, maxLines: null),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          surfaceTintColor: Colors.transparent,
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: CustomLoading(label: Globalization.loading.tr),
         ),
       ),
-      barrierDismissible: type != DialogType.loading,
-    );
-
-    if (type != DialogType.loading) {
-      Future.delayed(duration, () {
-        if (Get.isDialogOpen ?? false) Get.back();
-      });
-    }
-  }
-
-  static Future<bool?> showConfirmationDialog({
-    required Color backgroundColor,
-    required IconData icon,
-    required String message,
-    required String title,
-    String? cancelText,
-    String? confirmText,
-  }) async {
-    return Get.dialog<bool>(
-      Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusM)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(kBorderRadiusM)),
-                  color: backgroundColor,
-                ),
-                height: kDialogHeight,
-                padding: const EdgeInsets.all(kBorderRadiusM),
-                child: FittedBox(
-                  fit: BoxFit.fitHeight,
-                  child: Icon(icon, color: Colors.white),
-                ),
-              ),
-              Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(kBorderRadiusM)),
-                  color: Colors.white,
-                ),
-                padding: const EdgeInsets.all(kBorderRadiusM),
-                child: Column(
-                  spacing: kBorderRadiusM,
-                  children: <Widget>[
-                    CustomText(title, fontSize: 24.0, fontWeight: FontWeight.bold, textAlign: TextAlign.center),
-                    CustomText(message, fontSize: 18.0, maxLines: null, textAlign: TextAlign.center),
-                    Row(
-                      spacing: kBorderRadiusM,
-                      children: <Widget>[
-                        Expanded(
-                          child: TextButton(
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, foregroundColor: Colors.black87),
-                            onPressed: () => Get.back(result: false),
-                            child: CustomText(cancelText ?? Globalization.cancel.tr, fontSize: 18.0),
-                          ),
-                        ),
-                        Expanded(
-                          child: TextButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Get.theme.colorScheme.primary,
-                              foregroundColor: Get.theme.colorScheme.onPrimary,
-                              padding: EdgeInsets.all(16.dp),
-                            ),
-                            onPressed: () => Get.back(result: true),
-                            child: CustomText(confirmText ?? Globalization.confirm.tr, color: Get.theme.colorScheme.onPrimary, fontSize: 18.0),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      barrierDismissible: true,
+      barrierDismissible: false,
     );
   }
 }

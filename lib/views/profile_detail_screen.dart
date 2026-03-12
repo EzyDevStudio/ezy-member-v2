@@ -122,11 +122,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     FocusScope.of(context).unfocus();
 
     if (_memberControllers[fieldContactNumber].text.trim().isEmpty) {
-      MessageHelper.show(
-        Globalization.msgRequired.trParams({"label": Globalization.phone.tr}),
-        backgroundColor: Colors.red,
-        icon: Icons.error_rounded,
-      );
+      MessageHelper.error(message: Globalization.msgRequired.trParams({"label": Globalization.phone.tr}));
       return;
     }
 
@@ -160,14 +156,20 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     FocusScope.of(context).unfocus();
 
     if (_isRequired && !_workingControllers.validateRequiredFields()) {
-      MessageHelper.show(Globalization.msgRequiredEInvoice.tr, backgroundColor: Colors.red, icon: Icons.error_rounded);
+      MessageHelper.error(message: Globalization.msgRequiredEInvoice.tr);
       return;
+    }
+
+    String contactNumber = "";
+
+    if (_workingControllers[fieldContactNumber].text.trim().isNotEmpty) {
+      contactNumber = int.parse(_workingControllers[fieldContactNumber].text.trim()).toString();
     }
 
     final Map<String, dynamic> data = WorkingProfileModel.toJsonUpdate(
       memberCode: _memberProfile.memberCode,
       countryCode: _phoneWorking.dialCode,
-      contactNumber: _workingControllers[fieldContactNumber].text.trim(),
+      contactNumber: contactNumber,
       address1: _workingControllers[fieldAddress1].text.trim(),
       address2: _workingControllers[fieldAddress2].text.trim(),
       address3: _workingControllers[fieldAddress3].text.trim(),
@@ -213,9 +215,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   void _deleteAccount() async {
     if (!await ConnectionService.checkConnection()) return;
 
-    final bool? result = await MessageHelper.showConfirmationDialog(
-      backgroundColor: Colors.red,
-      icon: Icons.warning_rounded,
+    final bool? result = await MessageHelper.confirmation(
       message: Globalization.msgDeleteAccountConfirmation.tr,
       title: Globalization.deleteAccount.tr,
     );
@@ -260,7 +260,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       ],
     ),
     leading: IconButton(
-      onPressed: () => Navigator.of(context).pop(),
+      onPressed: () => Get.back(),
       icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
     ),
     title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),

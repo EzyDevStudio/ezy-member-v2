@@ -1,6 +1,5 @@
 import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/language/globalization.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -103,9 +102,7 @@ class PermissionHelper {
   }
 
   static Future<void> _showDialog(String action, String permission) async {
-    bool? result = await MessageHelper.showConfirmationDialog(
-      backgroundColor: Colors.blue,
-      icon: Icons.info_rounded,
+    bool? result = await MessageHelper.confirmation(
       message: Globalization.msgNeedPermission.trParams({"action": action, "permission": permission}),
       title: Globalization.needPermission.trParams({"permission": permission}),
       confirmText: Globalization.goNow.tr,

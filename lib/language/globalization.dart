@@ -28,6 +28,7 @@ class Globalization {
   static const String changePassword = "Change Password";
   static const String city = "City";
   static const String clear = "Clear";
+  static const String close = "Close";
   static const String codeExpired = "Code Expired";
   static const String collect = "Collect";
   static const String collectBy = "Collect By";
@@ -41,12 +42,14 @@ class Globalization {
   static const String credits = "Credits";
   static const String customDateRange = "Custom Date Range";
   static const String deleteAccount = "Delete Account";
+  static const String disconnected = "Disconnected";
   static const String discountAmount = "Discount Amount";
   static const String dob = "Date of Birth";
   static const String eInvoice = "E-Invoice";
   static const String earn = "Earn";
   static const String earnPoints = "Earn Points";
   static const String email = "Email";
+  static const String error = "Error";
   static const String expired = "Expired";
   static const String expires = "Expires";
   static const String female = "Female";
@@ -64,6 +67,7 @@ class Globalization {
   static const String joined = "Joined";
   static const String home = "Home";
   static const String less = "Less";
+  static const String loading = "Loading...";
   static const String male = "Male";
   static const String member = "Member";
   static const String memberBenefits = "Member Benefits";
@@ -77,6 +81,7 @@ class Globalization {
   static const String name = "Name";
   static const String needPermission = "Need @permission Access";
   static const String newPassword = "New Password";
+  static const String no = "No";
   static const String notifications = "Notifications";
   static const String off = "Off";
   static const String oldPassword = "Old Password";
@@ -122,6 +127,7 @@ class Globalization {
   static const String signUp = "Sign Up";
   static const String sstRegistration = "SST Registration";
   static const String state = "State";
+  static const String success = "Success";
   static const String takePhotos = "Take Photos";
   static const String timeline = "Timeline";
   static const String tin = "TIN";
@@ -136,13 +142,16 @@ class Globalization {
   static const String viewAll = "View All";
   static const String voucherExpiresToday = "Voucher expires today";
   static const String vouchers = "Vouchers";
+  static const String warning = "Warning";
   static const String welcome = "Welcome";
   static const String whatNew = "What's New";
   static const String working = "Working";
+  static const String yes = "Yes";
   static const String msgAccountExists = "Already have an account? ";
   static const String msgAccountInactive = "Your account is inactive. Please contact support for assistance.";
   static const String msgAccountNotExists = "Don't have an account? ";
   static const String msgAddressCopied = "Address has been copied to your clipboard!";
+  static const String msgConfirmation = "Are you sure?";
   static const String msgConnectionOff = "You are currently offline.";
   static const String msgContinueGuest = "I’m just exploring, try the app freely and sign up later.";
   static const String msgContinueSignIn = "I have an account, sign in and continue my journey.";
@@ -176,10 +185,10 @@ class Globalization {
   static const String msgPhoneInvalidFormat = "Please enter a valid phone number.";
   static const String msgPhoneNotFound = "No account found with this phone number.";
   static const String msgPointNotEnough = "You don't have enough points to redeem this voucher.";
-  static const String msgPressBackAgain = "Press back again to exit.";
   static const String msgProfileRetrieving = "Please wait while we retrieve your profile.";
   static const String msgProfileSuccess = "Your profile has been updated successfully.";
   static const String msgProfileUpdating = "Please wait while we update your profile.";
+  static const String msgQuitApp = "Are you sure you want to exit?";
   static const String msgReferralProgram = "Hey! Join [@company] as a member using my code [@member] and enjoy all the exclusive benefits. @url";
   static const String msgRequired = "@label cannot be empty.";
   static const String msgRequiredEInvoice = "Fields marked with * are required.";

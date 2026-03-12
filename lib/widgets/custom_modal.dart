@@ -1,11 +1,90 @@
+import 'package:ezymember/constants/app_colors.dart';
 import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
+import 'package:ezymember/language/globalization.dart';
+import 'package:ezymember/widgets/custom_button.dart';
 import 'package:ezymember/widgets/custom_text.dart';
 import 'package:ezymember/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+enum DialogType { confirmation, disconnected, error, success, warning }
 
 typedef ToCompare<T> = String Function(T item);
 typedef WidgetBuilder<T> = Widget Function(BuildContext context, T item);
+
+class CustomDialog extends StatelessWidget {
+  final DialogType? type;
+  final String content;
+  final String? confirmText, title;
+  final VoidCallback? onConfirm;
+
+  const CustomDialog({super.key, this.type = DialogType.error, required this.content, this.confirmText, this.title, this.onConfirm});
+
+  String _getImage(DialogType type) {
+    switch (type) {
+      case DialogType.confirmation:
+        return "assets/icons/confirmation.png";
+      case DialogType.disconnected:
+        return "assets/icons/disconnected.png";
+      case DialogType.error:
+        return "assets/icons/error.png";
+      case DialogType.success:
+        return "assets/icons/success.png";
+      case DialogType.warning:
+        return "assets/icons/warning.png";
+    }
+  }
+
+  String _getTitle(DialogType type) {
+    switch (type) {
+      case DialogType.confirmation:
+        return Globalization.msgConfirmation.tr;
+      case DialogType.disconnected:
+        return Globalization.disconnected.tr;
+      case DialogType.error:
+        return Globalization.error.tr;
+      case DialogType.success:
+        return Globalization.success.tr;
+      case DialogType.warning:
+        return Globalization.warning.tr;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+    backgroundColor: AppColors.defaultWhite,
+    surfaceTintColor: AppColors.defaultWhite,
+    actions: <Widget>[
+      Row(
+        spacing: 16.0,
+        children: <Widget>[
+          Expanded(
+            child: CustomFilledButton(
+              backgroundColor: AppColors.defaultRed,
+              label: type == DialogType.confirmation ? Globalization.no.tr : Globalization.close.tr,
+              onTap: () => Get.isDialogOpen == true ? Get.back() : null,
+            ),
+          ),
+          if (onConfirm != null)
+            Expanded(
+              child: CustomFilledButton(label: Globalization.yes.tr, onTap: onConfirm!),
+            ),
+        ],
+      ),
+    ],
+    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+    content: CustomText(content, fontSize: 16.0, maxLines: null, textAlign: TextAlign.center),
+    title: Column(
+      spacing: 8.0,
+      children: <Widget>[
+        Image.asset(_getImage(type!), height: 30.0),
+        CustomText(title ?? _getTitle(type!), fontSize: 20.0, fontWeight: FontWeight.bold, maxLines: null, textAlign: TextAlign.center),
+      ],
+    ),
+  );
+}
 
 class CustomPickerDialog<T> extends StatefulWidget {
   final Future<List<T>> Function() loadItems;
@@ -75,8 +154,10 @@ class _CustomPickerDialogState<T> extends State<CustomPickerDialog<T>> {
           Expanded(
             child: ListView.builder(
               itemCount: _filteredItems.length,
-              itemBuilder: (context, index) =>
-                  InkWell(onTap: () => Navigator.pop(context, _filteredItems[index]), child: widget.itemTileBuilder(context, _filteredItems[index])),
+              itemBuilder: (context, index) => InkWell(
+                onTap: () => Get.back(result: _filteredItems[index]),
+                child: widget.itemTileBuilder(context, _filteredItems[index]),
+              ),
             ),
           ),
         ],
@@ -107,7 +188,10 @@ class CustomTypePickerDialog<K, V> extends StatelessWidget {
         children: <Widget>[
           CustomText(title, fontSize: 24.0, fontWeight: FontWeight.bold, textAlign: TextAlign.center),
           ...options.entries.map(
-            (entry) => ListTile(title: CustomText(onDisplay(entry.value), fontSize: 16.0), onTap: () => Navigator.pop(context, entry)),
+            (entry) => ListTile(
+              title: CustomText(onDisplay(entry.value), fontSize: 16.0),
+              onTap: () => Get.back(result: entry),
+            ),
           ),
         ],
       ),

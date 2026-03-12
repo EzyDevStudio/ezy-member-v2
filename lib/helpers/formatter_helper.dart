@@ -1,6 +1,5 @@
 import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/language/globalization.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -37,7 +36,7 @@ class FormatterHelper {
 
     bool isExpired = date.isBefore(today);
 
-    if (isExpired && showMessage) MessageHelper.show(Globalization.msgMemberExpired.tr, backgroundColor: Colors.red, icon: Icons.error_rounded);
+    if (isExpired && showMessage) MessageHelper.error(message: Globalization.msgMemberExpired.tr);
 
     return isExpired;
   }

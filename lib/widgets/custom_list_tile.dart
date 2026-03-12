@@ -74,23 +74,23 @@ class CustomHistoryListTile extends StatelessWidget {
 }
 
 class CustomInfoListTile extends StatelessWidget {
-  final IconData? icon, trailing;
+  final IconData? icon;
   final String title;
-  final String? subtitle;
+  final String? emoji, subtitle;
   final Widget? subWidget;
   final VoidCallback? onTap, onTapCopy;
 
-  const CustomInfoListTile({super.key, this.icon, this.trailing, required this.title, this.subtitle, this.subWidget, this.onTap, this.onTapCopy});
+  const CustomInfoListTile({super.key, this.icon, required this.title, this.emoji, this.subtitle, this.subWidget, this.onTap, this.onTapCopy});
 
   @override
   Widget build(BuildContext context) => ListTile(
     leading: icon != null ? Icon(icon, size: 24.sp) : null,
     subtitle: subtitle != null ? CustomText(subtitle!, fontSize: 14.0, maxLines: null) : subWidget,
     title: CustomText(title, color: Theme.of(context).colorScheme.primary, fontSize: 16.0, fontWeight: FontWeight.bold, maxLines: null),
-    trailing: trailing != null
+    trailing: emoji != null
         ? GestureDetector(
             onTap: onTapCopy,
-            child: Icon(trailing, size: 24.sp),
+            child: CustomText(emoji!, fontSize: 22.sp),
           )
         : null,
     onTap: onTap,

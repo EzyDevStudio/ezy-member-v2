@@ -19,14 +19,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-// Future Features: Point expires
-// Future Features: Auto upgrade or downgrade member tier
-// Pending Features: Payment Gateway (Join or Renew member)
-// Pending Features: When user spend money meet requirement then provide a voucher for future use
-
-// run "adb devices" to get devices
-// run "adb -s <DEVICE_NAME> reverse tcp:8000 tcp:8000" for physical device
-// run php artisan serve --host=0.0.0.0 --port=8000 for API
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

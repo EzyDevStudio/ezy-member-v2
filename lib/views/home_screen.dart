@@ -40,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
   // late StreamSubscription<bool> _subscription;
 
   bool _showFab = false;
-  DateTime? _lastBackTime;
 
   void _showMemberCode() => showModalBottomSheet(
     context: context,
@@ -129,12 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _signOut() async {
-    final bool? result = await MessageHelper.showConfirmationDialog(
-      backgroundColor: Colors.red,
-      icon: Icons.warning_rounded,
-      message: Globalization.msgSignOutConfirmation.tr,
-      title: Globalization.signOut.tr,
-    );
+    final bool? result = await MessageHelper.confirmation(message: Globalization.msgSignOutConfirmation.tr, title: Globalization.signOut.tr);
 
     if (result == true) _hive.signOut();
   }
@@ -154,17 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
-        final now = DateTime.now();
+        final bool? result = await MessageHelper.confirmation(message: Globalization.msgQuitApp.tr);
 
-        if (_lastBackTime == null || now.difference(_lastBackTime!) > const Duration(seconds: 2)) {
-          _lastBackTime = now;
-
-          MessageHelper.show(Globalization.msgPressBackAgain.tr, duration: const Duration(seconds: 2), icon: Icons.info_rounded);
-
-          return;
-        }
-
-        SystemNavigator.pop();
+        if (result == true) SystemNavigator.pop();
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,

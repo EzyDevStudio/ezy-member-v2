@@ -38,4 +38,7 @@ class AppColors {
   static const Color lightScaffoldBackground = Color(0xFFF5F5F5);
 
   static const Color lightShadow = Color(0x66000000);
+
+  static const Color defaultWhite = Color(0xFAFAFAFF);
+  static const Color defaultRed = Color(0xFFE8292C);
 }

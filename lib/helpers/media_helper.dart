@@ -31,7 +31,7 @@ class MediaHelper {
       final int fileSize = await originalFile.length();
 
       if (fileSize > maxFileSizeInBytes) {
-        MessageHelper.show(Globalization.msgImageSizeExceed.tr);
+        MessageHelper.error(message: Globalization.msgImageSizeExceed.tr);
         return null;
       }
 

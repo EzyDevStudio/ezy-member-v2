@@ -4,6 +4,7 @@ import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CustomAppBar extends StatelessWidget {
   final bool isLeading;
@@ -68,7 +69,7 @@ class CustomAppBar extends StatelessWidget {
     ),
     leading: isLeading
         ? IconButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Get.back(),
             icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           )
         : null,
