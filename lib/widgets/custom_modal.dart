@@ -53,7 +53,6 @@ class CustomDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
     backgroundColor: AppColors.defaultWhite,
     surfaceTintColor: AppColors.defaultWhite,
     actions: <Widget>[

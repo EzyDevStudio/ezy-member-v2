@@ -4,22 +4,35 @@ import 'package:ezymember/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomFilledButton extends StatelessWidget {
+  final bool isLarge;
   final Color? backgroundColor;
+  final IconData? icon;
   final String label;
   final VoidCallback onTap;
 
-  const CustomFilledButton({super.key, this.backgroundColor, required this.label, required this.onTap});
+  const CustomFilledButton({super.key, this.isLarge = true, this.backgroundColor, this.icon, required this.label, required this.onTap});
 
   @override
-  Widget build(BuildContext context) => ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.primary,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kBorderRadiusS)),
-    ),
-    onPressed: onTap,
-    child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
-      child: CustomText(label, color: Theme.of(context).colorScheme.onPrimary, fontSize: 20.0, fontWeight: FontWeight.w700),
+  Widget build(BuildContext context) => SizedBox(
+    width: isLarge ? double.infinity : null,
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.primary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kBorderRadiusS)),
+      ),
+      onPressed: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8.dp,
+          children: <Widget>[
+            if (icon != null) Icon(icon, color: Theme.of(context).colorScheme.onPrimary, size: 24.0),
+            CustomText(label, color: Theme.of(context).colorScheme.onPrimary, fontSize: 16.0, fontWeight: FontWeight.bold),
+          ],
+        ),
+      ),
     ),
   );
 }

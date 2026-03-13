@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-enum DevicePlatform { android, ios, web, unknown }
+enum DevicePlatform { app, web }
 
 enum DeviceType { mobile, tablet, desktop }
 
@@ -36,19 +36,17 @@ class ResponsiveHelper {
   void _detectPlatform() {
     if (kIsWeb) {
       platform = DevicePlatform.web;
-    } else if (Platform.isAndroid) {
-      platform = DevicePlatform.android;
-    } else if (Platform.isIOS) {
-      platform = DevicePlatform.ios;
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      platform = DevicePlatform.app;
     } else {
-      platform = DevicePlatform.unknown;
+      platform = DevicePlatform.app;
     }
   }
 
   void _detectDeviceType() {
     double deviceWidth = 0.0;
 
-    if (platform == DevicePlatform.android || platform == DevicePlatform.ios) {
+    if (platform == DevicePlatform.app) {
       deviceWidth = orientation == Orientation.portrait ? screenWidth : screenHeight;
 
       if (deviceWidth < mobileBreakpoint) {
@@ -79,15 +77,15 @@ class ResponsiveHelper {
   //   return "H: ${screenHeight.toStringAsFixed(1)}, W: ${screenWidth.toStringAsFixed(1)}, R: ${aspectRatio.toStringAsFixed(1)}";
   // }
 
-  double _textScale() => deviceType == DeviceType.desktop ? 1.3 : 1.0;
-  double _sizeScale() => deviceType == DeviceType.desktop ? 2.0 : (deviceType == DeviceType.tablet ? 1.5 : 1.0);
+  double _textScale() => 1.0;
+  double _sizeScale() => 1.0;
 
   int quickAccessCount() => deviceType == DeviceType.desktop ? 5 : (deviceType == DeviceType.tablet ? 4 : 3);
   double authSize() => deviceType == DeviceType.desktop ? 300.0 : 200.0;
   double avatarSize() => deviceType == DeviceType.desktop ? 70.0 : 50.0;
   double nearbyHeight() => deviceType == DeviceType.desktop ? 300.0 : 200.0;
   double quickAccessHeight() => deviceType == DeviceType.desktop ? 150.0 : 100.0;
-  double voucherHeight() => deviceType == DeviceType.desktop ? 175.0 : 125.0;
+  double voucherHeight() => deviceType == DeviceType.desktop ? 125.0 : 125.0;
   double voucherWidth() => deviceType == DeviceType.desktop ? 400.0 : 300.0;
   double welcomeSize() => deviceType == DeviceType.desktop ? 500.0 : 400.0;
 }
