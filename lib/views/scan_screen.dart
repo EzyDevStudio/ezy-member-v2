@@ -45,8 +45,6 @@ class _ScanScreenState extends State<ScanScreen> {
 
     _checkConnection();
 
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-
     final args = Get.arguments ?? {};
 
     _type = args["scan_type"] ?? ScanType.earnPoints;
@@ -129,7 +127,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -251,7 +249,7 @@ class _ScanScreenState extends State<ScanScreen> {
     spacing: 32.dp,
     children: <Widget>[
       AspectRatio(
-        aspectRatio: 3 / 1,
+        aspectRatio: kBarcodeRatio,
         child: Code(drawText: false, codeType: CodeType.code128(), backgroundColor: Colors.white, data: _hive.memberProfile.value!.memberCode),
       ),
       _buildQRCode(_hive.memberProfile.value!.memberCode),

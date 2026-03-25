@@ -123,7 +123,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -191,9 +191,9 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
     physics: const NeverScrollableScrollPhysics(),
     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisSpacing: 16.dp,
-      mainAxisExtent: ResponsiveHelper().quickAccessHeight(),
+      mainAxisExtent: rsp.quickHeight(),
       mainAxisSpacing: 16.dp,
-      crossAxisCount: 3,
+      crossAxisCount: rsp.quickCount(),
     ),
     children: <Widget>[
       CustomImageTextButton(

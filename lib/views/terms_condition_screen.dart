@@ -34,17 +34,21 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()]),
+      appBar: _buildAppBar(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+          child: _buildContent(),
+        ),
+      ),
     );
   }
 
-  Widget _buildAppBar() => SliverAppBar(
-    floating: true,
-    pinned: true,
+  PreferredSizeWidget _buildAppBar() => AppBar(
     leading: IconButton(
       onPressed: () => Get.back(),
       icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
@@ -52,21 +56,16 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
     title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
   );
 
-  Widget _buildContent() => SliverPadding(
+  Widget _buildContent() => ListView(
     padding: EdgeInsets.only(bottom: 16.dp, left: 16.dp, right: 16.dp, top: 24.dp),
-    sliver: SliverToBoxAdapter(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          CustomText(_voucher.batchDescription, fontSize: 24.0, fontWeight: FontWeight.bold),
-          SizedBox(height: 16.dp),
-          _buildListTile(subtitle: "${_voucher.startDate.tsToStr} - ${_voucher.expiredDate.tsToStr}", title: Globalization.validPeriod.tr),
-          _buildListTile(subtitle: "${_voucher.discountValue.toStringAsFixed(1)} ${Globalization.off.tr}", title: Globalization.discountAmount.tr),
-          _buildListTile(subtitle: _voucher.minimumSpend.toStringAsFixed(1), title: Globalization.minSpend.tr),
-          _buildListTile(subtitle: _voucher.termsCondition, title: Globalization.more.tr),
-        ],
-      ),
-    ),
+    children: <Widget>[
+      CustomText(_voucher.batchDescription, fontSize: 24.0, fontWeight: FontWeight.bold),
+      SizedBox(height: 16.dp),
+      _buildListTile(subtitle: "${_voucher.startDate.tsToStr} - ${_voucher.expiredDate.tsToStr}", title: Globalization.validPeriod.tr),
+      _buildListTile(subtitle: "${_voucher.discountValue.toStringAsFixed(1)} ${Globalization.off.tr}", title: Globalization.discountAmount.tr),
+      _buildListTile(subtitle: _voucher.minimumSpend.toStringAsFixed(1), title: Globalization.minSpend.tr),
+      _buildListTile(subtitle: _voucher.termsCondition, title: Globalization.more.tr),
+    ],
   );
 
   Widget _buildListTile({String? subtitle, required String title}) => ListTile(

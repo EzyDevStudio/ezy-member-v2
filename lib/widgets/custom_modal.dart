@@ -57,7 +57,7 @@ class CustomDialog extends StatelessWidget {
     surfaceTintColor: AppColors.defaultWhite,
     actions: <Widget>[
       Row(
-        spacing: 16.0,
+        spacing: 16.dp,
         children: <Widget>[
           Expanded(
             child: CustomFilledButton(
@@ -73,10 +73,10 @@ class CustomDialog extends StatelessWidget {
         ],
       ),
     ],
-    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusModal))),
     content: CustomText(content, fontSize: 16.0, maxLines: null, textAlign: TextAlign.center),
     title: Column(
-      spacing: 8.0,
+      spacing: 8.dp,
       children: <Widget>[
         Image.asset(_getImage(type!), height: 30.0),
         CustomText(title ?? _getTitle(type!), fontSize: 20.0, fontWeight: FontWeight.bold, maxLines: null, textAlign: TextAlign.center),

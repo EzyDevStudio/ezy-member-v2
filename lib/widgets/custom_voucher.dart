@@ -39,14 +39,10 @@ class CustomVoucher extends StatelessWidget {
         curveAxis: Axis.vertical,
         clockwise: false,
         borderRadius: kBorderRadiusS,
-        curvePosition: (isCollectable ? ResponsiveHelper().voucherWidth() : constraints.maxWidth) * 0.3,
+        curvePosition: (isCollectable ? rsp.voucherWidth() : constraints.maxWidth) * 0.3,
         curveRadius: kBorderRadiusS * 2,
-        height: isCollectable
-            ? ResponsiveHelper().voucherHeight()
-            : ResponsiveHelper().deviceType == DeviceType.desktop
-            ? 200.0
-            : kVoucherDefaultHeight,
-        width: isCollectable ? ResponsiveHelper().voucherWidth() : null,
+        height: isCollectable ? rsp.voucherHeight() : (isDesktop ? 200.0 : 150.0),
+        width: isCollectable ? rsp.voucherWidth() : null,
         shadow: Shadow(color: shadowColor!, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
         firstChild: _buildFirstChild(context),
         secondChild: _buildSecondChild(context),
@@ -66,11 +62,7 @@ class CustomVoucher extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          CustomAvatarImage(
-            size: ResponsiveHelper().avatarSize() * (isCollectable ? 1.0 : 1.1),
-            networkImage: voucher.companyLogo,
-            name: voucher.companyName,
-          ),
+          CustomAvatarImage(size: rsp.avatarSize() * (isCollectable ? 1.0 : 1.1), networkImage: voucher.companyLogo, name: voucher.companyName),
           CustomText(
             voucher.companyName,
             color: Theme.of(context).colorScheme.onPrimary,
@@ -89,7 +81,7 @@ class CustomVoucher extends StatelessWidget {
       alignment: Alignment.topLeft,
       backgroundColor: Theme.of(context).colorScheme.errorContainer,
       padding: EdgeInsets.only(left: 10.0, right: 6.0),
-      offset: Offset(-6.0, 8.dp),
+      offset: Offset(-6.0, 8.0),
       label: CustomText("x${voucher.quantity}", color: Theme.of(context).colorScheme.onErrorContainer, fontSize: 11.0),
       child: content,
     );
@@ -102,7 +94,7 @@ class CustomVoucher extends StatelessWidget {
 
     return Container(
       color: bgColor,
-      padding: EdgeInsets.all(isCollectable ? 8.dp : 16.0),
+      padding: EdgeInsets.all(isCollectable ? 8.dp : 16.dp),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

@@ -1,10 +1,10 @@
 import 'dart:developer';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:ezymember/constants/app_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ApiService {
   final Dio _dio = Dio();
@@ -57,7 +57,7 @@ class ApiService {
   }
 
   Future<Response?> postFile<T>({
-    required File file,
+    required XFile file,
     required Map<String, dynamic> data,
     required String endPoint,
     required String memberToken,
@@ -66,11 +66,12 @@ class ApiService {
     final url = "$_baseUrl/$endPoint";
 
     try {
-      String fileName = file.path.split("/").last;
+      String fileName = file.name;
       FormData formData = FormData();
+      Uint8List bytes = await file.readAsBytes();
 
       data.forEach((key, value) => formData.fields.add(MapEntry(key, value.toString())));
-      formData.files.add(MapEntry("media", await MultipartFile.fromFile(file.path, filename: fileName)));
+      formData.files.add(MapEntry("media", MultipartFile.fromBytes(bytes, filename: fileName)));
 
       final response = await _dio.post(
         url,

@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/helpers/permission_helper.dart';
@@ -11,7 +10,7 @@ class MediaHelper {
   static final ImagePicker _picker = ImagePicker();
   static const int maxFileSizeInBytes = 5 * 1024 * 1024;
 
-  static Future<File?> processImage(ImageSource source) async {
+  static Future<XFile?> processImage(ImageSource source) async {
     if (source == ImageSource.camera) {
       final granted = await PermissionHelper.checkAndRequestCamera();
       if (!granted) return null;
@@ -27,20 +26,14 @@ class MediaHelper {
 
       if (xFile == null) return null;
 
-      final File originalFile = File(xFile.path);
-      final int fileSize = await originalFile.length();
+      final bytes = await xFile.readAsBytes();
 
-      if (fileSize > maxFileSizeInBytes) {
+      if (bytes.length > maxFileSizeInBytes) {
         MessageHelper.error(message: Globalization.msgImageSizeExceed.tr);
         return null;
       }
 
-      final String directory = originalFile.parent.path;
-      final String extension = originalFile.path.split(".").last;
-      final String path = "$directory/${DateTime.now().millisecondsSinceEpoch}.$extension";
-      final File currentFile = await originalFile.copy(path);
-
-      return currentFile;
+      return xFile;
     } catch (e) {
       log("MediaHelper - processImage", time: DateTime.now(), error: e, name: "Unknown Error");
       return null;

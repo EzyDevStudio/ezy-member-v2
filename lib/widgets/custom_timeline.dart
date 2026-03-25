@@ -1,4 +1,3 @@
-import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/constants/app_routes.dart';
 import 'package:ezymember/helpers/formatter_helper.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
@@ -37,7 +36,7 @@ class CustomTimeline extends StatelessWidget {
                 onTap: () => isDetail
                     ? null
                     : (isNavigateCompany ? Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": timeline.companyID}) : null),
-                child: CustomAvatarImage(size: ResponsiveHelper().avatarSize(), networkImage: timeline.companyLogo, name: timeline.companyName),
+                child: CustomAvatarImage(size: rsp.avatarSize(), networkImage: timeline.companyLogo, name: timeline.companyName),
               ),
               Expanded(
                 child: Column(
@@ -63,7 +62,7 @@ class CustomTimeline extends StatelessWidget {
           child: Image.network(
             timeline.timelineImage,
             fit: BoxFit.cover,
-            height: isDetail ? null : kTimelineHeight,
+            height: isDetail ? null : rsp.timelineHeight(),
             width: double.infinity,
             errorBuilder: (context, error, stackTrace) => Container(
               color: Colors.grey,

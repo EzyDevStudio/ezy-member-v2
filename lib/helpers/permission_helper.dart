@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:ezymember/helpers/message_helper.dart';
+import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/language/globalization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -41,7 +45,13 @@ class PermissionHelper {
     }
   }
 
-  static Future<bool> isCameraGranted() async => await Permission.camera.status.isGranted;
+  static Future<bool> isCameraGranted() async {
+    if (kIsWeb) {
+      return true;
+    } else {
+      return await Permission.camera.status.isGranted;
+    }
+  }
 
   static Future<bool> checkAndRequestCamera({bool openSettingsIfDenied = true}) async {
     if (await isCameraGranted()) return true;
@@ -59,7 +69,9 @@ class PermissionHelper {
   }
 
   static Future<bool> isGalleryGranted() async {
-    if (GetPlatform.isAndroid) {
+    if (kIsWeb) {
+      return true;
+    } else if (Platform.isAndroid) {
       return await Permission.photos.status.isGranted;
 
       // if (AndroidSDK >= 33) {
@@ -77,7 +89,7 @@ class PermissionHelper {
 
     Permission permission;
 
-    if (GetPlatform.isAndroid) {
+    if (Platform.isAndroid) {
       permission = Permission.photos;
 
       // if (AndroidSDK >= 33) {
@@ -91,7 +103,7 @@ class PermissionHelper {
 
     var result = await permission.request();
 
-    if (result.isGranted) {
+    if (result.isGranted || isDesktop) {
       return true;
     } else if (result.isPermanentlyDenied && openSettingsIfDenied) {
       _showDialog(Globalization.selectPhotos.tr, Globalization.gallery.tr);

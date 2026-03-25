@@ -43,7 +43,7 @@ dependencies:
   firebase_core: ^4.3.0
   flutter_local_notifications: ^19.5.0 # web app doesn't allow
   flutter_localization: ^0.3.3
-  geocoding: ^4.0.0 # web app doesn't allow (use geolocator)
+  geocoding: ^4.0.0 # web app doesn't allow
   geolocator: ^14.0.2
   get: ^4.7.3
   google_sign_in: ^7.2.0

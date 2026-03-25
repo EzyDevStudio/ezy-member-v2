@@ -25,7 +25,7 @@ class _TimelineDetailScreenState extends State<TimelineDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -36,7 +36,13 @@ class _TimelineDetailScreenState extends State<TimelineDetailScreen> {
         ),
         title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
       ),
-      body: ListView(children: <Widget>[CustomTimeline(timeline: _timeline, isDetail: true, isShowMore: false)]),
+      body: Center(
+        child: Container(
+          color: Colors.white,
+          constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+          child: ListView(children: <Widget>[CustomTimeline(timeline: _timeline, isDetail: true, isShowMore: false)]),
+        ),
+      ),
     );
   }
 }

@@ -51,7 +51,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -62,7 +62,12 @@ class _MemberListScreenState extends State<MemberListScreen> {
         ),
         title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
       ),
-      body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.7),
+          child: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
+        ),
+      ),
     );
   }
 
@@ -107,15 +112,10 @@ class _MemberListScreenState extends State<MemberListScreen> {
           child: ListView.builder(
             itemCount: displayMembers.length,
             itemBuilder: (context, index) => Padding(
-              padding: EdgeInsetsGeometry.only(bottom: index == displayMembers.length - 1 ? 16.dp : 0.0, left: 16.dp, right: 16.dp, top: 16.dp),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint * 0.7),
-                  child: CustomMemberCard(
-                    member: displayMembers[index],
-                    onTap: () => Get.toNamed(AppRoutes.memberDetail, arguments: {"company_id": displayMembers[index].company.companyID}),
-                  ),
-                ),
+              padding: EdgeInsets.only(bottom: index == displayMembers.length - 1 ? 16.dp : 0.0, left: 16.dp, right: 16.dp, top: 16.dp),
+              child: CustomMemberCard(
+                member: displayMembers[index],
+                onTap: () => Get.toNamed(AppRoutes.memberDetail, arguments: {"company_id": displayMembers[index].company.companyID}),
               ),
             ),
           ),

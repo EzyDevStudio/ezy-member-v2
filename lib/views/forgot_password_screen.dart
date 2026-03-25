@@ -43,7 +43,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -54,32 +54,35 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
         title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
       ),
-      body: _buildContent(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+          child: _buildContent(),
+        ),
+      ),
     );
   }
 
-  Widget _buildContent() => CustomScrollView(
-    slivers: <Widget>[
-      SliverToBoxAdapter(
-        child: Padding(
-          padding: EdgeInsets.all(16.dp),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 16.dp,
-            children: <Widget>[
-              Image.asset("assets/images/forgot_password.png", scale: kSquareRatio, height: ResponsiveHelper().authSize()),
-              CustomText(Globalization.msgResetPassword.tr, fontSize: 16.0, maxLines: null, textAlign: TextAlign.center),
-              CustomOutlinedTextField(
-                controller: _emailController,
-                icon: Icons.lock_rounded,
-                type: OutlinedType.text,
-                label: Globalization.email.tr,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(),
-              CustomFilledButton(label: Globalization.confirm.tr, onTap: () => _forgotPassword()),
-            ],
-          ),
+  Widget _buildContent() => ListView(
+    children: <Widget>[
+      Padding(
+        padding: EdgeInsets.all(16.dp),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 16.dp,
+          children: <Widget>[
+            Image.asset("assets/images/forgot_password.png", scale: kSquareRatio, height: rsp.authSize()),
+            CustomText(Globalization.msgResetPassword.tr, fontSize: 16.0, maxLines: null, textAlign: TextAlign.center),
+            CustomOutlinedTextField(
+              controller: _emailController,
+              icon: Icons.lock_rounded,
+              type: OutlinedType.text,
+              label: Globalization.email.tr,
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(),
+            CustomFilledButton(label: Globalization.confirm.tr, onTap: () => _forgotPassword()),
+          ],
         ),
       ),
     ],

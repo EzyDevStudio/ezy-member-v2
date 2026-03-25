@@ -83,7 +83,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -94,42 +94,45 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ),
         title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
       ),
-      body: _buildContent(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+          child: _buildContent(),
+        ),
+      ),
     );
   }
 
-  Widget _buildContent() => CustomScrollView(
-    slivers: <Widget>[
-      SliverToBoxAdapter(
-        child: Padding(
-          padding: EdgeInsets.all(16.dp),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 16.dp,
-            children: <Widget>[
-              Image.asset("assets/images/change_password.png", scale: kSquareRatio, height: ResponsiveHelper().authSize()),
-              CustomOutlinedTextField(
-                controller: _oldController,
-                icon: Icons.lock_rounded,
-                type: OutlinedType.password,
-                label: Globalization.oldPassword.tr,
-              ),
-              CustomOutlinedTextField(
-                controller: _newController,
-                icon: Icons.lock_rounded,
-                type: OutlinedType.password,
-                label: Globalization.newPassword.tr,
-              ),
-              CustomOutlinedTextField(
-                controller: _confirmController,
-                icon: Icons.lock_rounded,
-                type: OutlinedType.password,
-                label: Globalization.confirmPassword.tr,
-              ),
-              const SizedBox(),
-              CustomFilledButton(label: Globalization.changePassword.tr, onTap: () => _changePassword()),
-            ],
-          ),
+  Widget _buildContent() => ListView(
+    children: <Widget>[
+      Padding(
+        padding: EdgeInsets.all(16.dp),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 16.dp,
+          children: <Widget>[
+            Image.asset("assets/images/change_password.png", scale: kSquareRatio, height: rsp.authSize()),
+            CustomOutlinedTextField(
+              controller: _oldController,
+              icon: Icons.lock_rounded,
+              type: OutlinedType.password,
+              label: Globalization.oldPassword.tr,
+            ),
+            CustomOutlinedTextField(
+              controller: _newController,
+              icon: Icons.lock_rounded,
+              type: OutlinedType.password,
+              label: Globalization.newPassword.tr,
+            ),
+            CustomOutlinedTextField(
+              controller: _confirmController,
+              icon: Icons.lock_rounded,
+              type: OutlinedType.password,
+              label: Globalization.confirmPassword.tr,
+            ),
+            const SizedBox(),
+            CustomFilledButton(label: Globalization.changePassword.tr, onTap: () => _changePassword()),
+          ],
         ),
       ),
     ],

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:ezymember/constants/app_routes.dart';
 import 'package:ezymember/controllers/member_hive_controller.dart';
 import 'package:ezymember/helpers/formatter_helper.dart';
@@ -11,6 +9,7 @@ import 'package:ezymember/services/remote/api_service.dart';
 import 'package:ezymember/views/profile_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileController extends GetxController {
   final ApiService _api = ApiService();
@@ -80,7 +79,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<void> uploadMedia(File file, int imgType, String memberCode, String memberToken) async {
+  Future<void> uploadMedia(XFile file, int imgType, String memberCode, String memberToken) async {
     _showLoading(Globalization.msgProfileUpdating.tr);
 
     final Map<String, dynamic> data = {"image_type": imgType, "member_code": memberCode};

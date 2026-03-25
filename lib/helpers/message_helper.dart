@@ -1,3 +1,4 @@
+import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/language/globalization.dart';
 import 'package:ezymember/widgets/custom_loading.dart';
@@ -48,7 +49,7 @@ class MessageHelper {
           insetPadding: EdgeInsets.all(16.dp),
           backgroundColor: Colors.transparent,
           surfaceTintColor: Colors.transparent,
-          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusModal))),
           content: CustomLoading(label: Globalization.loading.tr),
         ),
       ),

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/constants/app_routes.dart';
+import 'package:ezymember/controllers/authentication_controller.dart';
 import 'package:ezymember/controllers/settings_controller.dart';
 import 'package:ezymember/controllers/member_hive_controller.dart';
 import 'package:ezymember/controllers/timeline_controller.dart';
@@ -33,6 +34,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _hive = Get.find<MemberHiveController>();
   final _settingsController = Get.find<SettingsController>();
+  final _authController = Get.put(AuthenticationController());
   final _timelineController = Get.put(TimelineController(), tag: "home");
   final _voucherController = Get.put(VoucherController(), tag: "home");
   final _scrollController = ScrollController();
@@ -47,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     backgroundColor: Colors.white,
     builder: (context) => ListView(
       shrinkWrap: true,
-      padding: EdgeInsets.all(32.0),
+      padding: EdgeInsets.all(32.dp),
       children: <Widget>[
         Column(
           mainAxisSize: MainAxisSize.min,
@@ -63,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   isShadow: true,
                   cacheImage: _hive.backgroundImage,
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16.dp),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -123,6 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _timelineController.loadTimelines(memberCode: _hive.isSignIn ? _hive.memberProfile.value!.memberCode : null);
 
     if (_hive.isSignIn) {
+      _authController.checkToken(_hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token);
       _voucherController.loadOverview(_hive.memberProfile.value!.memberCode);
     }
   }
@@ -143,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return PopScope(
       canPop: false,
@@ -154,20 +157,17 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        body: Obx(
-          () => RefreshIndicator(
-            onRefresh: _onRefresh,
-            child: CustomScrollView(
-              controller: _scrollController,
-              physics: const AlwaysScrollableScrollPhysics(),
-              slivers: <Widget>[_buildAppBar(), if (_hive.isSignIn) _buildQuickAccess(), if (_hive.isSignIn) _buildVouchers(), _buildTimeline()],
-            ),
-          ),
-        ),
+        body: Obx(() => RefreshIndicator(onRefresh: _onRefresh, child: _buildMobile())),
         floatingActionButton: _showFab ? CustomFab(controller: _scrollController) : null,
       ),
     );
   }
+
+  Widget _buildMobile() => CustomScrollView(
+    controller: _scrollController,
+    physics: const AlwaysScrollableScrollPhysics(),
+    slivers: <Widget>[_buildAppBar(), _buildQuickAccess(), if (_hive.isSignIn) _buildVouchers(), _buildTimeline()],
+  );
 
   Widget _buildAppBar() => CustomAppBar(
     isLeading: false,
@@ -232,45 +232,47 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildQuickAccess() => Obx(
     () => SliverToBoxAdapter(
       child: Container(
-        color: Theme.of(context).colorScheme.surface,
         child: Column(
           children: <Widget>[
             GridView(
               shrinkWrap: true,
-              padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 24.dp),
+              padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 16.dp),
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisSpacing: 16.dp,
-                mainAxisExtent: ResponsiveHelper().quickAccessHeight(),
+                mainAxisExtent: rsp.quickHeight(),
                 mainAxisSpacing: 16.dp,
-                crossAxisCount: ResponsiveHelper().quickAccessCount(),
+                crossAxisCount: rsp.quickCount(),
               ),
               children: <Widget>[
-                CustomImageTextButton(
-                  isCountVisible: true,
-                  count: _voucherController.redeemedCount.value,
-                  assetName: "assets/icons/my_vouchers.png",
-                  label: Globalization.myVouchers.tr,
-                  onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
-                ),
-                CustomImageTextButton(
-                  isCountVisible: true,
-                  count: _voucherController.memberCount.value,
-                  assetName: "assets/icons/my_members.png",
-                  label: Globalization.myCards.tr,
-                  onTap: () => Get.toNamed(AppRoutes.memberList),
-                ),
-                CustomImageTextButton(
-                  assetName: "assets/icons/invoice.png",
-                  label: Globalization.eInvoice.tr,
-                  onTap: () => Get.toNamed(AppRoutes.invoice),
-                ),
+                if (_hive.isSignIn)
+                  CustomImageTextButton(
+                    isCountVisible: true,
+                    count: _voucherController.redeemedCount.value,
+                    assetName: "assets/icons/my_vouchers.png",
+                    label: Globalization.myVouchers.tr,
+                    onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
+                  ),
+                if (_hive.isSignIn)
+                  CustomImageTextButton(
+                    isCountVisible: true,
+                    count: _voucherController.memberCount.value,
+                    assetName: "assets/icons/my_members.png",
+                    label: Globalization.myCards.tr,
+                    onTap: () => Get.toNamed(AppRoutes.memberList),
+                  ),
+                if (_hive.isSignIn)
+                  CustomImageTextButton(
+                    assetName: "assets/icons/invoice.png",
+                    label: Globalization.eInvoice.tr,
+                    onTap: () => Get.toNamed(AppRoutes.invoice),
+                  ),
                 CustomImageTextButton(
                   assetName: "assets/icons/find_shops.png",
                   label: Globalization.findShop.tr,
                   onTap: () => Get.toNamed(AppRoutes.branchList),
                 ),
-                CustomImageTextButton(assetName: "assets/icons/scan.png", label: Globalization.scan.tr, onTap: _showMemberCode),
+                if (_hive.isSignIn) CustomImageTextButton(assetName: "assets/icons/scan.png", label: Globalization.scan.tr, onTap: _showMemberCode),
               ],
             ),
           ],
@@ -289,61 +291,62 @@ class _HomeScreenState extends State<HomeScreen> {
     final vouchers = _voucherController.vouchers;
 
     return SliverToBoxAdapter(
-      child: Column(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[
-                BoxShadow(color: Colors.black38, blurRadius: 2.0, spreadRadius: 6.0),
-                BoxShadow(color: Colors.black38, blurRadius: 5.0, spreadRadius: 12.0),
-              ],
+      child: ClipRRect(
+        child: Column(
+          children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                boxShadow: <BoxShadow>[
+                  BoxShadow(color: Colors.black38, blurRadius: 2.0, spreadRadius: 6.0),
+                  BoxShadow(color: Colors.black38, blurRadius: 5.0, spreadRadius: 12.0),
+                ],
+              ),
             ),
-          ),
-          Container(
-            color: Colors.grey.withValues(alpha: 0.5),
-            padding: EdgeInsets.symmetric(vertical: 8.dp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(16.dp),
-                  child: CustomText(Globalization.vouchers.tr, fontSize: 16.0, fontWeight: FontWeight.w600),
-                ),
-                SizedBox(
-                  height: ResponsiveHelper().voucherHeight() + 8.dp,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: vouchers.length,
-                    separatorBuilder: (_, _) => SizedBox(width: 16.dp),
-                    itemBuilder: (context, index) => Padding(
-                      padding: EdgeInsets.only(bottom: 24.dp, left: index == 0 ? 16.dp : 0.0, right: index == vouchers.length - 1 ? 16.dp : 0.0),
-                      child: CustomVoucher(
-                        shadowColor: Colors.black54,
-                        voucher: vouchers[index],
-                        type: VoucherType.collectable,
-                        onTapCollect: () async => _voucherController.collectVoucher(
-                          vouchers[index].batchCode,
-                          vouchers[index].companyID,
-                          _hive.memberProfile.value!.memberCode,
-                          _hive.memberProfile.value!.token,
+            Container(
+              color: Colors.grey.withValues(alpha: 0.5),
+              padding: EdgeInsets.symmetric(vertical: 8.dp),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(16.dp),
+                    child: CustomText(Globalization.vouchers.tr, fontSize: 16.0, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(
+                    height: rsp.voucherHeight() + 8.dp,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: vouchers.length,
+                      separatorBuilder: (_, _) => SizedBox(width: 16.dp),
+                      itemBuilder: (context, index) => Padding(
+                        padding: EdgeInsets.only(bottom: 24.dp, left: index == 0 ? 16.dp : 0.0, right: index == vouchers.length - 1 ? 16.dp : 0.0),
+                        child: CustomVoucher(
+                          shadowColor: Colors.black54,
+                          voucher: vouchers[index],
+                          type: VoucherType.collectable,
+                          onTapCollect: () async => _voucherController.collectVoucher(
+                            vouchers[index].batchCode,
+                            vouchers[index].companyID,
+                            _hive.memberProfile.value!.memberCode,
+                            _hive.memberProfile.value!.token,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 16.dp),
-            decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[
-                BoxShadow(color: Colors.black54, blurRadius: 6.0, spreadRadius: 2.0, offset: Offset(0.0, -4.0)),
-                BoxShadow(color: Colors.black54, blurRadius: 10.0, spreadRadius: 2.0, offset: Offset(0.0, -4.0)),
-              ],
+            Container(
+              decoration: BoxDecoration(
+                boxShadow: <BoxShadow>[
+                  BoxShadow(color: Colors.black12, blurRadius: 2.0, spreadRadius: 6.0),
+                  BoxShadow(color: Colors.black26, blurRadius: 5.0, spreadRadius: 12.0),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   });
@@ -369,7 +372,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Container(
           decoration: BoxDecoration(
             border: Border(
-              top: index == 0 ? BorderSide.none : BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
+              top: index == 0 && _hive.isSignIn ? BorderSide.none : BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
             ),
           ),
           child: CustomTimeline(timeline: timelines[index], isNavigateCompany: true, isNavigateTimeline: true),

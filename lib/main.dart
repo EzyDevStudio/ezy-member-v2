@@ -2,7 +2,6 @@ import 'package:app_links/app_links.dart';
 import 'package:ezymember/constants/app_routes.dart';
 import 'package:ezymember/constants/app_strings.dart';
 import 'package:ezymember/constants/app_themes.dart';
-import 'package:ezymember/controllers/authentication_controller.dart';
 import 'package:ezymember/controllers/member_hive_controller.dart';
 import 'package:ezymember/controllers/settings_controller.dart';
 import 'package:ezymember/firebase_options.dart';
@@ -61,7 +60,6 @@ class WrapperScreen extends StatefulWidget {
 }
 
 class _WrapperScreenState extends State<WrapperScreen> with SingleTickerProviderStateMixin {
-  final _authController = Get.put(AuthenticationController());
   final _hive = Get.find<MemberHiveController>();
 
   late AnimationController _controller;
@@ -86,8 +84,6 @@ class _WrapperScreenState extends State<WrapperScreen> with SingleTickerProvider
     if (!mounted) return;
 
     if (_hive.isSignIn) {
-      await _authController.checkToken(_hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token);
-
       Get.offAllNamed(AppRoutes.home);
     } else {
       Get.offAllNamed(AppRoutes.welcome);

@@ -176,7 +176,7 @@ class AuthenticationController extends GetxController {
 
       await hive.signOut();
 
-      _showError(Globalization.msgTokenExpired.tr);
+      _showWarning(Globalization.msgTokenExpired.tr);
     }
   }
 
@@ -194,5 +194,9 @@ class AuthenticationController extends GetxController {
 
   void _showSuccess(String message) {
     MessageHelper.success(message: message);
+  }
+
+  void _showWarning(String message) {
+    MessageHelper.warning(message: message);
   }
 }

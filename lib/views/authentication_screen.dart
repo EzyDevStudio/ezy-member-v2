@@ -155,20 +155,24 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return DefaultTabController(
       length: TabType.values.length,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        body: CustomScrollView(slivers: <Widget>[_buildAppBar(), _buildContent()]),
+        appBar: _buildAppBar(),
+        body: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+            child: _buildContent(),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildAppBar() => SliverAppBar(
-    floating: true,
-    pinned: true,
+  PreferredSizeWidget _buildAppBar() => AppBar(
     backgroundColor: Theme.of(context).colorScheme.primary,
     bottom: TabBar(
       controller: _tabController,
@@ -187,102 +191,96 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
     title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
   );
 
-  Widget _buildContent() => SliverFillRemaining(
-    child: TabBarView(controller: _tabController, children: <Widget>[_buildSignInForm(), _buildSignUpForm()]),
-  );
+  Widget _buildContent() => TabBarView(controller: _tabController, children: <Widget>[_buildSignInForm(), _buildSignUpForm()]);
 
   Widget _buildSignInForm() {
     bool isEmail = _selectedType == AuthType.email;
 
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.all(16.dp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 16.dp,
-              children: <Widget>[
-                Image.asset("assets/images/sign_in.png", scale: kSquareRatio, height: ResponsiveHelper().authSize()),
-                CustomText(Globalization.msgSignIn.tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
-                CustomChoiceChip(values: _authTypes, selectedValue: _selectedType, onSelected: (type) => setState(() => _selectedType = type)),
-                if (isEmail)
-                  CustomOutlinedTextField(
-                    controller: _emailController,
-                    icon: Icons.email_rounded,
-                    type: OutlinedType.text,
-                    label: Globalization.email.tr,
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                if (!isEmail)
-                  CustomOutlinedTextField(
-                    controller: _phoneController,
-                    type: OutlinedType.phone,
-                    phone: _phone,
-                    label: Globalization.phone.tr,
-                    keyboardType: TextInputType.phone,
-                    onPhoneChanged: (value) => setState(() => _phone = value),
-                  ),
+    return ListView(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.all(16.dp),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 16.dp,
+            children: <Widget>[
+              Image.asset("assets/images/sign_in.png", scale: kSquareRatio, height: rsp.authSize()),
+              CustomText(Globalization.msgSignIn.tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
+              CustomChoiceChip(values: _authTypes, selectedValue: _selectedType, onSelected: (type) => setState(() => _selectedType = type)),
+              if (isEmail)
                 CustomOutlinedTextField(
-                  controller: _passwordController,
-                  icon: Icons.lock_rounded,
-                  type: OutlinedType.password,
-                  label: Globalization.password.tr,
+                  controller: _emailController,
+                  icon: Icons.email_rounded,
+                  type: OutlinedType.text,
+                  label: Globalization.email.tr,
+                  keyboardType: TextInputType.emailAddress,
                 ),
-                _buildForgotPassword(),
-                CustomFilledButton(label: Globalization.signIn.tr, onTap: _signIn),
-                CustomText("- ${Globalization.or.tr} -", fontSize: 14.0, maxLines: 1, textAlign: TextAlign.center),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 16.dp,
-                  children: <Widget>[CustomIconButton(assetName: "assets/icons/google.png", onPressed: () => _signInWithGoogle())],
+              if (!isEmail)
+                CustomOutlinedTextField(
+                  controller: _phoneController,
+                  type: OutlinedType.phone,
+                  phone: _phone,
+                  label: Globalization.phone.tr,
+                  keyboardType: TextInputType.phone,
+                  onPhoneChanged: (value) => setState(() => _phone = value),
                 ),
-                _buildAuthMessage(true),
-              ],
-            ),
+              CustomOutlinedTextField(
+                controller: _passwordController,
+                icon: Icons.lock_rounded,
+                type: OutlinedType.password,
+                label: Globalization.password.tr,
+              ),
+              _buildForgotPassword(),
+              CustomFilledButton(label: Globalization.signIn.tr, onTap: _signIn),
+              CustomText("- ${Globalization.or.tr} -", fontSize: 14.0, maxLines: 1, textAlign: TextAlign.center),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 16.dp,
+                children: <Widget>[CustomIconButton(assetName: "assets/icons/google.png", onPressed: () => _signInWithGoogle())],
+              ),
+              _buildAuthMessage(true),
+            ],
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSignUpForm() => CustomScrollView(
-    slivers: <Widget>[
-      SliverToBoxAdapter(
-        child: Padding(
-          padding: EdgeInsets.all(16.dp),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 16.dp,
-            children: <Widget>[
-              Image.asset("assets/images/sign_up.png", scale: kSquareRatio, height: ResponsiveHelper().authSize()),
-              CustomText(Globalization.msgSignUp.tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
-              CustomOutlinedTextField(
-                controller: _usernameController,
-                icon: Icons.account_circle_rounded,
-                type: OutlinedType.text,
-                label: Globalization.username.tr,
-              ),
-              CustomOutlinedTextField(
-                controller: _emailController,
-                icon: Icons.email_rounded,
-                type: OutlinedType.text,
-                label: Globalization.email.tr,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              CustomOutlinedTextField(
-                controller: _phoneController,
-                type: OutlinedType.phone,
-                phone: _phone,
-                label: Globalization.phone.tr,
-                keyboardType: TextInputType.phone,
-                onPhoneChanged: (value) => setState(() => _phone = value),
-              ),
-              const SizedBox(),
-              CustomFilledButton(label: Globalization.signUp.tr, onTap: _signUp),
-              _buildAuthMessage(false),
-            ],
-          ),
+  Widget _buildSignUpForm() => ListView(
+    children: <Widget>[
+      Padding(
+        padding: EdgeInsets.all(16.dp),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 16.dp,
+          children: <Widget>[
+            Image.asset("assets/images/sign_up.png", scale: kSquareRatio, height: rsp.authSize()),
+            CustomText(Globalization.msgSignUp.tr, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
+            CustomOutlinedTextField(
+              controller: _usernameController,
+              icon: Icons.account_circle_rounded,
+              type: OutlinedType.text,
+              label: Globalization.username.tr,
+            ),
+            CustomOutlinedTextField(
+              controller: _emailController,
+              icon: Icons.email_rounded,
+              type: OutlinedType.text,
+              label: Globalization.email.tr,
+              keyboardType: TextInputType.emailAddress,
+            ),
+            CustomOutlinedTextField(
+              controller: _phoneController,
+              type: OutlinedType.phone,
+              phone: _phone,
+              label: Globalization.phone.tr,
+              keyboardType: TextInputType.phone,
+              onPhoneChanged: (value) => setState(() => _phone = value),
+            ),
+            const SizedBox(),
+            CustomFilledButton(label: Globalization.signUp.tr, onTap: _signUp),
+            _buildAuthMessage(false),
+          ],
         ),
       ),
     ],

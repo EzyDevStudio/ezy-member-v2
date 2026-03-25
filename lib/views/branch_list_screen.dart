@@ -53,7 +53,7 @@ class _BranchListScreenState extends State<BranchListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -64,7 +64,12 @@ class _BranchListScreenState extends State<BranchListScreen> {
         ),
         title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
       ),
-      body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+          child: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
+        ),
+      ),
     );
   }
 
@@ -175,15 +180,10 @@ class _BranchListScreenState extends State<BranchListScreen> {
           child: ListView.builder(
             itemCount: filteredShops.length,
             itemBuilder: (context, index) => Padding(
-              padding: EdgeInsetsGeometry.only(bottom: index == filteredShops.length - 1 ? 16.dp : 0.0, left: 16.dp, right: 16.dp, top: 16.dp),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
-                  child: GestureDetector(
-                    onTap: () => Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": filteredShops[index].companyID}),
-                    child: CustomShopCard(shop: filteredShops[index]),
-                  ),
-                ),
+              padding: EdgeInsets.only(bottom: index == filteredShops.length - 1 ? 16.dp : 0.0, left: 16.dp, right: 16.dp, top: 16.dp),
+              child: GestureDetector(
+                onTap: () => Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": filteredShops[index].companyID}),
+                child: CustomShopCard(shop: filteredShops[index]),
               ),
             ),
           ),

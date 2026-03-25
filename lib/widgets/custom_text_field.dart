@@ -95,7 +95,7 @@ class _CustomOutlinedTextFieldState extends State<CustomOutlinedTextField> {
           readOnly: true,
           decoration: InputDecoration(
             isCollapsed: true,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+            contentPadding: EdgeInsets.symmetric(vertical: 12.dp),
             border: InputBorder.none,
             hint: CustomText(_phoneDetail.displayFlagCode, fontSize: 16.0, textAlign: TextAlign.center),
           ),
@@ -274,7 +274,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
     enabled: widget.enabled,
     decoration: InputDecoration(
       isCollapsed: true,
-      contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+      contentPadding: EdgeInsets.symmetric(vertical: 12.dp),
       enabledBorder: _border(context),
       focusedBorder: _focusedBorder(context),
       hint: CustomText(Globalization.msgHintText.trParams({"label": widget.label.toLowerCase()}), color: Colors.black38, fontSize: 16.0),
@@ -293,7 +293,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
           readOnly: true,
           decoration: InputDecoration(
             isCollapsed: true,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+            contentPadding: EdgeInsets.symmetric(vertical: 12.dp),
             enabledBorder: _border(context),
             focusedBorder: _focusedBorder(context),
             hint: CustomText(Globalization.registrationSchemeID.tr, fontSize: 16.0, textAlign: TextAlign.center),
@@ -307,7 +307,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
           controller: widget.valueController,
           decoration: InputDecoration(
             isCollapsed: true,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+            contentPadding: EdgeInsets.symmetric(vertical: 12.dp),
             enabledBorder: _border(context),
             focusedBorder: _focusedBorder(context),
             hint: CustomText(widget.label, color: Colors.black38, fontSize: 16.0),
@@ -327,7 +327,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
           readOnly: true,
           decoration: InputDecoration(
             isCollapsed: true,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+            contentPadding: EdgeInsets.symmetric(vertical: 12.dp),
             enabledBorder: _border(context),
             focusedBorder: _focusedBorder(context),
             hint: CustomText(_phoneDetail.displayFlagCode, fontSize: 16.0, textAlign: TextAlign.center),
@@ -359,7 +359,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
           controller: widget.controller,
           decoration: InputDecoration(
             isCollapsed: true,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+            contentPadding: EdgeInsets.symmetric(vertical: 12.dp),
             enabledBorder: _border(context),
             focusedBorder: _focusedBorder(context),
             hint: CustomText(_phoneDetail.hintLabel, color: Colors.black38, fontSize: 16.0),

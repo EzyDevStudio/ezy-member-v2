@@ -1,3 +1,4 @@
+import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/constants/app_routes.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class CodeGeneratorHelper {
             child: Padding(
               padding: padding,
               child: AspectRatio(
-                aspectRatio: 4 / 1,
+                aspectRatio: kBarcodeRatio,
                 child: Code(
                   drawText: false,
                   codeType: CodeType.code128(),

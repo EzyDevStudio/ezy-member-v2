@@ -68,7 +68,7 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -79,7 +79,12 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
         ),
         title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
       ),
-      body: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
+          child: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
+        ),
+      ),
     );
   }
 
@@ -122,22 +127,17 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
           child: ListView.builder(
             itemCount: displayVouchers.length,
             itemBuilder: (context, index) => Padding(
-              padding: EdgeInsetsGeometry.only(bottom: index == displayVouchers.length - 1 ? 16.dp : 0.0, left: 16.dp, right: 16.dp, top: 16.dp),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
-                  child: CustomVoucher(
-                    voucher: displayVouchers[index],
-                    type: VoucherType.normal,
-                    onTap: () => Get.toNamed(
-                      AppRoutes.scan,
-                      arguments: {
-                        "scan_type": ScanType.redeemVoucher,
-                        "company_id": displayVouchers[index].companyID,
-                        "value": displayVouchers[index].voucherCode,
-                      },
-                    ),
-                  ),
+              padding: EdgeInsets.only(bottom: index == displayVouchers.length - 1 ? 16.dp : 0.0, left: 16.dp, right: 16.dp, top: 16.dp),
+              child: CustomVoucher(
+                voucher: displayVouchers[index],
+                type: VoucherType.normal,
+                onTap: () => Get.toNamed(
+                  AppRoutes.scan,
+                  arguments: {
+                    "scan_type": ScanType.redeemVoucher,
+                    "company_id": displayVouchers[index].companyID,
+                    "value": displayVouchers[index].voucherCode,
+                  },
                 ),
               ),
             ),

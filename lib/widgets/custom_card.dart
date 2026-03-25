@@ -28,7 +28,7 @@ class CustomMemberCard extends StatelessWidget {
         isShadow: true,
         backgroundImage: member.memberCard.cardImage,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.dp),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 16.dp,
@@ -45,11 +45,7 @@ class CustomMemberCard extends StatelessWidget {
                       ],
                     ),
                     const Spacer(),
-                    CustomAvatarImage(
-                      size: ResponsiveHelper().avatarSize() * 1.2,
-                      networkImage: member.company.companyLogo,
-                      name: member.company.companyName,
-                    ),
+                    CustomAvatarImage(size: rsp.avatarSize() * 1.2, networkImage: member.company.companyLogo, name: member.company.companyName),
                     const Spacer(),
                     CustomText("${member.memberCard.cardTier} · ${member.memberCard.expiredDate.tsToStr}", color: Colors.white, fontSize: 16.0),
                   ],

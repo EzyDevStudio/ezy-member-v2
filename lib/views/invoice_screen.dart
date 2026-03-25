@@ -37,7 +37,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return DefaultTabController(
       length: InvoiceType.values.length,

@@ -203,7 +203,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -260,7 +260,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                CustomAvatarImage(size: ResponsiveHelper().avatarSize() * 1.2, cacheImage: _hive.image),
+                CustomAvatarImage(size: rsp.avatarSize() * 1.2, cacheImage: _hive.image),
                 const Spacer(),
                 CustomLabelChip(
                   backgroundColor: _member.memberCard.expiredDate.isExpired ? Colors.red : Colors.green,
@@ -329,9 +329,9 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
     physics: const NeverScrollableScrollPhysics(),
     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisSpacing: 16.dp,
-      mainAxisExtent: ResponsiveHelper().quickAccessHeight(),
+      mainAxisExtent: rsp.quickHeight(),
       mainAxisSpacing: 16.dp,
-      crossAxisCount: 3,
+      crossAxisCount: rsp.quickCount(),
     ),
     children: <Widget>[
       CustomImageTextButton(

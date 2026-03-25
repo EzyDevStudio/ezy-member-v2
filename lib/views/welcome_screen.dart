@@ -16,7 +16,7 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper().init(context);
+    rsp.init(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -33,9 +33,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         crossAxisAlignment: WrapCrossAlignment.center,
         runAlignment: WrapAlignment.center,
         children: <Widget>[
-          Image.asset("assets/images/welcome.png", scale: kSquareRatio, width: ResponsiveHelper().welcomeSize() - 100.0),
+          Image.asset("assets/images/welcome.png", scale: kSquareRatio, width: rsp.welcomeSize() - 100.0),
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: ResponsiveHelper().welcomeSize() + 100.0),
+            constraints: BoxConstraints(maxWidth: rsp.welcomeSize() + 100.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 16.dp,
