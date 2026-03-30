@@ -331,7 +331,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
       crossAxisSpacing: 16.dp,
       mainAxisExtent: rsp.quickHeight(),
       mainAxisSpacing: 16.dp,
-      crossAxisCount: rsp.quickCount(),
+      crossAxisCount: 3,
     ),
     children: <Widget>[
       CustomImageTextButton(

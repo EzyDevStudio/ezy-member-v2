@@ -74,7 +74,7 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Get.back(),
+          onPressed: () => AppRoutes.back(fallback: AppRoutes.home),
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
         ),
         title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
@@ -116,6 +116,15 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
 
     final vouchers = List.from(_voucherController.vouchers)..sort((a, b) => a.expiredDate.compareTo(b.expiredDate));
     final displayVouchers = _searchController.text.isEmpty ? vouchers : _filteredVouchers;
+    final Map<String, List<dynamic>> groupedVouchers = {};
+
+    for (var voucher in displayVouchers) {
+      if (!groupedVouchers.containsKey(voucher.companyName)) {
+        groupedVouchers[voucher.companyName] = [];
+      }
+
+      groupedVouchers[voucher.companyName]!.add(voucher);
+    }
 
     return Column(
       children: <Widget>[
@@ -124,23 +133,35 @@ class _VoucherListScreenState extends State<VoucherListScreen> {
           child: CustomSearchTextField(controller: _searchController, onChanged: (String value) => _onSearchChanged()),
         ),
         Expanded(
-          child: ListView.builder(
-            itemCount: displayVouchers.length,
-            itemBuilder: (context, index) => Padding(
-              padding: EdgeInsets.only(bottom: index == displayVouchers.length - 1 ? 16.dp : 0.0, left: 16.dp, right: 16.dp, top: 16.dp),
-              child: CustomVoucher(
-                voucher: displayVouchers[index],
-                type: VoucherType.normal,
-                onTap: () => Get.toNamed(
-                  AppRoutes.scan,
-                  arguments: {
-                    "scan_type": ScanType.redeemVoucher,
-                    "company_id": displayVouchers[index].companyID,
-                    "value": displayVouchers[index].voucherCode,
-                  },
-                ),
-              ),
-            ),
+          child: ListView(
+            padding: EdgeInsets.symmetric(horizontal: 16.dp),
+            children: groupedVouchers.entries.map((entry) {
+              final companyName = entry.key;
+              final vouchers = entry.value;
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.dp),
+                    child: CustomText("$companyName (${vouchers.length})", fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
+                  ...vouchers.map(
+                    (voucher) => Padding(
+                      padding: EdgeInsets.only(bottom: 16.dp),
+                      child: CustomVoucher(
+                        voucher: voucher,
+                        type: VoucherType.normal,
+                        onTap: () => Get.toNamed(
+                          AppRoutes.scan,
+                          arguments: {"scan_type": ScanType.redeemVoucher, "company_id": voucher.companyID, "value": voucher.voucherCode},
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }).toList(),
           ),
         ),
       ],

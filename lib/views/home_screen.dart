@@ -158,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        body: RefreshIndicator(onRefresh: _onRefresh, child: isDesktop ? _buildDesktop() : _buildMobile()),
+        body: RefreshIndicator(onRefresh: _onRefresh, child: _buildMobile()),
         floatingActionButton: _showFab ? CustomFab(controller: _scrollController) : null,
       ),
     );
@@ -188,16 +188,18 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 
-  Widget _buildMobile() => Obx(() => CustomScrollView(
-    controller: _scrollController,
-    physics: const AlwaysScrollableScrollPhysics(),
-    slivers: <Widget>[
-      _buildAppBar(),
-      _buildQuickAccess(),
-      SliverToBoxAdapter(child: _buildVouchers()),
-      SliverToBoxAdapter(child: _buildTimeline()),
-    ],
-  ));
+  Widget _buildMobile() => Obx(
+    () => CustomScrollView(
+      controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
+      slivers: <Widget>[
+        _buildAppBar(),
+        _buildQuickAccess(),
+        SliverToBoxAdapter(child: _buildVouchers()),
+        SliverToBoxAdapter(child: _buildTimeline()),
+      ],
+    ),
+  );
 
   Widget _buildAppBar() => CustomAppBar(
     isLeading: false,

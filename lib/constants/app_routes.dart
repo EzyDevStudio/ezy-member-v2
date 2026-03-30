@@ -62,9 +62,9 @@ class AppRoutes {
     GetPage(name: welcome, page: () => WelcomeScreen()),
   ];
 
-  static void back({String? destination}) {
+  static void back({String? destination, String fallback = AppRoutes.welcome}) {
     if (destination == null && Get.previousRoute.isEmpty) {
-      Get.offAllNamed(AppRoutes.welcome);
+      Get.offAllNamed(fallback);
     } else if (destination == null && Get.previousRoute.isNotEmpty) {
       Get.back();
     } else if (destination != null && Get.previousRoute.isEmpty) {
@@ -72,7 +72,7 @@ class AppRoutes {
     } else if (destination != null && Get.previousRoute.isNotEmpty) {
       Get.previousRoute == destination ? Get.back() : Get.offAllNamed(destination);
     } else {
-      Get.offAllNamed(AppRoutes.welcome);
+      Get.offAllNamed(fallback);
     }
   }
 

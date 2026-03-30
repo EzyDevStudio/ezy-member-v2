@@ -193,7 +193,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
       crossAxisSpacing: 16.dp,
       mainAxisExtent: rsp.quickHeight(),
       mainAxisSpacing: 16.dp,
-      crossAxisCount: rsp.quickCount(),
+      crossAxisCount: 3,
     ),
     children: <Widget>[
       CustomImageTextButton(

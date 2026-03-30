@@ -1,3 +1,4 @@
+import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/constants/app_routes.dart';
 import 'package:ezymember/constants/app_strings.dart';
 import 'package:ezymember/controllers/company_controller.dart';
@@ -23,8 +24,9 @@ class _CompanyListScreenState extends State<CompanyListScreen> {
   final _companyController = Get.put(CompanyController(), tag: "branchList");
   final _searchController = TextEditingController();
   final List<CategoryModel> _categories = AppStrings.categories;
+  final CategoryModel _allCategory = CategoryModel(title: "All", description: "", image: "");
 
-  CategoryModel? _selectedCategory = null;
+  CategoryModel? _selectedCategory;
 
   @override
   void initState() {
@@ -34,6 +36,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> {
   }
 
   Future<void> _onRefresh() async {
+    _selectedCategory = _allCategory;
     _searchController.clear();
     _companyController.loadCompanies(isLocation: true);
   }
@@ -51,16 +54,14 @@ class _CompanyListScreenState extends State<CompanyListScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: isDesktop
-          ? null
-          : AppBar(
-              leading: IconButton(
-                onPressed: () => Get.back(),
-                icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-              ),
-              title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
-            ),
-      body: isDesktop ? _buildDesktop() : _buildMobile(),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Get.back(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+        ),
+        title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
+      ),
+      body: _buildMobile(),
     );
   }
 
@@ -82,15 +83,63 @@ class _CompanyListScreenState extends State<CompanyListScreen> {
   );
 
   Widget _buildContent() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
       Padding(
         padding: EdgeInsets.all(16.dp),
-        child: CustomSearchTextField(
-          controller: _searchController,
-          onSubmit: (value) => _companyController.loadCompanies(search: value),
-          onClear: () => _onRefresh(),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 16.dp,
+            children: <Widget>[
+              Expanded(
+                child: CustomSearchTextField(
+                  controller: _searchController,
+                  onSubmit: (value) => _companyController.loadCompanies(search: value),
+                  onClear: () => _onRefresh(),
+                ),
+              ),
+              AspectRatio(
+                aspectRatio: kSquareRatio,
+                child: Material(
+                  borderRadius: BorderRadius.circular(kBorderRadiusS),
+                  elevation: kElevation,
+                  child: Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(kBorderRadiusS), color: Colors.white),
+                    padding: EdgeInsets.all(8.dp),
+                    child: PopupMenuButton<CategoryModel>(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(value: _allCategory, child: Text(_allCategory.title)),
+                        ..._categories.map((c) => PopupMenuItem(value: c, child: Text(c.title))),
+                      ],
+                      onSelected: (category) {
+                        setState(() => _selectedCategory = category);
+                        _companyController.loadCompanies(category: category.code);
+                      },
+                      child: Center(child: Icon(Icons.filter_alt_rounded, color: Colors.blue)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
+      if (_selectedCategory != _allCategory)
+        Padding(
+          padding: EdgeInsets.fromLTRB(16.dp, 0.0, 16.dp, 8.dp),
+          child: InkWell(
+            onTap: () => setState(() {
+              _selectedCategory = _allCategory;
+              _onRefresh();
+            }),
+            child: CustomText(
+              "${Globalization.filter.tr}: ${_selectedCategory!.title} (${Globalization.clear.tr})",
+              color: Colors.lightBlue,
+              fontSize: 16.0,
+            ),
+          ),
+        ),
       Expanded(
         child: Obx(() {
           if (_companyController.isLoading.value) {

@@ -18,6 +18,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+// Use parameters instead of arguments because it pass data in URL
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
