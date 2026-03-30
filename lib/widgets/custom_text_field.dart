@@ -58,8 +58,18 @@ class _CustomOutlinedTextFieldState extends State<CustomOutlinedTextField> {
       borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: kBorderWidth),
     ),
     hintText: hint,
-    prefixIcon: prefix,
-    suffixIcon: suffix,
+    prefixIcon: prefix != null
+        ? Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.dp),
+            child: prefix,
+          )
+        : null,
+    suffixIcon: suffix != null
+        ? Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.dp),
+            child: suffix,
+          )
+        : null,
   );
 
   @override
@@ -139,9 +149,10 @@ class _CustomOutlinedTextFieldState extends State<CustomOutlinedTextField> {
 
 class CustomSearchTextField extends StatefulWidget {
   final TextEditingController controller;
-  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onChanged, onSubmit;
+  final VoidCallback? onClear;
 
-  const CustomSearchTextField({super.key, required this.controller, this.onChanged});
+  const CustomSearchTextField({super.key, required this.controller, this.onChanged, this.onSubmit, this.onClear});
 
   @override
   State<CustomSearchTextField> createState() => _CustomSearchTextFieldState();
@@ -160,22 +171,30 @@ class _CustomSearchTextFieldState extends State<CustomSearchTextField> {
         contentPadding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(kBorderRadiusS), borderSide: BorderSide.none),
         hintText: Globalization.search.tr,
-        prefixIcon: const Icon(Icons.search_rounded),
-        suffixIcon: widget.controller.text.isEmpty
+        prefixIcon: widget.controller.text.isEmpty
             ? null
-            : IconButton(
-                onPressed: () {
-                  widget.controller.clear();
-                  widget.onChanged?.call("");
-                  setState(() {});
-                },
-                icon: const Icon(Icons.cancel_rounded),
+            : Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.dp),
+                child: IconButton(
+                  onPressed: () {
+                    widget.controller.clear();
+                    widget.onClear?.call();
+                    setState(() {});
+                  },
+                  icon: const Icon(Icons.cancel_rounded),
+                ),
               ),
+        suffixIcon: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.dp),
+          child: IconButton(onPressed: () => widget.onSubmit?.call(widget.controller.text.trim()), icon: const Icon(Icons.search_rounded)),
+        ),
       ),
+      textInputAction: TextInputAction.search,
       onChanged: (value) {
         setState(() {});
-        widget.onChanged?.call(value);
+        widget.onChanged?.call(value.trim());
       },
+      onSubmitted: (value) => widget.onSubmit?.call(value.trim()),
     ),
   );
 }

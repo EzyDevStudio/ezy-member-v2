@@ -11,6 +11,7 @@ class EnUs {
     Globalization.advertisements: "Advertisements",
     Globalization.all: "All",
     Globalization.apply: "Apply",
+    Globalization.backToSignIn: "Back to SIGN IN",
     Globalization.basicInformation: "Basic Information",
     Globalization.branches: "Branches",
     Globalization.camera: "Camera",
@@ -116,6 +117,8 @@ class EnUs {
     Globalization.shops: "Shops",
     Globalization.signIn: "Sign In",
     Globalization.signInAccount: "Sign in with your account",
+    Globalization.signInWithEmail: "Sign in with email",
+    Globalization.signInWithMobile: "Sign in with mobile no.",
     Globalization.signOut: "Sign Out",
     Globalization.signUp: "Sign Up",
     Globalization.sstRegistration: "SST Registration",
@@ -144,6 +147,8 @@ class EnUs {
     Globalization.msgAccountInactive: "Your account is inactive. Please contact support for assistance.",
     Globalization.msgAccountNotExists: "Don't have an account? ",
     Globalization.msgAddressCopied: "Address has been copied to your clipboard!",
+    Globalization.msgChangePassword:
+        "You can change your password anytime. Please ensure your new password meets the minimum strength requirements.\nNote: Your new password will NOT be sent via email, so please remember it carefully.",
     Globalization.msgConfirmation: "Are you sure?",
     Globalization.msgConnectionOff: "You are currently offline.",
     Globalization.msgContinueGuest: "I’m just exploring, try the app freely and sign up later.",
@@ -187,12 +192,14 @@ class EnUs {
     Globalization.msgResetPassword:
         "A new temporary password will be generated and sent to your email. You can use it to sign in and change your password.",
     Globalization.msgResultEnd: "You’ve reached the end!",
-    Globalization.msgSignIn: "Welcome to ${AppStrings.appName}. Please sign in to access your account.",
+    Globalization.msgSignIn:
+        "Welcome back to ${AppStrings.appName}. Sign in to access your account, manage your membership, explore all features, and continue enjoying exclusive benefits tailored just for you.",
     Globalization.msgSignInFail: "Incorrect password. Please try again.",
     Globalization.msgSignInProcessing: "Please wait while we sign you in.",
     Globalization.msgSignInSuccess: "Welcome back! You’ve successfully signed in.",
     Globalization.msgSignOutConfirmation: "Are you sure you want to sign out? You can sign back in anytime.",
-    Globalization.msgSignUp: "Welcome to ${AppStrings.appName}. Create an account to get started.",
+    Globalization.msgSignUp:
+        "Welcome to ${AppStrings.appName}. Create an account to get started, explore all features, manage your membership, and enjoy exclusive benefits tailored just for you.",
     Globalization.msgSignUpProcessing: "Please wait while we create your account.",
     Globalization.msgSignUpSuccess: "Your account has been successfully created. Please sign in to continue.",
     Globalization.msgSystemError: "System under maintenance. Please try again later.",
@@ -202,6 +209,6 @@ class EnUs {
     Globalization.msgVoucherCollectSuccess: "Your voucher has been collected. Enjoy your reward!",
     Globalization.msgVoucherCollectedBefore: "Looks like you’ve collected this voucher before.",
     Globalization.msgWelcome:
-        "Thank you for choosing ${AppStrings.appName}.\nThis app allows you to easily subscribe as a member to your selected company. Once subscribed, you can manage your membership, access exclusive benefits, and stay updated with the latest news and services.\nBefore you begin, please complete a quick setup so we can prepare your device. Let's get started.",
+        "Thank you for choosing ${AppStrings.appName}.\nThis app allows you to easily subscribe as a member to your selected company. Once subscribed, you can manage your membership, access exclusive benefits, and stay updated with the latest news and services.\nBefore you begin, please complete a quick setup so we can prepare your device.\nLet's get started.",
   };
 }

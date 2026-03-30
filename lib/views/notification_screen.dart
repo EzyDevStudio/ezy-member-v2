@@ -67,7 +67,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
           runSpacing: 16.dp,
           spacing: 16.dp,
           alignment: WrapAlignment.center,
-          children: <Widget>[_buildSection(true, todayVouchers), _buildSection(false, redeemableVouchers)],
+          children: <Widget>[
+            if (todayVouchers.isNotEmpty) _buildSection(true, todayVouchers),
+            if (redeemableVouchers.isNotEmpty) _buildSection(false, redeemableVouchers),
+          ],
         ),
       ],
     );
@@ -86,10 +89,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        ListView.builder(
+        ListView.separated(
           shrinkWrap: true,
           itemCount: vouchers.length,
           physics: const NeverScrollableScrollPhysics(),
+          separatorBuilder: (_, _) => SizedBox(height: 16.dp),
           itemBuilder: (context, index) {
             final voucher = vouchers[index];
 

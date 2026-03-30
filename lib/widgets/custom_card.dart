@@ -4,8 +4,8 @@ import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/helpers/formatter_helper.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/language/globalization.dart';
+import 'package:ezymember/models/company_model.dart';
 import 'package:ezymember/models/member_model.dart';
-import 'package:ezymember/models/shop_model.dart';
 import 'package:ezymember/widgets/custom_image.dart';
 import 'package:ezymember/widgets/custom_chip.dart';
 import 'package:ezymember/widgets/custom_text.dart';
@@ -152,9 +152,9 @@ class CustomSectionCard extends StatelessWidget {
 }
 
 class CustomShopCard extends StatelessWidget {
-  final ShopModel shop;
+  final CompanyModel company;
 
-  const CustomShopCard({super.key, required this.shop});
+  const CustomShopCard({super.key, required this.company});
 
   @override
   Widget build(BuildContext context) => Container(
@@ -168,7 +168,7 @@ class CustomShopCard extends StatelessWidget {
     padding: EdgeInsets.all(8.dp),
     child: Row(
       children: <Widget>[
-        CustomAvatarImage(isCircle: false, size: kProfileImgSizeL, networkImage: shop.logo, name: shop.name),
+        CustomAvatarImage(isCircle: false, size: kProfileImgSizeL, networkImage: company.companyLogo, name: company.companyName),
         Expanded(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
@@ -177,9 +177,9 @@ class CustomShopCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               spacing: 4.dp,
               children: <Widget>[
-                CustomText(shop.name, fontSize: 14.0, fontWeight: FontWeight.w700, maxLines: 2),
-                CustomText(shop.address, fontSize: 12.0),
-                CustomText(shop.categoryTitle.join(", "), color: Colors.black54, fontSize: 12.0),
+                CustomText(company.companyName, fontSize: 14.0, fontWeight: FontWeight.w700, maxLines: 2),
+                CustomText(company.fullAddress, fontSize: 12.0),
+                CustomText(company.categoryTitle.join(", "), color: Colors.black54, fontSize: 12.0),
               ],
             ),
           ),

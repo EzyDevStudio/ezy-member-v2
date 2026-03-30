@@ -1,9 +1,10 @@
 import 'package:ezymember/main.dart';
-import 'package:ezymember/views/authentication_screen.dart';
-import 'package:ezymember/views/change_password_screen.dart';
+import 'package:ezymember/views/authentication/change_password_screen.dart';
+import 'package:ezymember/views/authentication/forgot_password_screen.dart';
+import 'package:ezymember/views/authentication/sign_in_screen.dart';
+import 'package:ezymember/views/authentication/sign_up_screen.dart';
 import 'package:ezymember/views/company_detail_screen.dart';
-import 'package:ezymember/views/branch_list_screen.dart';
-import 'package:ezymember/views/forgot_password_screen.dart';
+import 'package:ezymember/views/company_list_screen.dart';
 import 'package:ezymember/views/home_screen.dart';
 import 'package:ezymember/views/invoice_screen.dart';
 import 'package:ezymember/views/timeline_detail_screen.dart';
@@ -20,11 +21,12 @@ import 'package:get/get.dart';
 
 class AppRoutes {
   static const wrapper = "/";
-  static const authentication = "/authentication";
-  static const branchList = "/branch_list";
-  static const changePassword = "/change_password";
+  static const changePassword = "/authentication/change_password";
+  static const forgotPassword = "/authentication/forgot_password";
+  static const signIn = "/authentication/sign_in";
+  static const signUp = "/authentication/sign_up";
   static const companyDetail = "/company_detail";
-  static const forgotPassword = "/forgot_password";
+  static const companyList = "/company_list";
   static const home = "/home";
   static const invoice = "/invoice";
   static const memberDetail = "/member_detail";
@@ -40,11 +42,12 @@ class AppRoutes {
 
   static final pages = <GetPage>[
     GetPage(name: wrapper, page: () => WrapperScreen()),
-    GetPage(name: authentication, page: () => AuthenticationScreen()),
-    GetPage(name: branchList, page: () => BranchListScreen()),
     GetPage(name: changePassword, page: () => ChangePasswordScreen()),
-    GetPage(name: companyDetail, page: () => CompanyDetailScreen()),
     GetPage(name: forgotPassword, page: () => ForgotPasswordScreen()),
+    GetPage(name: signIn, page: () => SignInScreen()),
+    GetPage(name: signUp, page: () => SignUpScreen()),
+    GetPage(name: companyDetail, page: () => CompanyDetailScreen()),
+    GetPage(name: companyList, page: () => CompanyListScreen()),
     GetPage(name: home, page: () => HomeScreen()),
     GetPage(name: invoice, page: () => InvoiceScreen()),
     GetPage(name: memberDetail, page: () => MemberDetailScreen()),
@@ -58,4 +61,34 @@ class AppRoutes {
     GetPage(name: voucherList, page: () => VoucherListScreen()),
     GetPage(name: welcome, page: () => WelcomeScreen()),
   ];
+
+  static void back({String? destination}) {
+    if (destination == null && Get.previousRoute.isEmpty) {
+      Get.offAllNamed(AppRoutes.welcome);
+    } else if (destination == null && Get.previousRoute.isNotEmpty) {
+      Get.back();
+    } else if (destination != null && Get.previousRoute.isEmpty) {
+      Get.offAllNamed(destination);
+    } else if (destination != null && Get.previousRoute.isNotEmpty) {
+      Get.previousRoute == destination ? Get.back() : Get.offAllNamed(destination);
+    } else {
+      Get.offAllNamed(AppRoutes.welcome);
+    }
+  }
+
+  static void backAuth() {
+    bool found = false;
+
+    Get.until((route) {
+      if (route.settings.name == AppRoutes.welcome || route.settings.name == AppRoutes.home) {
+        found = true;
+
+        return true;
+      }
+
+      return false;
+    });
+
+    if (!found) Get.offAllNamed(AppRoutes.welcome);
+  }
 }

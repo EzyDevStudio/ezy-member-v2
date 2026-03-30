@@ -109,6 +109,12 @@ class CompanyModel {
     return selectedCategory.image;
   }
 
+  List<String> get categoryCodes {
+    if (categories.isEmpty) return [];
+
+    return categories.split(",").map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+  }
+
   List<String> get categoryTitle {
     if (categories.isEmpty) return [];
 

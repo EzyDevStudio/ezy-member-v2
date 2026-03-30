@@ -17,6 +17,7 @@ import 'package:ezymember/widgets/custom_app_bar.dart';
 import 'package:ezymember/widgets/custom_button.dart';
 import 'package:ezymember/widgets/custom_fab.dart';
 import 'package:ezymember/widgets/custom_image.dart';
+import 'package:ezymember/widgets/custom_menu.dart';
 import 'package:ezymember/widgets/custom_text.dart';
 import 'package:ezymember/widgets/custom_timeline.dart';
 import 'package:ezymember/widgets/custom_voucher.dart';
@@ -157,24 +158,53 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        body: Obx(() => RefreshIndicator(onRefresh: _onRefresh, child: _buildMobile())),
+        body: RefreshIndicator(onRefresh: _onRefresh, child: isDesktop ? _buildDesktop() : _buildMobile()),
         floatingActionButton: _showFab ? CustomFab(controller: _scrollController) : null,
       ),
     );
   }
 
-  Widget _buildMobile() => CustomScrollView(
+  Widget _buildDesktop() => CustomMenu(
+    title: Globalization.home.tr,
+    child: ListView(
+      controller: _scrollController,
+      shrinkWrap: true,
+      padding: EdgeInsets.all(16.dp),
+      children: <Widget>[
+        if (_hive.isSignIn)
+          Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: ResponsiveHelper.tabletLarge),
+              child: _buildVouchers(),
+            ),
+          ),
+        Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: ResponsiveHelper.tabletLarge),
+            child: _buildTimeline(),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildMobile() => Obx(() => CustomScrollView(
     controller: _scrollController,
     physics: const AlwaysScrollableScrollPhysics(),
-    slivers: <Widget>[_buildAppBar(), _buildQuickAccess(), if (_hive.isSignIn) _buildVouchers(), _buildTimeline()],
-  );
+    slivers: <Widget>[
+      _buildAppBar(),
+      _buildQuickAccess(),
+      SliverToBoxAdapter(child: _buildVouchers()),
+      SliverToBoxAdapter(child: _buildTimeline()),
+    ],
+  ));
 
   Widget _buildAppBar() => CustomAppBar(
     isLeading: false,
     cacheAvatar: _hive.image,
     cacheBackground: _hive.backgroundImage,
     actions: _buildAppBarAction(),
-    onTap: () => Get.toNamed(_hive.isSignIn ? AppRoutes.profileDetail : AppRoutes.authentication),
+    onTap: () => Get.toNamed(_hive.isSignIn ? AppRoutes.profileDetail : AppRoutes.signIn),
     child: Expanded(
       child: Row(
         spacing: 16.dp,
@@ -224,87 +254,90 @@ class _HomeScreenState extends State<HomeScreen> {
       itemBuilder: (context) => Globalization.languages.entries
           .map((entry) => PopupMenuItem<Locale>(value: entry.value, child: CustomText(entry.key, fontSize: 14.0)))
           .toList(),
-      icon: const Icon(Icons.language_rounded, color: Colors.white),
+      icon: Icon(Icons.language_rounded, color: isDesktop ? Theme.of(context).colorScheme.primary : Colors.white),
     ),
-    if (_hive.isSignIn) IconButton(onPressed: _signOut, icon: Icon(Icons.logout_rounded)),
+    if (_hive.isSignIn)
+      IconButton(
+        onPressed: _signOut,
+        icon: Icon(Icons.logout_rounded, color: isDesktop ? Theme.of(context).colorScheme.primary : Colors.white),
+      ),
   ];
 
   Widget _buildQuickAccess() => Obx(
     () => SliverToBoxAdapter(
-      child: Container(
-        child: Column(
-          children: <Widget>[
-            GridView(
-              shrinkWrap: true,
-              padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 16.dp),
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisSpacing: 16.dp,
-                mainAxisExtent: rsp.quickHeight(),
-                mainAxisSpacing: 16.dp,
-                crossAxisCount: rsp.quickCount(),
-              ),
-              children: <Widget>[
-                if (_hive.isSignIn)
-                  CustomImageTextButton(
-                    isCountVisible: true,
-                    count: _voucherController.redeemedCount.value,
-                    assetName: "assets/icons/my_vouchers.png",
-                    label: Globalization.myVouchers.tr,
-                    onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
-                  ),
-                if (_hive.isSignIn)
-                  CustomImageTextButton(
-                    isCountVisible: true,
-                    count: _voucherController.memberCount.value,
-                    assetName: "assets/icons/my_members.png",
-                    label: Globalization.myCards.tr,
-                    onTap: () => Get.toNamed(AppRoutes.memberList),
-                  ),
-                if (_hive.isSignIn)
-                  CustomImageTextButton(
-                    assetName: "assets/icons/invoice.png",
-                    label: Globalization.eInvoice.tr,
-                    onTap: () => Get.toNamed(AppRoutes.invoice),
-                  ),
-                CustomImageTextButton(
-                  assetName: "assets/icons/find_shops.png",
-                  label: Globalization.findShop.tr,
-                  onTap: () => Get.toNamed(AppRoutes.branchList),
-                ),
-                if (_hive.isSignIn) CustomImageTextButton(assetName: "assets/icons/scan.png", label: Globalization.scan.tr, onTap: _showMemberCode),
-              ],
+      child: Column(
+        children: <Widget>[
+          GridView(
+            shrinkWrap: true,
+            padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 16.dp),
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisSpacing: 16.dp,
+              mainAxisExtent: rsp.quickHeight(),
+              mainAxisSpacing: 16.dp,
+              crossAxisCount: rsp.quickCount(),
             ),
-          ],
-        ),
+            children: <Widget>[
+              if (_hive.isSignIn)
+                CustomImageTextButton(
+                  isCountVisible: true,
+                  count: _voucherController.redeemedCount.value,
+                  assetName: "assets/icons/my_vouchers.png",
+                  label: Globalization.myVouchers.tr,
+                  onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
+                ),
+              if (_hive.isSignIn)
+                CustomImageTextButton(
+                  isCountVisible: true,
+                  count: _voucherController.memberCount.value,
+                  assetName: "assets/icons/my_members.png",
+                  label: Globalization.myCards.tr,
+                  onTap: () => Get.toNamed(AppRoutes.memberList),
+                ),
+              if (_hive.isSignIn)
+                CustomImageTextButton(
+                  assetName: "assets/icons/invoice.png",
+                  label: Globalization.eInvoice.tr,
+                  onTap: () => Get.toNamed(AppRoutes.invoice),
+                ),
+              CustomImageTextButton(
+                assetName: "assets/icons/find_shops.png",
+                label: Globalization.findShop.tr,
+                onTap: () => Get.toNamed(AppRoutes.companyList),
+              ),
+              if (_hive.isSignIn) CustomImageTextButton(assetName: "assets/icons/scan.png", label: Globalization.scan.tr, onTap: _showMemberCode),
+            ],
+          ),
+        ],
       ),
     ),
   );
 
   Widget _buildVouchers() => Obx(() {
     if (_voucherController.vouchers.isEmpty) {
-      return SliverToBoxAdapter(
-        child: Divider(color: Colors.grey.withValues(alpha: 0.7), thickness: 5.dp),
-      );
+      return isDesktop ? SizedBox.shrink() : Divider(color: Colors.grey.withValues(alpha: 0.7), thickness: 5.dp);
     }
 
     final vouchers = _voucherController.vouchers;
 
-    return SliverToBoxAdapter(
+    return Container(
+      margin: isDesktop ? EdgeInsets.only(bottom: 16.dp) : null,
       child: ClipRRect(
+        borderRadius: isDesktop ? BorderRadius.all(Radius.circular(kBorderRadiusS)) : BorderRadius.zero,
         child: Column(
           children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: <BoxShadow>[
-                  BoxShadow(color: Colors.black38, blurRadius: 2.0, spreadRadius: 6.0),
-                  BoxShadow(color: Colors.black38, blurRadius: 5.0, spreadRadius: 12.0),
-                ],
+            if (!isDesktop)
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(color: Colors.black38, blurRadius: 2.0, spreadRadius: 6.0),
+                    BoxShadow(color: Colors.black38, blurRadius: 5.0, spreadRadius: 12.0),
+                  ],
+                ),
               ),
-            ),
             Container(
               color: Colors.grey.withValues(alpha: 0.5),
-              padding: EdgeInsets.symmetric(vertical: 8.dp),
+              padding: isDesktop ? null : EdgeInsets.symmetric(vertical: 8.dp),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -337,14 +370,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: <BoxShadow>[
-                  BoxShadow(color: Colors.black12, blurRadius: 2.0, spreadRadius: 6.0),
-                  BoxShadow(color: Colors.black26, blurRadius: 5.0, spreadRadius: 12.0),
-                ],
+            if (!isDesktop)
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(color: Colors.black12, blurRadius: 2.0, spreadRadius: 6.0),
+                    BoxShadow(color: Colors.black26, blurRadius: 5.0, spreadRadius: 12.0),
+                  ],
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -353,31 +387,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTimeline() => Obx(() {
     if (_timelineController.isLoading.value) {
-      return SliverFillRemaining(
-        hasScrollBody: false,
-        child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
-      );
+      return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary));
     }
 
     final timelines = _timelineController.timelines;
 
-    if (timelines.isEmpty) return SliverToBoxAdapter();
+    if (timelines.isEmpty) return SizedBox.shrink();
 
-    return SliverList(
-      delegate: SliverChildBuilderDelegate((context, index) {
+    return ListView.separated(
+      shrinkWrap: true,
+      itemCount: timelines.length,
+      physics: NeverScrollableScrollPhysics(),
+      separatorBuilder: (context, index) => isDesktop ? SizedBox(height: 16.0) : Divider(color: Colors.grey.withValues(alpha: 0.7), thickness: 5.dp),
+      itemBuilder: (context, index) {
         if (index == timelines.length - 1 && _timelineController.hasMore && !_timelineController.isLoading.value) {
           _timelineController.loadTimelines(isLoadMore: true);
         }
 
         return Container(
           decoration: BoxDecoration(
-            border: Border(
-              top: index == 0 && _hive.isSignIn ? BorderSide.none : BorderSide(color: Colors.grey.withValues(alpha: 0.7), width: 5.dp),
-            ),
+            borderRadius: isDesktop ? BorderRadius.all(Radius.circular(kBorderRadiusS)) : null,
+            color: isDesktop ? Colors.white : null,
+            boxShadow: isDesktop ? <BoxShadow>[BoxShadow(color: Color(0x0D000000), blurRadius: 10.0, offset: Offset(0.0, 0.4))] : null,
           ),
           child: CustomTimeline(timeline: timelines[index], isNavigateCompany: true, isNavigateTimeline: true),
         );
-      }, childCount: timelines.length),
+      },
     );
   });
 }

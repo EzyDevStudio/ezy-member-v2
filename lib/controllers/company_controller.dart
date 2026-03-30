@@ -38,16 +38,16 @@ class CompanyController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<void> loadCompanies({String? category}) async {
+  Future<void> loadCompanies({bool isLocation = false, String? category, String? search}) async {
     isLoading.value = true;
 
-    final Coordinate? c = await LocationHelper.getCurrentCoordinate();
+    final Coordinate? c = isLocation ? await LocationHelper.getCurrentCoordinate() : null;
 
     final responsePOS = await _api.get(
       baseUrl: "${AppStrings.serverEzyPos}/${AppStrings.serverDirectory}",
       endPoint: "get-company-list",
       module: "CompanyController - loadCompanies",
-      data: {if (category != null) "business_category": category, if (c != null) "city": c.city},
+      data: {if (category != null) "business_category": category, if (c != null) "city": c.city, if (search != null) "search": search},
     );
 
     if (responsePOS == null || responsePOS.data["company_list"] == null) {

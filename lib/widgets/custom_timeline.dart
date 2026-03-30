@@ -32,11 +32,13 @@ class CustomTimeline extends StatelessWidget {
           child: Row(
             spacing: 8.dp,
             children: <Widget>[
-              GestureDetector(
+              CustomAvatarImage(
+                size: rsp.avatarSize(),
+                networkImage: timeline.companyLogo,
+                name: timeline.companyName,
                 onTap: () => isDetail
                     ? null
                     : (isNavigateCompany ? Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": timeline.companyID}) : null),
-                child: CustomAvatarImage(size: rsp.avatarSize(), networkImage: timeline.companyLogo, name: timeline.companyName),
               ),
               Expanded(
                 child: Column(

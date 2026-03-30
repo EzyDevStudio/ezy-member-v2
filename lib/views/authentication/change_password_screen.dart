@@ -1,10 +1,12 @@
 import 'package:ezymember/constants/app_constants.dart';
+import 'package:ezymember/constants/app_routes.dart';
 import 'package:ezymember/controllers/member_hive_controller.dart';
 import 'package:ezymember/controllers/profile_controller.dart';
 import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/language/globalization.dart';
 import 'package:ezymember/widgets/custom_button.dart';
+import 'package:ezymember/widgets/custom_text.dart';
 import 'package:ezymember/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -87,54 +89,70 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-        ),
-        title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
-      ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
-          child: _buildContent(),
-        ),
-      ),
+      appBar: _buildAppBar(),
+      body: CustomScrollView(slivers: <Widget>[_buildContent()]),
     );
   }
 
-  Widget _buildContent() => ListView(
-    children: <Widget>[
-      Padding(
-        padding: EdgeInsets.all(16.dp),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: 16.dp,
-          children: <Widget>[
-            Image.asset("assets/images/change_password.png", scale: kSquareRatio, height: rsp.authSize()),
-            CustomOutlinedTextField(
-              controller: _oldController,
-              icon: Icons.lock_rounded,
-              type: OutlinedType.password,
-              label: Globalization.oldPassword.tr,
+  PreferredSizeWidget _buildAppBar() => AppBar(
+    backgroundColor: Theme.of(context).colorScheme.primary,
+    leading: IconButton(
+      onPressed: () => AppRoutes.back(destination: AppRoutes.profileDetail),
+      icon: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+    ),
+    title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
+  );
+
+  Widget _buildContent() => SliverFillRemaining(
+    hasScrollBody: false,
+    child: Padding(
+      padding: EdgeInsets.all(24.dp),
+      child: Wrap(
+        runSpacing: 24.dp,
+        spacing: 24.dp,
+        alignment: WrapAlignment.spaceEvenly,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        runAlignment: WrapAlignment.center,
+        children: <Widget>[
+          Image.asset("assets/images/forgot_password.png", scale: kSquareRatio, width: rsp.welcomeSize() - 100.0),
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: rsp.welcomeSize() + 100.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 16.dp,
+              children: <Widget>[
+                CustomText(
+                  Globalization.changePassword.tr,
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w700,
+                ),
+                CustomText(Globalization.msgChangePassword.tr, fontSize: 14.0, maxLines: null),
+                CustomOutlinedTextField(
+                  controller: _oldController,
+                  icon: Icons.lock_rounded,
+                  type: OutlinedType.password,
+                  label: Globalization.oldPassword.tr,
+                ),
+                CustomOutlinedTextField(
+                  controller: _newController,
+                  icon: Icons.lock_rounded,
+                  type: OutlinedType.password,
+                  label: Globalization.newPassword.tr,
+                ),
+                CustomOutlinedTextField(
+                  controller: _confirmController,
+                  icon: Icons.lock_rounded,
+                  type: OutlinedType.password,
+                  label: Globalization.confirmPassword.tr,
+                ),
+                const SizedBox(),
+                CustomFilledButton(label: Globalization.confirm.tr, onTap: () => _changePassword()),
+              ],
             ),
-            CustomOutlinedTextField(
-              controller: _newController,
-              icon: Icons.lock_rounded,
-              type: OutlinedType.password,
-              label: Globalization.newPassword.tr,
-            ),
-            CustomOutlinedTextField(
-              controller: _confirmController,
-              icon: Icons.lock_rounded,
-              type: OutlinedType.password,
-              label: Globalization.confirmPassword.tr,
-            ),
-            const SizedBox(),
-            CustomFilledButton(label: Globalization.changePassword.tr, onTap: () => _changePassword()),
-          ],
-        ),
+          ),
+        ],
       ),
-    ],
+    ),
   );
 }

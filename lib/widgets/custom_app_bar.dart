@@ -40,24 +40,7 @@ class CustomAppBar extends StatelessWidget {
           child: Row(
             spacing: 16.dp,
             children: <Widget>[
-              GestureDetector(
-                onTap: onTap,
-                child: Stack(
-                  children: <Widget>[
-                    CustomAvatarImage(size: kProfileImgSizeM, networkImage: avatarImage, cacheImage: cacheAvatar),
-                    if (onTap != null)
-                      Positioned(
-                        bottom: kPositionEmpty,
-                        right: kPositionEmpty,
-                        child: Container(
-                          decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                          padding: const EdgeInsets.all(4.0),
-                          child: Icon(Icons.edit_rounded, color: Theme.of(context).colorScheme.primary, size: 15.0),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
+              CustomAvatarImage(showEdit: onTap != null, size: kProfileImgSizeM, networkImage: avatarImage, cacheImage: cacheAvatar, onTap: onTap),
               child,
             ],
           ),

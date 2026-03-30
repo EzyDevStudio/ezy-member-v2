@@ -18,6 +18,7 @@ class Globalization {
   static const String advertisements = "Advertisements";
   static const String all = "All";
   static const String apply = "Apply";
+  static const String backToSignIn = "Back to SIGN IN";
   static const String basicInformation = "Basic Information";
   static const String branches = "Branches";
   static const String camera = "Camera";
@@ -123,6 +124,8 @@ class Globalization {
   static const String shops = "Shops";
   static const String signIn = "Sign In";
   static const String signInAccount = "Sign in with your account";
+  static const String signInWithEmail = "Sign in with email";
+  static const String signInWithMobile = "Sign in with mobile no.";
   static const String signOut = "Sign Out";
   static const String signUp = "Sign Up";
   static const String sstRegistration = "SST Registration";
@@ -151,6 +154,8 @@ class Globalization {
   static const String msgAccountInactive = "Your account is inactive. Please contact support for assistance.";
   static const String msgAccountNotExists = "Don't have an account? ";
   static const String msgAddressCopied = "Address has been copied to your clipboard!";
+  static const String msgChangePassword =
+      "You can change your password anytime. Please ensure your new password meets the minimum strength requirements.\nNote: Your new password will NOT be sent via email, so please remember it carefully.";
   static const String msgConfirmation = "Are you sure?";
   static const String msgConnectionOff = "You are currently offline.";
   static const String msgContinueGuest = "I’m just exploring, try the app freely and sign up later.";
@@ -195,12 +200,14 @@ class Globalization {
   static const String msgResetPassword =
       "A new temporary password will be generated and sent to your email. You can use it to sign in and change your password.";
   static const String msgResultEnd = "You’ve reached the end!";
-  static const String msgSignIn = "Welcome to ${AppStrings.appName}. Please sign in to access your account.";
+  static const String msgSignIn =
+      "Welcome back to ${AppStrings.appName}. Sign in to access your account, manage your membership, explore all features, and continue enjoying exclusive benefits tailored just for you.";
   static const String msgSignInFail = "Incorrect password. Please try again.";
   static const String msgSignInProcessing = "Please wait while we sign you in.";
   static const String msgSignInSuccess = "Welcome back! You’ve successfully signed in.";
   static const String msgSignOutConfirmation = "Are you sure you want to sign out? You can sign back in anytime.";
-  static const String msgSignUp = "Welcome to ${AppStrings.appName}. Create an account to get started.";
+  static const String msgSignUp =
+      "Welcome to ${AppStrings.appName}. Create an account to get started, explore all features, manage your membership, and enjoy exclusive benefits tailored just for you.";
   static const String msgSignUpProcessing = "Please wait while we create your account.";
   static const String msgSignUpSuccess = "Your account has been successfully created. Please sign in to continue.";
   static const String msgSystemError = "System under maintenance. Please try again later.";
@@ -210,5 +217,5 @@ class Globalization {
   static const String msgVoucherCollectSuccess = "Your voucher has been collected. Enjoy your reward!";
   static const String msgVoucherCollectedBefore = "Looks like you’ve collected this voucher before.";
   static const String msgWelcome =
-      "Thank you for choosing ${AppStrings.appName}.\nThis app allows you to easily subscribe as a member to your selected company. Once subscribed, you can manage your membership, access exclusive benefits, and stay updated with the latest news and services.\nBefore you begin, please complete a quick setup so we can prepare your device. Let's get started.";
+      "Thank you for choosing ${AppStrings.appName}.\nThis app allows you to easily subscribe as a member to your selected company. Once subscribed, you can manage your membership, access exclusive benefits, and stay updated with the latest news and services.\nBefore you begin, please complete a quick setup so we can prepare your device.\nLet's get started.";
 }

@@ -29,6 +29,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     child: Padding(
       padding: EdgeInsets.all(24.dp),
       child: Wrap(
+        runSpacing: 24.dp,
+        spacing: 24.dp,
         alignment: WrapAlignment.spaceEvenly,
         crossAxisAlignment: WrapCrossAlignment.center,
         runAlignment: WrapAlignment.center,
@@ -42,7 +44,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               children: <Widget>[
                 CustomText(Globalization.welcome.tr, color: Theme.of(context).colorScheme.primary, fontSize: 18.0, fontWeight: FontWeight.w700),
                 CustomText(Globalization.msgWelcome.tr, fontSize: 14.0, maxLines: null),
-                _buildOptionTile(() => Get.toNamed(AppRoutes.authentication), Globalization.msgContinueSignIn.tr, Globalization.signInAccount.tr),
+                _buildOptionTile(() => Get.toNamed(AppRoutes.signIn), Globalization.msgContinueSignIn.tr, Globalization.signInAccount.tr),
                 _buildOptionTile(() => Get.offAllNamed(AppRoutes.home), Globalization.msgContinueGuest.tr, Globalization.continueGuest.tr),
               ],
             ),

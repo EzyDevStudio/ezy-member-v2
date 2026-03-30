@@ -21,6 +21,7 @@ const double kElevation = 4.0;
 
 // Menu Side Bar
 const double kMenuWidth = 300.0;
+const double kMenuIconSize = 40.0;
 
 // Offset
 const double kBackToTop = 150.0;
