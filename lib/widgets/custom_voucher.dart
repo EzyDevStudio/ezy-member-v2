@@ -77,14 +77,7 @@ class CustomVoucher extends StatelessWidget {
 
     if (type == VoucherType.normal) return content;
 
-    return Badge(
-      alignment: Alignment.topLeft,
-      backgroundColor: Theme.of(context).colorScheme.errorContainer,
-      padding: EdgeInsets.only(left: 10.0, right: 6.0),
-      offset: Offset(-6.0, 8.0),
-      label: CustomText("x${voucher.quantity}", color: Theme.of(context).colorScheme.onErrorContainer, fontSize: 11.0),
-      child: content,
-    );
+    return content;
   }
 
   Widget _buildSecondChild(BuildContext context) {
@@ -122,7 +115,7 @@ class CustomVoucher extends StatelessWidget {
                 ),
             ],
           ),
-          CustomText("${voucher.discountValue.toStringAsFixed(1)} ${Globalization.off.tr}", fontSize: isCollectable ? 12.0 : 14.0),
+          CustomText("${voucher.discountValue.toStringAsFixed(2)} ${Globalization.off.tr}", fontSize: isCollectable ? 12.0 : 14.0),
           const Spacer(),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,

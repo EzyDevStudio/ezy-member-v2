@@ -63,7 +63,7 @@ class CustomMemberCard extends StatelessWidget {
                   CustomText(member.point.toString(), color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
                   CustomText(Globalization.points.tr, color: Colors.white, fontSize: 16.0),
                   const Spacer(),
-                  CustomText(member.credit.toStringAsFixed(1), color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                  CustomText(member.credit.toStringAsFixed(2), color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
                   CustomText(Globalization.credits.tr, color: Colors.white, fontSize: 16.0),
                 ],
               ),
@@ -138,11 +138,11 @@ class CustomSectionCard extends StatelessWidget {
           Container(
             color: Colors.white,
             padding: EdgeInsets.only(left: 16.dp, right: 16.dp, top: 16.dp),
-            child: CustomText(title, color: Colors.black54, fontSize: 18.0),
+            child: CustomText(title, color: Colors.black54, fontSize: 16.0),
           ),
           Container(
             color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 24.dp, vertical: 16.dp),
+            padding: EdgeInsets.only(bottom: 16.dp, left: 24.dp, right: 24.dp, top: 8.dp),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, spacing: 8.dp, children: children),
           ),
         ],
@@ -174,12 +174,13 @@ class CustomShopCard extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
               spacing: 4.dp,
               children: <Widget>[
                 CustomText(company.companyName, fontSize: 14.0, fontWeight: FontWeight.w700, maxLines: 2),
                 CustomText(company.fullAddress, fontSize: 12.0),
                 CustomText(company.categoryTitle.join(", "), color: Colors.black54, fontSize: 12.0),
+                if (company.databaseName.isNotEmpty && company.domainName.isNotEmpty)
+                  CustomLabelChip(backgroundColor: Colors.green, foregroundSize: 12.0, label: "Joined"),
               ],
             ),
           ),

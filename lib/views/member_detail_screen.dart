@@ -349,7 +349,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
       CustomImageTextButton(
         assetName: "assets/icons/my_credits.png",
         label: _member.isMember ? Globalization.myCredits.tr : Globalization.redeemByCredits.tr,
-        content: _member.isMember ? _member.credit.toStringAsFixed(1) : null,
+        content: _member.isMember ? _member.credit.toStringAsFixed(2) : null,
         onTap: _member.isMember ? () => _isExpired(_member, AppRoutes.scan, {"scan_type": ScanType.redeemCredits}) : null,
       ),
     ],

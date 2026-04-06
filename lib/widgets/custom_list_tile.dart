@@ -22,12 +22,12 @@ class CustomHistoryListTile extends StatelessWidget {
     if (history.type == HistoryType.credit) {
       title = history.credit!.creditDescription;
       location = [history.credit?.branchName, history.credit?.counterName].where((s) => s != null && s.isNotEmpty).join(" - ");
-      value = history.credit!.credit.toStringAsFixed(1);
+      value = history.credit!.credit.toStringAsFixed(2);
       textColor = history.credit!.credit < 0 ? Colors.red : Colors.green;
     } else if (history.type == HistoryType.point) {
       title = history.point!.pointDescription;
       location = [history.point?.branchName, history.point?.counterName].where((s) => s != null && s.isNotEmpty).join(" - ");
-      value = history.point!.point.toStringAsFixed(1);
+      value = history.point!.point.toString();
       textColor = history.point!.point < 0 ? Colors.red : Colors.green;
     } else if (history.type == HistoryType.voucher) {
       title = history.voucher!.batchDescription;

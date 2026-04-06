@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 
 enum OutlinedType { text, password, phone }
 
-enum UnderlineType { text, idType, phone }
+enum UnderlineType { text, phone }
 
 class CustomOutlinedTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -269,10 +269,9 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
     contentPadding: EdgeInsets.zero,
     subtitle: _buildField(context),
     title: _title(context),
-    trailing: Icon(
-      widget.onTap == null ? Icons.edit_rounded : Icons.arrow_forward_ios_rounded,
-      color: widget.enabled ? Theme.of(context).colorScheme.primary : Colors.transparent,
-    ),
+    trailing: widget.onTap != null
+        ? Icon(Icons.arrow_forward_ios_rounded, color: widget.enabled ? Theme.of(context).colorScheme.primary : Colors.transparent)
+        : null,
     onTap: widget.enabled ? widget.onTap : null,
   );
 
@@ -280,8 +279,6 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
     switch (widget.type!) {
       case UnderlineType.text:
         return _textField(context);
-      case UnderlineType.idType:
-        return _idTypeField(context);
       case UnderlineType.phone:
         return _phoneField(context);
     }
@@ -300,41 +297,6 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
     ),
     keyboardType: widget.keyboardType,
     onTap: widget.onTap,
-  );
-
-  Widget _idTypeField(BuildContext context) => Row(
-    spacing: 16.dp,
-    children: <Widget>[
-      Expanded(
-        flex: 1,
-        child: TextField(
-          controller: widget.typeController,
-          readOnly: true,
-          decoration: InputDecoration(
-            isCollapsed: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 12.dp),
-            enabledBorder: _border(context),
-            focusedBorder: _focusedBorder(context),
-            hint: CustomText(Globalization.registrationSchemeID.tr, fontSize: 16.0, textAlign: TextAlign.center),
-          ),
-          onTap: widget.onTap,
-        ),
-      ),
-      Expanded(
-        flex: 3,
-        child: TextField(
-          controller: widget.valueController,
-          decoration: InputDecoration(
-            isCollapsed: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 12.dp),
-            enabledBorder: _border(context),
-            focusedBorder: _focusedBorder(context),
-            hint: CustomText(widget.label, color: Colors.black38, fontSize: 16.0),
-          ),
-          keyboardType: widget.keyboardType,
-        ),
-      ),
-    ],
   );
 
   Widget _phoneField(BuildContext context) => Row(

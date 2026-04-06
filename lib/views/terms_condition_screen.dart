@@ -61,16 +61,32 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
     children: <Widget>[
       CustomText(_voucher.batchDescription, fontSize: 24.0, fontWeight: FontWeight.bold),
       SizedBox(height: 16.dp),
-      _buildListTile(subtitle: "${_voucher.startDate.tsToStr} - ${_voucher.expiredDate.tsToStr}", title: Globalization.validPeriod.tr),
-      _buildListTile(subtitle: "${_voucher.discountValue.toStringAsFixed(1)} ${Globalization.off.tr}", title: Globalization.discountAmount.tr),
-      _buildListTile(subtitle: _voucher.minimumSpend.toStringAsFixed(1), title: Globalization.minSpend.tr),
-      _buildListTile(subtitle: _voucher.termsCondition, title: Globalization.more.tr),
+      _buildResponsive(
+        _buildListTile(subtitle: "${_voucher.startCollectDate.tsToStr} - ${_voucher.endCollectDate.tsToStr}", title: Globalization.collectBetween.tr),
+        _buildListTile(subtitle: "${_voucher.startDate.tsToStr} - ${_voucher.expiredDate.tsToStr}", title: Globalization.useBetween.tr),
+      ),
+      _buildResponsive(
+        _buildListTile(subtitle: "${_voucher.discountValue.toStringAsFixed(2)} ${Globalization.off.tr}", title: Globalization.discountAmount.tr),
+        _buildListTile(subtitle: _voucher.minimumSpend.toStringAsFixed(2), title: Globalization.minSpend.tr),
+      ),
+      _buildListTile(subtitle: _voucher.termsCondition, title: Globalization.tncApplied.tr),
     ],
   );
 
   Widget _buildListTile({String? subtitle, required String title}) => ListTile(
     contentPadding: EdgeInsets.zero,
     subtitle: subtitle != null ? CustomText(subtitle, fontSize: 16.0, maxLines: null) : null,
-    title: CustomText(title, color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w600),
+    title: CustomText(title, color: Theme.of(context).colorScheme.primary, fontSize: 14.0, fontWeight: FontWeight.w600),
   );
+
+  Widget _buildResponsive(Widget child1, Widget child2) => isMobile
+      ? Column(spacing: 16.0, children: <Widget>[child1, child2])
+      : Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16.0,
+          children: <Widget>[
+            Expanded(child: child1),
+            Expanded(child: child2),
+          ],
+        );
 }

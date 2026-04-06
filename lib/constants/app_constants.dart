@@ -19,6 +19,9 @@ const double kOffsetY = 4.0;
 // Elevation
 const double kElevation = 4.0;
 
+// Image
+const double kSettingImage = 50.0;
+
 // Menu Side Bar
 const double kMenuWidth = 300.0;
 const double kMenuIconSize = 40.0;

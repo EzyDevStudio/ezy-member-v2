@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:ezymember/constants/enum.dart';
 import 'package:ezymember/hive/member_profile_hive.dart';
 import 'package:ezymember/services/local/member_profile_storage_service.dart';
 import 'package:get/get.dart';
@@ -36,30 +37,35 @@ class MemberHiveController extends GetxController {
     memberProfile.value = null;
   }
 
-  Future<void> updateImage(Uint8List bytes) async {
+  Future<void> updateMedia(Uint8List bytes, MediaType type) async {
     if (memberProfile.value == null) return;
-    final updatedProfile = memberProfile.value!.copyWith(image: bytes);
+
+    final profile = memberProfile.value!;
+    MemberProfileHive updatedProfile;
+
+    switch (type) {
+      case MediaType.image:
+        updatedProfile = profile.copyWith(image: bytes);
+        break;
+      case MediaType.background:
+        updatedProfile = profile.copyWith(backgroundImage: bytes);
+        break;
+      case MediaType.personalInvoice:
+        updatedProfile = profile.copyWith(personalInvoice: bytes);
+        break;
+      case MediaType.workingInvoice:
+        updatedProfile = profile.copyWith(workingInvoice: bytes);
+        break;
+    }
+
     await _storage.saveMemberProfile(updatedProfile);
     memberProfile.value = updatedProfile;
   }
 
-  Future<void> updateBackgroundImage(Uint8List bytes) async {
+  Future<void> clearMedia(MediaType type) async {
     if (memberProfile.value == null) return;
-    final updatedProfile = memberProfile.value!.copyWith(backgroundImage: bytes);
-    await _storage.saveMemberProfile(updatedProfile);
-    memberProfile.value = updatedProfile;
-  }
 
-  Future<void> updatePersonalInvoiceImage(Uint8List bytes) async {
-    if (memberProfile.value == null) return;
-    final updatedProfile = memberProfile.value!.copyWith(personalInvoice: bytes);
-    await _storage.saveMemberProfile(updatedProfile);
-    memberProfile.value = updatedProfile;
-  }
-
-  Future<void> updateCompanyInvoiceImage(Uint8List bytes) async {
-    if (memberProfile.value == null) return;
-    final updatedProfile = memberProfile.value!.copyWith(workingInvoice: bytes);
+    final updatedProfile = memberProfile.value!.clearMedia(type);
     await _storage.saveMemberProfile(updatedProfile);
     memberProfile.value = updatedProfile;
   }

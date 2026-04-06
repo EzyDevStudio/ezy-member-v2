@@ -1,4 +1,3 @@
-import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/constants/app_routes.dart';
 import 'package:ezymember/constants/app_strings.dart';
 import 'package:ezymember/controllers/member_hive_controller.dart';
@@ -38,14 +37,12 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   late ProfileDetailControllers _workingControllers;
   late TabController _tabController;
 
-  bool _isRequired = false;
   PhoneDetail _phoneMember = PhoneDetail();
   PhoneDetail _phoneWorking = PhoneDetail();
   MemberProfileModel _memberProfile = MemberProfileModel.empty();
   WorkingProfileModel _workingProfile = WorkingProfileModel.empty();
 
   String _selectedGender = "";
-  String _selectedIDType = AppStrings().idTypes.keys.first;
 
   @override
   void initState() {
@@ -80,16 +77,6 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       _workingControllers = ProfileDetailControllers(_workingProfile);
 
       await _phoneWorking.update(_workingProfile.countryCode);
-
-      if (_workingProfile.registrationSchemeID.isNotEmpty) _selectedIDType = _workingProfile.registrationSchemeID;
-
-      _workingControllers[fieldRegistrationSchemeID].text = AppStrings().idTypes[_selectedIDType] ?? AppStrings().idTypes.values.first;
-      setState(() {});
-    }
-
-    if (_profileController.workingProfile.value == null) {
-      _workingControllers[fieldRegistrationSchemeID].text = AppStrings().idTypes[_selectedIDType] ?? AppStrings().idTypes.values.first;
-      setState(() {});
     }
   }
 
@@ -153,11 +140,6 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   void _updateWorkingProfile() async {
     FocusScope.of(context).unfocus();
 
-    if (_isRequired && !_workingControllers.validateRequiredFields()) {
-      MessageHelper.error(message: Globalization.msgRequiredEInvoice.tr);
-      return;
-    }
-
     String contactNumber = "";
 
     if (_workingControllers[fieldContactNumber].text.trim().isNotEmpty) {
@@ -176,15 +158,8 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       city: _workingControllers[fieldCity].text.trim(),
       state: _workingControllers[fieldState].text.trim(),
       country: _workingControllers[fieldCountry].text.trim(),
-      tin: _workingControllers[fieldTIN].text.trim(),
-      sstRegistrationNo: _workingControllers[fieldSSTRegistrationNo].text.trim(),
-      ttxRegistrationNo: _workingControllers[fieldTTXRegistrationNo].text.trim(),
       name: _workingControllers[fieldName].text.trim(),
       email: _workingControllers[fieldEmail].text.trim(),
-      roc: _workingControllers[fieldROC].text.trim(),
-      msic: _workingControllers[fieldMSICCode].text.trim(),
-      registrationSchemeID: _selectedIDType,
-      registrationSchemeNo: _workingControllers[fieldRegistrationSchemeNo].text.trim(),
     );
 
     _profileController.updateProfile(data, ProfileType.working, _hive.memberProfile.value!.token);
@@ -208,6 +183,12 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     if (pickedFile == null) return;
 
     _profileController.uploadMedia(pickedFile, imgType, _hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token);
+  }
+
+  void _removeMedia(int imgType) async {
+    if (!await ConnectionService.checkConnection()) return;
+
+    _profileController.removeMedia(imgType, _hive.memberProfile.value!.memberCode, _hive.memberProfile.value!.token);
   }
 
   void _deleteAccount() async {
@@ -320,7 +301,6 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   ),
                 ],
               ),
-              CustomUnderlineTextField(controller: _memberControllers[fieldAccountCode], label: Globalization.accountCode.tr),
             ],
           ),
           CustomSectionCard(
@@ -415,46 +395,17 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 8.dp,
         children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kBorderRadiusM),
-              color: Theme.of(context).colorScheme.primaryContainer,
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Theme.of(context).colorScheme.surfaceContainerHigh,
-                  blurRadius: kBlurRadius,
-                  offset: const Offset(kOffsetX, kOffsetY),
-                ),
-              ],
-            ),
-            margin: EdgeInsets.all(16.dp),
-            padding: EdgeInsets.symmetric(horizontal: 24.dp, vertical: 16.dp),
-            child: CheckboxListTile(
-              value: _isRequired,
-              contentPadding: EdgeInsets.zero,
-              onChanged: (value) => setState(() => _isRequired = value!),
-              subtitle: _isRequired ? CustomText(Globalization.msgRequiredEInvoice.tr, fontSize: 14.0) : null,
-              title: CustomText(
-                Globalization.requiredEInvoice.tr,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
           CustomSectionCard(
             title: Globalization.companyInformation.tr,
             children: <Widget>[
-              CustomUnderlineTextField(controller: _workingControllers[fieldName], isRequired: _isRequired, label: Globalization.name.tr),
+              CustomUnderlineTextField(controller: _workingControllers[fieldName], label: Globalization.name.tr),
               CustomUnderlineTextField(
                 controller: _workingControllers[fieldEmail],
-                isRequired: _isRequired,
                 label: Globalization.email.tr,
                 keyboardType: TextInputType.emailAddress,
               ),
               CustomUnderlineTextField(
                 controller: _workingControllers[fieldContactNumber],
-                isRequired: _isRequired,
                 phone: _phoneWorking,
                 label: Globalization.phone.tr,
                 type: UnderlineType.phone,
@@ -466,40 +417,24 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
           CustomSectionCard(
             title: Globalization.address.tr,
             children: <Widget>[
-              CustomUnderlineTextField(
-                controller: _workingControllers[fieldAddress1],
-                isRequired: _isRequired,
-                label: "${Globalization.addressLine.tr} 1",
-              ),
+              CustomUnderlineTextField(controller: _workingControllers[fieldAddress1], label: "${Globalization.addressLine.tr} 1"),
               CustomUnderlineTextField(controller: _workingControllers[fieldAddress2], label: "${Globalization.addressLine.tr} 2"),
               CustomUnderlineTextField(controller: _workingControllers[fieldAddress3], label: "${Globalization.addressLine.tr} 3"),
               CustomUnderlineTextField(controller: _workingControllers[fieldAddress4], label: "${Globalization.addressLine.tr} 4"),
               Row(
                 spacing: 32.dp,
                 children: <Widget>[
-                  Expanded(
-                    child: _buildPostCodeField(
-                      _workingControllers[fieldPostcode],
-                      _workingControllers,
-                      Globalization.postcode.tr,
-                      isRequired: _isRequired,
-                    ),
-                  ),
-                  Expanded(
-                    child: _buildPostCodeField(_workingControllers[fieldCity], _workingControllers, Globalization.city.tr, isRequired: _isRequired),
-                  ),
+                  Expanded(child: _buildPostCodeField(_workingControllers[fieldPostcode], _workingControllers, Globalization.postcode.tr)),
+                  Expanded(child: _buildPostCodeField(_workingControllers[fieldCity], _workingControllers, Globalization.city.tr)),
                 ],
               ),
               Row(
                 spacing: 32.dp,
                 children: <Widget>[
-                  Expanded(
-                    child: _buildPostCodeField(_workingControllers[fieldState], _workingControllers, Globalization.state.tr, isRequired: _isRequired),
-                  ),
+                  Expanded(child: _buildPostCodeField(_workingControllers[fieldState], _workingControllers, Globalization.state.tr)),
                   Expanded(
                     child: CustomUnderlineTextField(
                       controller: _workingControllers[fieldCountry],
-                      isRequired: _isRequired,
                       label: Globalization.country.tr,
                       onTap: () async {
                         PhoneDetail? selectedCountry = await CustomPickerDialog.show<PhoneDetail>(
@@ -521,40 +456,6 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               ),
             ],
           ),
-          CustomSectionCard(
-            title: Globalization.registrationInformation.tr,
-            children: <Widget>[
-              CustomUnderlineTextField(
-                typeController: _workingControllers[fieldRegistrationSchemeID],
-                valueController: _workingControllers[fieldRegistrationSchemeNo],
-                isRequired: _isRequired,
-                label: Globalization.registrationSchemeID.tr,
-                type: UnderlineType.idType,
-                onTap: () async {
-                  final pickedIDTypes = await CustomTypePickerDialog.show<String, String>(
-                    context: context,
-                    title: Globalization.pickRegistrationType.tr,
-                    options: AppStrings().idTypes,
-                    onDisplay: (option) => option,
-                  );
-
-                  if (pickedIDTypes != null) {
-                    _workingControllers[fieldRegistrationSchemeID].text = pickedIDTypes.value;
-                    _selectedIDType = pickedIDTypes.key;
-                  }
-                },
-              ),
-              CustomUnderlineTextField(controller: _workingControllers[fieldTIN], isRequired: _isRequired, label: Globalization.tin.tr),
-              CustomUnderlineTextField(controller: _workingControllers[fieldSSTRegistrationNo], label: Globalization.sstRegistration.tr),
-              CustomUnderlineTextField(
-                controller: _workingControllers[fieldTTXRegistrationNo],
-                isRequired: _isRequired,
-                label: Globalization.ttxRegistration.tr,
-              ),
-              CustomUnderlineTextField(controller: _workingControllers[fieldROC], isRequired: _isRequired, label: Globalization.roc.tr),
-              CustomUnderlineTextField(controller: _workingControllers[fieldMSICCode], isRequired: _isRequired, label: Globalization.msicCode.tr),
-            ],
-          ),
           const SizedBox(),
           Padding(
             padding: EdgeInsets.only(bottom: 16.dp, left: 16.dp, right: 16.dp),
@@ -573,32 +474,59 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 24.dp,
           children: <Widget>[
-            _buildSettingsItem(Globalization.changeAvatar.tr, () => _uploadMedia(0)),
-            _buildSettingsItem(Globalization.changeBackground.tr, () => _uploadMedia(1)),
-            _buildSettingsItem(Globalization.uploadPersonalEInvoice.tr, () => _uploadMedia(2)),
-            _buildSettingsItem(Globalization.uploadWorkingEInvoice.tr, () => _uploadMedia(3)),
-            _buildSettingsItem(Globalization.changePassword.tr, () => Get.toNamed(AppRoutes.changePassword)),
-            _buildSettingsItem(Globalization.deleteAccount.tr, () => _deleteAccount()),
+            Wrap(
+              runSpacing: 16.dp,
+              alignment: WrapAlignment.spaceAround,
+              children: <Widget>[
+                CustomImageButton(
+                  icon: Icons.upload_rounded,
+                  label: Globalization.uploadImage.tr,
+                  onTap: () async {
+                    final selected = await CustomTypePickerDialog.show<int, String>(
+                      context: context,
+                      title: Globalization.uploadImage.tr,
+                      options: {
+                        0: Globalization.avatar.tr,
+                        1: Globalization.background.tr,
+                        2: Globalization.personalEInvoice.tr,
+                        3: Globalization.workingEInvoice.tr,
+                      },
+                      onDisplay: (option) => option,
+                    );
+
+                    if (selected != null) _uploadMedia(selected.key);
+                  },
+                ),
+                CustomImageButton(
+                  icon: Icons.hide_image_rounded,
+                  label: Globalization.removeImage.tr,
+                  onTap: () async {
+                    final selected = await CustomTypePickerDialog.show<int, String>(
+                      context: context,
+                      title: Globalization.removeImage.tr,
+                      options: {
+                        0: Globalization.avatar.tr,
+                        1: Globalization.background.tr,
+                        2: Globalization.personalEInvoice.tr,
+                        3: Globalization.workingEInvoice.tr,
+                      },
+                      onDisplay: (option) => option,
+                    );
+
+                    if (selected != null) _removeMedia(selected.key);
+                  },
+                ),
+                CustomImageButton(
+                  icon: Icons.change_circle_rounded,
+                  label: Globalization.changePassword.tr,
+                  onTap: () => Get.toNamed(AppRoutes.changePassword),
+                ),
+                CustomImageButton(icon: Icons.delete_rounded, label: Globalization.deleteAccount.tr, onTap: () => _deleteAccount()),
+              ],
+            ),
           ],
         ),
       ),
     ],
-  );
-
-  Widget _buildSettingsItem(String label, VoidCallback onTap) => Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(kBorderRadiusM),
-      color: Theme.of(context).colorScheme.primaryContainer,
-      boxShadow: <BoxShadow>[
-        BoxShadow(color: Theme.of(context).colorScheme.surfaceContainerHigh, blurRadius: kBlurRadius, offset: const Offset(kOffsetX, kOffsetY)),
-      ],
-    ),
-    padding: EdgeInsets.symmetric(horizontal: 24.dp, vertical: 16.dp),
-    child: ListTile(
-      contentPadding: EdgeInsets.zero,
-      onTap: onTap,
-      title: CustomText(label, color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 18.0, fontWeight: FontWeight.bold),
-      trailing: Icon(Icons.arrow_forward_ios_rounded, color: Theme.of(context).colorScheme.onPrimaryContainer),
-    ),
   );
 }

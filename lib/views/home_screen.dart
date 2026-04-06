@@ -256,12 +256,12 @@ class _HomeScreenState extends State<HomeScreen> {
       itemBuilder: (context) => Globalization.languages.entries
           .map((entry) => PopupMenuItem<Locale>(value: entry.value, child: CustomText(entry.key, fontSize: 14.0)))
           .toList(),
-      icon: Icon(Icons.language_rounded, color: isDesktop ? Theme.of(context).colorScheme.primary : Colors.white),
+      icon: Icon(Icons.language_rounded, color: Colors.white),
     ),
     if (_hive.isSignIn)
       IconButton(
         onPressed: _signOut,
-        icon: Icon(Icons.logout_rounded, color: isDesktop ? Theme.of(context).colorScheme.primary : Colors.white),
+        icon: Icon(Icons.logout_rounded, color: Colors.white),
       ),
   ];
 
@@ -317,72 +317,67 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildVouchers() => Obx(() {
     if (_voucherController.vouchers.isEmpty) {
-      return isDesktop ? SizedBox.shrink() : Divider(color: Colors.grey.withValues(alpha: 0.7), thickness: 5.dp);
+      return Divider(color: Colors.grey.withValues(alpha: 0.7), thickness: 5.dp);
     }
 
     final vouchers = _voucherController.vouchers;
 
-    return Container(
-      margin: isDesktop ? EdgeInsets.only(bottom: 16.dp) : null,
-      child: ClipRRect(
-        borderRadius: isDesktop ? BorderRadius.all(Radius.circular(kBorderRadiusS)) : BorderRadius.zero,
-        child: Column(
-          children: <Widget>[
-            if (!isDesktop)
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(color: Colors.black38, blurRadius: 2.0, spreadRadius: 6.0),
-                    BoxShadow(color: Colors.black38, blurRadius: 5.0, spreadRadius: 12.0),
-                  ],
+    return ClipRRect(
+      borderRadius: BorderRadius.zero,
+      child: Column(
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[
+                BoxShadow(color: Colors.black38, blurRadius: 2.0, spreadRadius: 6.0),
+                BoxShadow(color: Colors.black38, blurRadius: 5.0, spreadRadius: 12.0),
+              ],
+            ),
+          ),
+          Container(
+            color: Colors.grey.withValues(alpha: 0.5),
+            padding: EdgeInsets.symmetric(vertical: 8.dp),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(16.dp),
+                  child: CustomText(Globalization.vouchers.tr, fontSize: 16.0, fontWeight: FontWeight.w600),
                 ),
-              ),
-            Container(
-              color: Colors.grey.withValues(alpha: 0.5),
-              padding: isDesktop ? null : EdgeInsets.symmetric(vertical: 8.dp),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(16.dp),
-                    child: CustomText(Globalization.vouchers.tr, fontSize: 16.0, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    height: rsp.voucherHeight() + 8.dp,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: vouchers.length,
-                      separatorBuilder: (_, _) => SizedBox(width: 16.dp),
-                      itemBuilder: (context, index) => Padding(
-                        padding: EdgeInsets.only(bottom: 24.dp, left: index == 0 ? 16.dp : 0.0, right: index == vouchers.length - 1 ? 16.dp : 0.0),
-                        child: CustomVoucher(
-                          shadowColor: Colors.black54,
-                          voucher: vouchers[index],
-                          type: VoucherType.collectable,
-                          onTapCollect: () async => _voucherController.collectVoucher(
-                            vouchers[index].batchCode,
-                            vouchers[index].companyID,
-                            _hive.memberProfile.value!.memberCode,
-                            _hive.memberProfile.value!.token,
-                          ),
+                SizedBox(
+                  height: rsp.voucherHeight() + 8.dp,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: vouchers.length,
+                    separatorBuilder: (_, _) => SizedBox(width: 16.dp),
+                    itemBuilder: (context, index) => Padding(
+                      padding: EdgeInsets.only(bottom: 24.dp, left: index == 0 ? 16.dp : 0.0, right: index == vouchers.length - 1 ? 16.dp : 0.0),
+                      child: CustomVoucher(
+                        shadowColor: Colors.black54,
+                        voucher: vouchers[index],
+                        type: VoucherType.collectable,
+                        onTapCollect: () async => _voucherController.collectVoucher(
+                          vouchers[index].batchCode,
+                          vouchers[index].companyID,
+                          _hive.memberProfile.value!.memberCode,
+                          _hive.memberProfile.value!.token,
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            if (!isDesktop)
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(color: Colors.black12, blurRadius: 2.0, spreadRadius: 6.0),
-                    BoxShadow(color: Colors.black26, blurRadius: 5.0, spreadRadius: 12.0),
-                  ],
                 ),
-              ),
-          ],
-        ),
+              ],
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[
+                BoxShadow(color: Colors.black12, blurRadius: 2.0, spreadRadius: 6.0),
+                BoxShadow(color: Colors.black26, blurRadius: 5.0, spreadRadius: 12.0),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   });
@@ -398,22 +393,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return ListView.separated(
       shrinkWrap: true,
+      padding: EdgeInsets.zero,
       itemCount: timelines.length,
       physics: NeverScrollableScrollPhysics(),
-      separatorBuilder: (context, index) => isDesktop ? SizedBox(height: 16.0) : Divider(color: Colors.grey.withValues(alpha: 0.7), thickness: 5.dp),
+      separatorBuilder: (context, index) => Divider(color: Colors.grey.withValues(alpha: 0.7), thickness: 5.dp),
       itemBuilder: (context, index) {
         if (index == timelines.length - 1 && _timelineController.hasMore && !_timelineController.isLoading.value) {
           _timelineController.loadTimelines(isLoadMore: true);
         }
 
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: isDesktop ? BorderRadius.all(Radius.circular(kBorderRadiusS)) : null,
-            color: isDesktop ? Colors.white : null,
-            boxShadow: isDesktop ? <BoxShadow>[BoxShadow(color: Color(0x0D000000), blurRadius: 10.0, offset: Offset(0.0, 0.4))] : null,
-          ),
-          child: CustomTimeline(timeline: timelines[index], isNavigateCompany: true, isNavigateTimeline: true),
-        );
+        return CustomTimeline(timeline: timelines[index], isNavigateCompany: true, isNavigateTimeline: true);
       },
     );
   });

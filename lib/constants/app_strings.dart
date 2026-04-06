@@ -79,5 +79,4 @@ class AppStrings {
   };
   Map<ImageSource, String> imageSrc = {ImageSource.camera: Globalization.camera.tr, ImageSource.gallery: Globalization.gallery.tr};
   Map<String, String> genders = {"M": Globalization.male.tr, "F": Globalization.female.tr, "O": Globalization.preferNotToSay.tr};
-  Map<String, String> idTypes = {"nric": "NRIC", "brn": "BRN", "passport": "PASSPORT", "army": "ARMY"};
 }

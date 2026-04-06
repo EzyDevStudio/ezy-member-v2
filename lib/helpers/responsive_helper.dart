@@ -107,6 +107,7 @@ class ResponsiveHelper {
   int quickCount() => isDesktop() ? 5 : (isTablet() ? 4 : 3);
   double authSize() => isDesktop() ? 300.0 : 200.0;
   double avatarSize() => isDesktop() ? 70.0 : 50.0;
+  double imageSettingHeight() => 140.0;
   double nearbyHeight() => isDesktop() ? 300.0 : 200.0;
   double quickHeight() => 100.0;
   double timelineHeight() => isDesktop() ? 400.0 : 300.0;

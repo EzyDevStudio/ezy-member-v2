@@ -222,7 +222,9 @@ class _ScanScreenState extends State<ScanScreen> {
   );
 
   Widget _buildRedeemSection() => Obx(() {
-    if (_pinController.isLoading.value) {
+    final pin = _pinController.pin.value;
+
+    if (_pinController.isLoading.value || pin == null) {
       return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary));
     }
 
@@ -231,7 +233,7 @@ class _ScanScreenState extends State<ScanScreen> {
     }
 
     return FutureBuilder<String>(
-      future: CipherHelper().encryption(_pinController.pin.value.toString()),
+      future: CipherHelper().encryption(pin.toJson(_companyID!).toString()),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary));

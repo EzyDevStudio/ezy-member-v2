@@ -1,4 +1,5 @@
 import 'package:ezymember/constants/app_routes.dart';
+import 'package:ezymember/constants/enum.dart';
 import 'package:ezymember/controllers/member_hive_controller.dart';
 import 'package:ezymember/helpers/formatter_helper.dart';
 import 'package:ezymember/helpers/message_helper.dart';
@@ -103,10 +104,38 @@ class ProfileController extends GetxController {
         final hive = Get.find<MemberHiveController>();
         final bytes = await file.readAsBytes();
 
-        if (imgType == 0) hive.updateImage(bytes);
-        if (imgType == 1) hive.updateBackgroundImage(bytes);
-        if (imgType == 2) hive.updatePersonalInvoiceImage(bytes);
-        if (imgType == 3) hive.updateCompanyInvoiceImage(bytes);
+        await hive.updateMedia(bytes, MediaType.values[imgType]);
+
+        _showSuccess(Globalization.msgProfileSuccess.tr);
+
+        break;
+      case 520:
+        _showError(Globalization.msgTokenInvalid.tr);
+        break;
+      default:
+        _showError(Globalization.msgSystemError.tr);
+        break;
+    }
+  }
+
+  Future<void> removeMedia(int imgType, String memberCode, String memberToken) async {
+    _showLoading(Globalization.msgProfileUpdating.tr);
+
+    final Map<String, dynamic> data = {"image_type": imgType, "member_code": memberCode};
+    final response = await _api.post(data: data, endPoint: "remove-media", memberToken: memberToken, module: "ProfileController - removeMedia");
+
+    _hideLoading();
+
+    if (response == null) {
+      _showError(Globalization.msgSystemError.tr);
+      return;
+    }
+
+    switch (response.data[ApiService.keyStatusCode]) {
+      case 200:
+        final hive = Get.find<MemberHiveController>();
+
+        await hive.clearMedia(MediaType.values[imgType]);
 
         _showSuccess(Globalization.msgProfileSuccess.tr);
 
@@ -228,9 +257,6 @@ class ProfileDetailControllers {
     _controllers[fieldCity] = TextEditingController(text: profile.city);
     _controllers[fieldState] = TextEditingController(text: profile.state);
     _controllers[fieldCountry] = TextEditingController(text: profile.country);
-    _controllers[fieldTIN] = TextEditingController(text: profile.tin);
-    _controllers[fieldSSTRegistrationNo] = TextEditingController(text: profile.sstRegistrationNo);
-    _controllers[fieldTTXRegistrationNo] = TextEditingController(text: profile.ttxRegistrationNo);
 
     if (profile is MemberProfileModel) {
       _controllers[fieldName] = TextEditingController(text: profile.name);
@@ -238,46 +264,18 @@ class ProfileDetailControllers {
       _controllers[fieldGender] = TextEditingController(text: profile.gender);
       _controllers[fieldDOB] = TextEditingController(text: profile.dob == 0 ? "" : profile.dob.tsToStr);
       _controllers[fieldAccountCode] = TextEditingController(text: profile.accountCode);
+      _controllers[fieldTIN] = TextEditingController(text: profile.tin);
+      _controllers[fieldSSTRegistrationNo] = TextEditingController(text: profile.sstRegistrationNo);
+      _controllers[fieldTTXRegistrationNo] = TextEditingController(text: profile.ttxRegistrationNo);
     }
 
     if (profile is WorkingProfileModel) {
       _controllers[fieldName] = TextEditingController(text: profile.companyName);
       _controllers[fieldEmail] = TextEditingController(text: profile.companyEmail);
-      _controllers[fieldROC] = TextEditingController(text: profile.roc);
-      _controllers[fieldMSICCode] = TextEditingController(text: profile.msicCode);
-      _controllers[fieldRegistrationSchemeID] = TextEditingController(text: profile.registrationSchemeID);
-      _controllers[fieldRegistrationSchemeNo] = TextEditingController(text: profile.registrationSchemeNo);
     }
   }
 
   TextEditingController operator [](String key) => _controllers[key]!;
-
-  bool validateRequiredFields() {
-    final requiredFields = [
-      fieldContactNumber,
-      fieldAddress1,
-      fieldPostcode,
-      fieldCity,
-      fieldState,
-      fieldCountry,
-      fieldTIN,
-      fieldTTXRegistrationNo,
-      fieldName,
-      fieldEmail,
-      fieldROC,
-      fieldMSICCode,
-      fieldRegistrationSchemeID,
-      fieldRegistrationSchemeNo,
-    ];
-
-    for (final key in requiredFields) {
-      final text = _controllers[key]?.text.trim() ?? "";
-
-      if (text.isEmpty) return false;
-    }
-
-    return true;
-  }
 
   void dispose() {
     for (final controller in _controllers.values) {

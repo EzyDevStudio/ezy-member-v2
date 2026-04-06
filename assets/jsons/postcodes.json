@@ -19031,5 +19031,12 @@
         "postcode": "87033",
         "state_code": "LBN",
         "state_name": "Wilayah Persekutuan Labuan"
+    },
+    {
+        "city": "",
+        "code": "",
+        "postcode": "",
+        "state_code": "",
+        "state_name": "Not Applicable"
     }
 ]

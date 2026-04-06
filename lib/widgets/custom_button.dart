@@ -52,7 +52,7 @@ class CustomIconButton extends StatelessWidget {
 }
 
 class CustomImageTextButton extends StatelessWidget {
-  final bool? isCountVisible, isLabelVisible;
+  final bool isCountVisible, isLabelVisible;
   final int? count;
   final String assetName, label;
   final String? content;
@@ -81,7 +81,7 @@ class CustomImageTextButton extends StatelessWidget {
           Expanded(
             child: Center(
               child: Badge.count(
-                isLabelVisible: isCountVisible!,
+                isLabelVisible: isCountVisible,
                 backgroundColor: Theme.of(context).colorScheme.error,
                 textColor: Theme.of(context).colorScheme.onError,
                 count: count!,
@@ -90,8 +90,38 @@ class CustomImageTextButton extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.dp),
-          if (isLabelVisible!) CustomText(label, fontSize: 14.0),
-          if (isLabelVisible! && content != null) CustomText(content!, fontSize: 14.0),
+          if (isLabelVisible) CustomText(label, fontSize: 14.0),
+          if (isLabelVisible && content != null) CustomText(content!, fontSize: 14.0),
+        ],
+      ),
+    ),
+  );
+}
+
+class CustomImageButton extends StatelessWidget {
+  final IconData? icon;
+  final String image, label;
+  final VoidCallback? onTap;
+
+  const CustomImageButton({super.key, this.icon, required this.label, this.image = "", this.onTap});
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+    onTap: onTap,
+    child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        color: Colors.white,
+        boxShadow: <BoxShadow>[BoxShadow(color: Color(0x0D000000), blurRadius: 10.0, offset: Offset(0.0, 0.4))],
+      ),
+      height: rsp.imageSettingHeight(),
+      width: rsp.imageSettingHeight(),
+      padding: EdgeInsets.all(16.dp),
+      child: Column(
+        spacing: 8.dp,
+        children: <Widget>[
+          icon != null ? Icon(icon, color: Colors.black87, size: kSettingImage) : Image.asset(image, height: kSettingImage, scale: kSquareRatio),
+          CustomText(label, fontSize: 16.0, maxLines: 2, textAlign: TextAlign.center),
         ],
       ),
     ),

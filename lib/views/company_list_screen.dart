@@ -125,7 +125,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> {
           ),
         ),
       ),
-      if (_selectedCategory != _allCategory)
+      if (_selectedCategory != null && _selectedCategory != _allCategory)
         Padding(
           padding: EdgeInsets.fromLTRB(16.dp, 0.0, 16.dp, 8.dp),
           child: InkWell(

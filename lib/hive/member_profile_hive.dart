@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:ezymember/constants/enum.dart';
 import 'package:hive/hive.dart';
 
 part 'member_profile_hive.g.dart';
@@ -62,4 +63,53 @@ class MemberProfileHive extends HiveObject {
     personalInvoice: personalInvoice ?? this.personalInvoice,
     workingInvoice: workingInvoice ?? this.workingInvoice,
   );
+
+  MemberProfileHive clearMedia(MediaType type) {
+    switch (type) {
+      case MediaType.image:
+        return MemberProfileHive(
+          id: id,
+          memberCode: memberCode,
+          name: name,
+          token: token,
+          image: null,
+          backgroundImage: backgroundImage,
+          personalInvoice: personalInvoice,
+          workingInvoice: workingInvoice,
+        );
+      case MediaType.background:
+        return MemberProfileHive(
+          id: id,
+          memberCode: memberCode,
+          name: name,
+          token: token,
+          image: image,
+          backgroundImage: null,
+          personalInvoice: personalInvoice,
+          workingInvoice: workingInvoice,
+        );
+      case MediaType.personalInvoice:
+        return MemberProfileHive(
+          id: id,
+          memberCode: memberCode,
+          name: name,
+          token: token,
+          image: image,
+          backgroundImage: backgroundImage,
+          personalInvoice: null,
+          workingInvoice: workingInvoice,
+        );
+      case MediaType.workingInvoice:
+        return MemberProfileHive(
+          id: id,
+          memberCode: memberCode,
+          name: name,
+          token: token,
+          image: image,
+          backgroundImage: backgroundImage,
+          personalInvoice: personalInvoice,
+          workingInvoice: null,
+        );
+    }
+  }
 }

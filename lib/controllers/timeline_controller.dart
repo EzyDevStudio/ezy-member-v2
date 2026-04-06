@@ -1,4 +1,3 @@
-import 'package:ezymember/helpers/location_helper.dart';
 import 'package:ezymember/models/timeline_model.dart';
 import 'package:ezymember/services/remote/api_service.dart';
 import 'package:get/get.dart';
@@ -24,12 +23,12 @@ class TimelineController extends GetxController {
 
     isLoading.value = true;
 
-    final Coordinate? c = await LocationHelper.getCurrentCoordinate();
+    // final Coordinate? c = await LocationHelper.getCurrentCoordinate();
 
     final Map<String, dynamic> data = {
       "limit": _limit,
       "offset": _offset,
-      if (c != null) "city": c.city,
+      // if (c != null) "city": c.city,
       if (companyID != null) "company_id": companyID,
       if (memberCode != null) "member_code": memberCode,
     };

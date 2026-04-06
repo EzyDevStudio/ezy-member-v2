@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/language/globalization.dart';
@@ -72,13 +73,14 @@ class PermissionHelper {
     if (kIsWeb) {
       return true;
     } else if (Platform.isAndroid) {
-      return await Permission.photos.status.isGranted;
+      final deviceInfo = await DeviceInfoPlugin().androidInfo;
+      final androidSDK = deviceInfo.version.sdkInt;
 
-      // if (AndroidSDK >= 33) {
-      //   await Permission.photos.status.isGranted;
-      // } else {
-      //   await Permission.storage.status.isGranted;
-      // }
+      if (androidSDK >= 33) {
+        return await Permission.photos.status.isGranted;
+      } else {
+        return await Permission.storage.status.isGranted;
+      }
     } else {
       return await Permission.photos.status.isGranted;
     }
@@ -90,13 +92,14 @@ class PermissionHelper {
     Permission permission;
 
     if (Platform.isAndroid) {
-      permission = Permission.photos;
+      final deviceInfo = await DeviceInfoPlugin().androidInfo;
+      final androidSDK = deviceInfo.version.sdkInt;
 
-      // if (AndroidSDK >= 33) {
-      //   permission = Permission.photos;
-      // } else {
-      //   permission = Permission.storage;
-      // }
+      if (androidSDK >= 33) {
+        permission = Permission.photos;
+      } else {
+        permission = Permission.storage;
+      }
     } else {
       permission = Permission.photos;
     }

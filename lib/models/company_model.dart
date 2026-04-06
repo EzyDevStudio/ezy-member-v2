@@ -21,6 +21,7 @@ const String fieldCity = "city";
 const String fieldState = "state";
 const String fieldCategories = "business_category";
 const String fieldDatabaseName = "database_name";
+const String fieldDomainName = "domain_name";
 const String fieldExpiredDate = "ezymember_expired_date";
 
 class CompanyModel {
@@ -46,6 +47,7 @@ class CompanyModel {
   final String state;
   final String categories;
   final String databaseName;
+  final String domainName;
   final int expiredDate;
 
   CompanyModel({
@@ -69,6 +71,7 @@ class CompanyModel {
     this.state = "",
     this.categories = "",
     this.databaseName = "",
+    this.domainName = "",
     this.expiredDate = 0,
   });
 
@@ -95,6 +98,7 @@ class CompanyModel {
     state: data1[fieldState] ?? "",
     categories: data1[fieldCategories] ?? "",
     databaseName: data1[fieldDatabaseName] ?? "",
+    domainName: data1[fieldDomainName] ?? "",
     expiredDate: data1[fieldExpiredDate] != null ? DateTime.tryParse(data1[fieldExpiredDate])?.millisecondsSinceEpoch ?? 0 : 0,
   );
 
@@ -126,5 +130,5 @@ class CompanyModel {
 
   @override
   String toString() =>
-      "CompanyModel(id: $id, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo, companyDescription: $companyDescription, companyVision: $companyVision, companyMission: $companyMission, companyValue: $companyValue, status: $status, contactNumber: $contactNumber, email: $email, address1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, categories: $categories, databaseName: $databaseName, expiredDate: $expiredDate)\n";
+      "CompanyModel(id: $id, companyID: $companyID, companyName: $companyName, companyLogo: $companyLogo, companyDescription: $companyDescription, companyVision: $companyVision, companyMission: $companyMission, companyValue: $companyValue, status: $status, contactNumber: $contactNumber, email: $email, address1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, categories: $categories, databaseName: $databaseName, domainName: $domainName, expiredDate: $expiredDate)\n";
 }

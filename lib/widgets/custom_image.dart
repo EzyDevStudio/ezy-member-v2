@@ -121,7 +121,7 @@ class CustomBackgroundImage extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Positioned.fill(
-            child: ColorFiltered(colorFilter: ColorFilter.mode(Colors.black.withValues(alpha: 0.7), BlendMode.darken), child: _buildImage()),
+            child: ColorFiltered(colorFilter: ColorFilter.mode(Colors.black.withValues(alpha: 0.5), BlendMode.darken), child: _buildImage()),
           ),
           if (child != null) child!,
         ],

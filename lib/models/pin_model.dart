@@ -26,6 +26,15 @@ class PinModel {
     voucherCode: data[fieldVoucherCode] ?? "",
   );
 
+  Map<String, dynamic> toJson(String companyID) => {
+    fieldID: id,
+    fieldMemberCode: memberCode,
+    fieldPin: pin,
+    fieldExpiredDate: expiredDate.toIso8601String(),
+    fieldVoucherCode: voucherCode,
+    "company_id": companyID,
+  };
+
   @override
   String toString() => "PinModel(id: $id, memberCode: $memberCode, pin: $pin, expiredDate: $expiredDate, voucherCode: $voucherCode)\n";
 }
