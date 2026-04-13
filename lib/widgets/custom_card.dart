@@ -157,35 +157,25 @@ class CustomShopCard extends StatelessWidget {
   const CustomShopCard({super.key, required this.company});
 
   @override
-  Widget build(BuildContext context) => Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(kBorderRadiusM),
-      color: Colors.white,
-      boxShadow: <BoxShadow>[
-        BoxShadow(color: Theme.of(context).colorScheme.surfaceContainerHigh, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
-      ],
-    ),
-    padding: EdgeInsets.all(8.dp),
-    child: Row(
-      children: <Widget>[
-        CustomAvatarImage(isCircle: false, size: kProfileImgSizeL, networkImage: company.companyLogo, name: company.companyName),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 4.dp,
-              children: <Widget>[
-                CustomText(company.companyName, fontSize: 14.0, fontWeight: FontWeight.w700, maxLines: 2),
-                CustomText(company.fullAddress, fontSize: 12.0),
-                CustomText(company.categoryTitle.join(", "), color: Colors.black54, fontSize: 12.0),
-                if (company.databaseName.isNotEmpty && company.domainName.isNotEmpty)
-                  CustomLabelChip(backgroundColor: Colors.green, foregroundSize: 12.0, label: "Joined"),
-              ],
-            ),
+  Widget build(BuildContext context) => Row(
+    children: <Widget>[
+      CustomAvatarImage(isCircle: false, size: kProfileImgSizeL, networkImage: company.companyLogo, name: company.companyName),
+      Expanded(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 4.dp,
+            children: <Widget>[
+              CustomText(company.companyName, fontSize: 14.0, fontWeight: FontWeight.w700, maxLines: 2),
+              CustomText(company.fullAddress, fontSize: 12.0),
+              CustomText(company.categoryTitle.join(", "), color: Colors.black54, fontSize: 12.0),
+              if (company.databaseName.isNotEmpty && company.domainName.isNotEmpty)
+                CustomLabelChip(backgroundColor: Colors.green, foregroundSize: 12.0, label: Globalization.msgJoinEzyMember.tr),
+            ],
           ),
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }

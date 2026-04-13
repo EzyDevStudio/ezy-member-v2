@@ -72,6 +72,7 @@ class Globalization {
   static const String minSpend = "Min. Spend";
   static const String more = "More";
   static const String myCards = "My Cards";
+  static const String myCode = "My Code";
   static const String myCredits = "My Credits";
   static const String myPoints = "My Points";
   static const String myVouchers = "My Vouchers";
@@ -82,7 +83,6 @@ class Globalization {
   static const String notifications = "Notifications";
   static const String off = "Off";
   static const String oldPassword = "Old Password";
-  static const String or = "or";
   static const String password = "Password";
   static const String payment = "Payment";
   static const String personal = "Personal";
@@ -102,11 +102,11 @@ class Globalization {
   static const String redeemWith = "Redeem With";
   static const String redirecting = "Redirecting";
   static const String refresh = "Refresh";
-  static const String registrationInformation = "Registration Information";
+  static const String registrationSchemeID = "Registration Scheme ID";
+  static const String registrationSchemeNo = "Registration Scheme No";
   static const String removeImage = "Remove Image";
   static const String resetPassword = "Reset Password";
   static const String saveChanges = "Save Changes";
-  static const String scan = "Scan";
   static const String search = "Search";
   static const String selectPhotos = "Select Photos";
   static const String selectSource = "Select a source";
@@ -126,7 +126,6 @@ class Globalization {
   static const String tin = "TIN";
   static const String tnc = "T&C";
   static const String tncApplied = "T&C Applied";
-  static const String ttxRegistration = "TTX Registration";
   static const String uploadImage = "Upload Image";
   static const String username = "Username";
   static const String useBetween = "Use Between";
@@ -152,13 +151,13 @@ class Globalization {
   static const String msgDeleteAccountProcessing = "Please wait while we process your account deletion.";
   static const String msgDeleteAccountSuccess = "We're sorry to see you go. Your account has been successfully deleted. Thank you for being with us!";
   static const String msgEmailExists = "This email is already registered. Please use another email.";
-  static const String msgEmailNotExists = "This email is not registered. Please check or sign up.";
   static const String msgEmailInvalidFormat = "Please enter an email in the correct format (e.g., example@mail.com).";
   static const String msgEmailNotFound = "No account found with this email.";
   static const String msgExpiredTimer = "Expires in @minutes min @seconds sec";
   static const String msgGoogleMapsConfirmation = "Would you like to open Google Maps to start navigation?";
   static const String msgHintText = "Enter your @label";
   static const String msgImageSizeExceed = "The selected image exceeds the maximum allowed size of 5 MB.";
+  static const String msgJoinEzyMember = "We're In ${AppStrings.appName}!";
   static const String msgMemberExpired = "Your membership has expired. Please renew it to continue enjoying our services.";
   static const String msgMemberRegisterProcessing = "Please wait while we process your registration.";
   static const String msgMemberRegisterSuccess = "You have successfully registered as a member. Enjoy our services!";

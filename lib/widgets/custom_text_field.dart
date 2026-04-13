@@ -94,6 +94,7 @@ class _CustomOutlinedTextFieldState extends State<CustomOutlinedTextField> {
               icon: Icon(_isObscure ? Icons.visibility_rounded : Icons.visibility_off_rounded),
             ),
     ),
+    textInputAction: TextInputAction.next,
     keyboardType: widget.keyboardType,
   );
 
@@ -136,6 +137,7 @@ class _CustomOutlinedTextFieldState extends State<CustomOutlinedTextField> {
           controller: widget.controller,
           decoration: _decoration(context, hint: _phoneDetail.hintLabel),
           inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(kPhoneLength)],
+          textInputAction: TextInputAction.next,
           keyboardType: widget.keyboardType,
           onChanged: (value) {
             _phoneDetail.number = value;
@@ -201,12 +203,14 @@ class _CustomSearchTextFieldState extends State<CustomSearchTextField> {
 
 class CustomUnderlineTextField extends StatefulWidget {
   final TextEditingController? controller, typeController, valueController;
+  final FocusNode? focusNode;
   final bool enabled, isRequired;
   final PhoneDetail? phone;
   final String label;
   final UnderlineType? type;
   final TextInputType? keyboardType;
   final ValueChanged<PhoneDetail>? onPhoneChanged;
+  final ValueChanged<String>? onChanged, onSubmitted;
   final VoidCallback? onTap;
 
   const CustomUnderlineTextField({
@@ -214,6 +218,7 @@ class CustomUnderlineTextField extends StatefulWidget {
     this.controller,
     this.typeController,
     this.valueController,
+    this.focusNode,
     this.enabled = true,
     this.isRequired = false,
     this.phone,
@@ -221,6 +226,8 @@ class CustomUnderlineTextField extends StatefulWidget {
     this.type = UnderlineType.text,
     this.keyboardType,
     this.onPhoneChanged,
+    this.onChanged,
+    this.onSubmitted,
     this.onTap,
   });
 
@@ -286,6 +293,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
 
   Widget _textField(BuildContext context) => TextField(
     controller: widget.controller,
+    focusNode: widget.focusNode,
     readOnly: widget.onTap != null,
     enabled: widget.enabled,
     decoration: InputDecoration(
@@ -295,8 +303,11 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
       focusedBorder: _focusedBorder(context),
       hint: CustomText(Globalization.msgHintText.trParams({"label": widget.label.toLowerCase()}), color: Colors.black38, fontSize: 16.0),
     ),
+    textInputAction: TextInputAction.next,
     keyboardType: widget.keyboardType,
     onTap: widget.onTap,
+    onChanged: widget.onChanged,
+    onSubmitted: widget.onSubmitted,
   );
 
   Widget _phoneField(BuildContext context) => Row(
@@ -346,6 +357,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
             hint: CustomText(_phoneDetail.hintLabel, color: Colors.black38, fontSize: 16.0),
           ),
           inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(kPhoneLength)],
+          textInputAction: TextInputAction.next,
           keyboardType: widget.keyboardType,
           onChanged: (value) {
             _phoneDetail.number = value;

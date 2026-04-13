@@ -258,7 +258,17 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
             ),
           ),
         ),
-        CustomInfoListTile(icon: Icons.location_on_rounded, title: Globalization.address.tr, subtitle: _company.fullAddress),
+        CustomInfoListTile(
+          icon: Icons.location_on_rounded,
+          title: Globalization.address.tr,
+          emoji: "\u{1F4CD}",
+          subtitle: _company.fullAddress,
+          onTapCopy: () async {
+            if (!await ConnectionService.checkConnection()) return;
+
+            LocationHelper.redirectGoogleMap(_company.fullAddress);
+          },
+        ),
         CustomInfoListTile(icon: Icons.email_rounded, title: Globalization.email.tr, subtitle: _company.email),
         CustomInfoListTile(icon: Icons.phone_rounded, title: Globalization.phone.tr, subtitle: _company.contactNumber),
         CustomInfoListTile(icon: Icons.account_box_rounded, title: Globalization.aboutUs.tr, subtitle: _company.companyDescription),

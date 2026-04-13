@@ -6,8 +6,6 @@ import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/language/globalization.dart';
 import 'package:ezymember/models/phone_detail.dart';
 import 'package:ezymember/models/profile_model.dart';
-import 'package:ezymember/services/local/connection_service.dart';
-import 'package:ezymember/services/remote/google_sign_in_service.dart';
 import 'package:ezymember/widgets/custom_button.dart';
 import 'package:ezymember/widgets/custom_text.dart';
 import 'package:ezymember/widgets/custom_text_field.dart';
@@ -48,17 +46,6 @@ class _SignInScreenState extends State<SignInScreen> {
     );
 
     _authController.signIn(data);
-  }
-
-  void _signInWithGoogle() async {
-    if (!await ConnectionService.checkConnection()) return;
-
-    final userCredential = await GoogleSignInService.signInWithGoogle();
-
-    if (userCredential == null) return;
-    if (userCredential.user == null) return;
-
-    _authController.signInWithGoogle(userCredential.user!.email!);
   }
 
   // Field validation, if "true" then continue sign in or up
@@ -127,10 +114,12 @@ class _SignInScreenState extends State<SignInScreen> {
             constraints: BoxConstraints(maxWidth: rsp.welcomeSize() + 100.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 16.dp,
+              spacing: 8.dp,
               children: <Widget>[
                 CustomText(Globalization.signIn.tr, color: Theme.of(context).colorScheme.primary, fontSize: 18.0, fontWeight: FontWeight.w700),
+                const SizedBox(),
                 CustomText(Globalization.msgSignIn.tr, fontSize: 14.0, maxLines: null),
+                const SizedBox(),
                 if (_isEmail)
                   CustomOutlinedTextField(
                     controller: _emailController,
@@ -151,12 +140,12 @@ class _SignInScreenState extends State<SignInScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    style: TextButton.styleFrom(tapTargetSize: MaterialTapTargetSize.shrinkWrap, minimumSize: Size.zero),
+                    style: TextButton.styleFrom(padding: EdgeInsets.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap, minimumSize: Size.zero),
                     onPressed: () => setState(() => _isEmail = !_isEmail),
                     child: CustomText(
                       _isEmail ? Globalization.signInWithMobile.tr : Globalization.signInWithEmail.tr,
                       color: Theme.of(context).colorScheme.primary,
-                      fontSize: 13.0,
+                      fontSize: 14.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -170,7 +159,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    style: TextButton.styleFrom(tapTargetSize: MaterialTapTargetSize.shrinkWrap, minimumSize: Size.zero),
+                    style: TextButton.styleFrom(padding: EdgeInsets.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap, minimumSize: Size.zero),
                     onPressed: () => Get.toNamed(AppRoutes.forgotPassword),
                     child: CustomText(
                       Globalization.forgotPassword.tr,
@@ -182,11 +171,6 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(),
                 CustomFilledButton(label: Globalization.signIn.tr, onTap: _signIn),
-                CustomText("- ${Globalization.or.tr} -", fontSize: 14.0, maxLines: 1, textAlign: TextAlign.center),
-                Align(
-                  alignment: Alignment.center,
-                  child: CustomIconButton(assetName: "assets/icons/google.png", onPressed: () => _signInWithGoogle()),
-                ),
                 RichText(
                   text: TextSpan(
                     text: Globalization.msgAccountNotExists.tr,

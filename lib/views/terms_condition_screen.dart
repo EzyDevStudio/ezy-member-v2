@@ -69,6 +69,8 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
         _buildListTile(subtitle: "${_voucher.discountValue.toStringAsFixed(2)} ${Globalization.off.tr}", title: Globalization.discountAmount.tr),
         _buildListTile(subtitle: _voucher.minimumSpend.toStringAsFixed(2), title: Globalization.minSpend.tr),
       ),
+      if (_voucher.usePointRedeem > 0)
+        _buildListTile(subtitle: "${_voucher.usePointRedeem.toString()} ${Globalization.points.tr}", title: Globalization.redeemWith.tr),
       _buildListTile(subtitle: _voucher.termsCondition, title: Globalization.tncApplied.tr),
     ],
   );
@@ -80,7 +82,7 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
   );
 
   Widget _buildResponsive(Widget child1, Widget child2) => isMobile
-      ? Column(spacing: 16.0, children: <Widget>[child1, child2])
+      ? Column(children: <Widget>[child1, child2])
       : Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16.0,

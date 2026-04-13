@@ -13,6 +13,7 @@ import 'package:ezymember/services/local/member_profile_storage_service.dart';
 import 'package:ezymember/services/local/notification_service.dart';
 import 'package:ezymember/services/local/settings_storage_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -20,13 +21,24 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 // Use parameters instead of arguments because it pass data in URL
 
+@pragma('vm:entry-point')
+Future<void> _fcmBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+
+  // Pending to handle background logout scenario
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Setup Firebase Messaging
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseMessaging.onBackgroundMessage(_fcmBackgroundHandler);
+  await NotificationService.init();
+
+  // Setup Hive
   await Hive.initFlutter();
   await MemberProfileStorageService().init();
-  await NotificationService.init();
   await SettingsStorageService().init();
 
   Get.put(MemberHiveController());

@@ -5,6 +5,7 @@ import 'package:ezymember/hive/member_profile_hive.dart';
 import 'package:ezymember/language/globalization.dart';
 import 'package:ezymember/models/profile_model.dart';
 import 'package:ezymember/services/local/connection_service.dart';
+import 'package:ezymember/services/local/notification_service.dart';
 import 'package:ezymember/services/remote/api_service.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +14,15 @@ class AuthenticationController extends GetxController {
 
   var isSuccess = false.obs;
   var memberProfile = Rx<MemberProfileModel?>(null);
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    NotificationService.onTokenRefresh((newToken) async {
+      if (memberProfile.value != null) await updateFCMToken(memberProfile.value!.memberCode, newToken);
+    });
+  }
 
   Future<void> signUp(Map<String, dynamic> data) async {
     if (!await ConnectionService.checkConnection()) return;
@@ -54,6 +64,15 @@ class AuthenticationController extends GetxController {
     memberProfile.value = null;
 
     _showLoading(Globalization.msgSignInProcessing.tr);
+
+    final fcmToken = await NotificationService.getToken();
+
+    if (fcmToken == null) {
+      _showError(Globalization.msgSystemError.tr);
+      return;
+    }
+
+    data.addAll({"fcm_token": fcmToken});
 
     final response = await _api.post(endPoint: "login-account", module: "AuthenticationController - signIn", data: data);
 
@@ -107,55 +126,6 @@ class AuthenticationController extends GetxController {
     }
   }
 
-  Future<void> signInWithGoogle(String email) async {
-    isSuccess.value = false;
-    memberProfile.value = null;
-
-    _showLoading(Globalization.msgSignInProcessing.tr);
-
-    final response = await _api.post(endPoint: "sign-in-with-google", module: "AuthenticationController - signInWithGoogle", data: {"email": email});
-
-    _hideLoading();
-
-    if (response == null) {
-      _showError(Globalization.msgSystemError.tr);
-      return;
-    }
-
-    switch (response.data[ApiService.keyStatusCode]) {
-      case 200:
-        final json = Map<String, dynamic>.from(response.data[MemberProfileModel.keyMember]);
-        final profile = MemberProfileModel.fromJson(json);
-
-        memberProfile.value = profile;
-        isSuccess.value = true;
-
-        final hive = Get.find<MemberHiveController>();
-        await hive.signIn(
-          MemberProfileHive(
-            id: profile.id,
-            memberCode: profile.memberCode,
-            name: profile.name,
-            token: profile.token,
-            image: await _api.downloadImageAsBytes(profile.image),
-            backgroundImage: await _api.downloadImageAsBytes(profile.backgroundImage),
-            personalInvoice: await _api.downloadImageAsBytes(profile.personalInvoiceImage),
-            workingInvoice: await _api.downloadImageAsBytes(response.data["working_e_invoice"]),
-          ),
-        );
-
-        _showSuccess(Globalization.msgSignInSuccess.tr);
-        Get.offAllNamed(AppRoutes.home);
-        break;
-      case 400:
-        _showError(Globalization.msgEmailNotExists.tr);
-        break;
-      default:
-        _showError(Globalization.msgSystemError.tr);
-        break;
-    }
-  }
-
   Future<void> checkToken(String memberCode, String memberToken) async {
     if (!await ConnectionService.checkConnection()) return;
 
@@ -177,6 +147,25 @@ class AuthenticationController extends GetxController {
       await hive.signOut();
 
       _showWarning(Globalization.msgTokenExpired.tr);
+    }
+  }
+
+  Future<void> updateFCMToken(String memberCode, String fcmToken) async {
+    if (!await ConnectionService.checkConnection()) return;
+
+    final response = await _api.post(
+      endPoint: "update-fcm-token",
+      module: "AuthenticationController - updateFCMToken",
+      data: {"member_code": memberCode, "fcm_token": fcmToken},
+    );
+
+    if (response == null) {
+      _showError(Globalization.msgSystemError.tr);
+      return;
+    }
+
+    if (response.data[ApiService.keyStatusCode] != 200) {
+      _showWarning(Globalization.msgTokenInvalid.tr);
     }
   }
 

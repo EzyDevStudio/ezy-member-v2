@@ -257,6 +257,10 @@ class ProfileDetailControllers {
     _controllers[fieldCity] = TextEditingController(text: profile.city);
     _controllers[fieldState] = TextEditingController(text: profile.state);
     _controllers[fieldCountry] = TextEditingController(text: profile.country);
+    _controllers[fieldRegistrationSchemeID] = TextEditingController(text: profile.registrationSchemeID);
+    _controllers[fieldRegistrationSchemeNo] = TextEditingController(text: profile.registrationSchemeNo);
+    _controllers[fieldTIN] = TextEditingController(text: profile.tin);
+    _controllers[fieldSSTRegistrationNo] = TextEditingController(text: profile.sstRegistrationNo);
 
     if (profile is MemberProfileModel) {
       _controllers[fieldName] = TextEditingController(text: profile.name);
@@ -264,9 +268,6 @@ class ProfileDetailControllers {
       _controllers[fieldGender] = TextEditingController(text: profile.gender);
       _controllers[fieldDOB] = TextEditingController(text: profile.dob == 0 ? "" : profile.dob.tsToStr);
       _controllers[fieldAccountCode] = TextEditingController(text: profile.accountCode);
-      _controllers[fieldTIN] = TextEditingController(text: profile.tin);
-      _controllers[fieldSSTRegistrationNo] = TextEditingController(text: profile.sstRegistrationNo);
-      _controllers[fieldTTXRegistrationNo] = TextEditingController(text: profile.ttxRegistrationNo);
     }
 
     if (profile is WorkingProfileModel) {

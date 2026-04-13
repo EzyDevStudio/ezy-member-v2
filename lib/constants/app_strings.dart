@@ -10,7 +10,6 @@ class AppStrings {
   static const String appName = "EzyMember";
 
   // App Server Url
-  // static const String serverUrl = "http://192.168.0.170:8000";
   static const String serverUrl = "https://ezymember.sigma-connect.xyz";
   static const String serverEzyPos = "https://ezypos.ezysolutions.com.my";
   static const String serverDirectory = "api";
@@ -56,18 +55,18 @@ class AppStrings {
     CategoryModel(
       title: "Baby Products",
       description: "Clothing & Accessories, Feeding & Nursing, Diapering & Potty, Baby Gear, Toys & Educational Items, Bath & Skincare",
-      image: "assets/images/cat_baby.png",
+      image: "assets/images/tmp_cat_baby.png",
     ),
     CategoryModel(
       title: "Food & Beverage",
       description: "Restaurants & Cafes, Home-Based Food, Bakeries, Beverages, Frozen Food",
-      image: "assets/images/cat_food.png",
+      image: "assets/images/tmp_cat_food.png",
     ),
     CategoryModel(
       title: "Others / Miscellaneous",
       description:
           "Handmade Items, Seasonal Products, Repair & Maintenance, Printing Services, Cleaning Services, Education & Tuition, Freelance Services",
-      image: "assets/images/cat_others.png",
+      image: "assets/images/tmp_cat_others.png",
     ),
   ];
 

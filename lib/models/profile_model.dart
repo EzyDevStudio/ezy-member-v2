@@ -13,6 +13,10 @@ const String fieldPostcode = "postcode";
 const String fieldCity = "city";
 const String fieldState = "state";
 const String fieldCountry = "country";
+const String fieldRegistrationSchemeID = "registration_scheme_id";
+const String fieldRegistrationSchemeNo = "registration_scheme_no";
+const String fieldTIN = "tin";
+const String fieldSSTRegistrationNo = "sst_registration_no";
 
 // MemberProfile fields
 const String fieldName = "name";
@@ -26,9 +30,6 @@ const String fieldDOB = "date_of_birth";
 const String fieldAccountCode = "account_code";
 const String fieldStatus = "status";
 const String fieldToken = "token";
-const String fieldTIN = "tin";
-const String fieldSSTRegistrationNo = "sst_registration_no";
-const String fieldTTXRegistrationNo = "ttx_registration_no";
 
 // WorkingProfile fields
 const String fieldCompanyName = "company_name";
@@ -48,6 +49,10 @@ class ProfileModel {
   final String city;
   final String state;
   final String country;
+  final String registrationSchemeID;
+  final String registrationSchemeNo;
+  final String tin;
+  final String sstRegistrationNo;
 
   ProfileModel({
     this.id = 0,
@@ -62,6 +67,10 @@ class ProfileModel {
     this.city = "",
     this.state = "",
     this.country = "",
+    this.registrationSchemeID = "",
+    this.registrationSchemeNo = "",
+    this.tin = "",
+    this.sstRegistrationNo = "",
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> data) => ProfileModel(
@@ -77,12 +86,17 @@ class ProfileModel {
     city: data[fieldCity] ?? "",
     state: data[fieldState] ?? "",
     country: data[fieldCountry] ?? "",
+    registrationSchemeID: data[fieldRegistrationSchemeID] ?? "",
+    registrationSchemeNo: data[fieldRegistrationSchemeNo] ?? "",
+    tin: data[fieldTIN] ?? "",
+    sstRegistrationNo: data[fieldSSTRegistrationNo] ?? "",
   );
 
   @override
   String toString() =>
       "\tid: $id, memberCode: $memberCode, countryCode: $countryCode, contactNumber: $contactNumber\n"
-      "\taddress1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, country: $country\n";
+      "\taddress1: $address1, address2: $address2, address3: $address3, address4: $address4, postcode: $postcode, city: $city, state: $state, country: $country\n"
+      "\tregistrationSchemeID: $registrationSchemeID, registrationSchemeNo: $registrationSchemeNo, tin: $tin, sstRegistrationNo: $sstRegistrationNo\n";
 }
 
 class MemberProfileModel extends ProfileModel {
@@ -99,9 +113,6 @@ class MemberProfileModel extends ProfileModel {
   final String accountCode;
   final int status;
   final String token;
-  final String tin;
-  final String sstRegistrationNo;
-  final String ttxRegistrationNo;
 
   MemberProfileModel({
     super.id,
@@ -116,6 +127,10 @@ class MemberProfileModel extends ProfileModel {
     super.city,
     super.state,
     super.country,
+    super.registrationSchemeID,
+    super.registrationSchemeNo,
+    super.tin,
+    super.sstRegistrationNo,
     this.name = "",
     this.email = "",
     this.password = "",
@@ -127,9 +142,6 @@ class MemberProfileModel extends ProfileModel {
     this.accountCode = "",
     this.status = 1,
     this.token = "",
-    this.tin = "",
-    this.sstRegistrationNo = "",
-    this.ttxRegistrationNo = "",
   });
 
   MemberProfileModel.empty() : this();
@@ -150,6 +162,10 @@ class MemberProfileModel extends ProfileModel {
       city: base.city,
       state: base.state,
       country: base.country,
+      registrationSchemeID: base.registrationSchemeID,
+      registrationSchemeNo: base.registrationSchemeNo,
+      tin: base.tin,
+      sstRegistrationNo: base.sstRegistrationNo,
       name: data[fieldName] ?? "",
       email: data[fieldEmail] ?? "",
       password: data[fieldPassword] ?? "",
@@ -161,9 +177,6 @@ class MemberProfileModel extends ProfileModel {
       accountCode: data[fieldAccountCode] ?? "",
       status: data[fieldStatus] ?? 1,
       token: data[fieldToken] ?? "",
-      tin: data[fieldTIN] ?? "",
-      sstRegistrationNo: data[fieldSSTRegistrationNo] ?? "",
-      ttxRegistrationNo: data[fieldTTXRegistrationNo] ?? "",
     );
   }
 
@@ -179,9 +192,10 @@ class MemberProfileModel extends ProfileModel {
     required String city,
     required String state,
     required String country,
+    required String registrationSchemeID,
+    required String registrationSchemeNo,
     required String tin,
     required String sstRegistrationNo,
-    required String ttxRegistrationNo,
     required String name,
     required String gender,
     required String dob,
@@ -198,9 +212,10 @@ class MemberProfileModel extends ProfileModel {
     fieldCity: city,
     fieldState: state,
     fieldCountry: country,
+    fieldRegistrationSchemeID: registrationSchemeID,
+    fieldRegistrationSchemeNo: registrationSchemeNo,
     fieldTIN: tin,
     fieldSSTRegistrationNo: sstRegistrationNo,
-    fieldTTXRegistrationNo: ttxRegistrationNo,
     fieldName: name,
     fieldGender: gender,
     fieldDOB: dob.isNotEmpty ? dob.strToDT.toIso8601String() : null,
@@ -250,6 +265,10 @@ class WorkingProfileModel extends ProfileModel {
     super.city,
     super.state,
     super.country,
+    super.registrationSchemeID,
+    super.registrationSchemeNo,
+    super.tin,
+    super.sstRegistrationNo,
     this.companyName = "",
     this.companyEmail = "",
     this.companyInvoiceImage = "",
@@ -273,6 +292,10 @@ class WorkingProfileModel extends ProfileModel {
       city: base.city,
       state: base.state,
       country: base.country,
+      registrationSchemeID: base.registrationSchemeID,
+      registrationSchemeNo: base.registrationSchemeNo,
+      tin: base.tin,
+      sstRegistrationNo: base.sstRegistrationNo,
       companyName: data[fieldCompanyName] ?? "",
       companyEmail: data[fieldCompanyEmail] ?? "",
       companyInvoiceImage: data[fieldCompanyInvoiceImage] ?? "",
@@ -291,6 +314,10 @@ class WorkingProfileModel extends ProfileModel {
     required String city,
     required String state,
     required String country,
+    required String registrationSchemeID,
+    required String registrationSchemeNo,
+    required String tin,
+    required String sstRegistrationNo,
     required String name,
     required String email,
   }) => {
@@ -305,6 +332,10 @@ class WorkingProfileModel extends ProfileModel {
     fieldCity: city,
     fieldState: state,
     fieldCountry: country,
+    fieldRegistrationSchemeID: registrationSchemeID,
+    fieldRegistrationSchemeNo: registrationSchemeNo,
+    fieldTIN: tin,
+    fieldSSTRegistrationNo: sstRegistrationNo,
     fieldCompanyName: name,
     fieldCompanyEmail: email,
   };

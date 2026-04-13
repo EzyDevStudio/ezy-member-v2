@@ -17,7 +17,6 @@ import 'package:ezymember/widgets/custom_app_bar.dart';
 import 'package:ezymember/widgets/custom_button.dart';
 import 'package:ezymember/widgets/custom_fab.dart';
 import 'package:ezymember/widgets/custom_image.dart';
-import 'package:ezymember/widgets/custom_menu.dart';
 import 'package:ezymember/widgets/custom_text.dart';
 import 'package:ezymember/widgets/custom_timeline.dart';
 import 'package:ezymember/widgets/custom_voucher.dart';
@@ -56,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisSize: MainAxisSize.min,
           spacing: 32.dp,
           children: <Widget>[
-            CustomText(Globalization.scan.tr, fontSize: 22.0, fontWeight: FontWeight.bold),
+            CustomText(Globalization.myCode.tr, fontSize: 22.0, fontWeight: FontWeight.bold),
             ConstrainedBox(
               constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
               child: AspectRatio(
@@ -73,6 +72,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: <Widget>[
                           CustomAvatarImage(size: kProfileImgSizeM, cacheImage: _hive.image),
                           CustomText(_hive.memberProfile.value!.name, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
+                          CustomText(
+                            _hive.memberProfile.value!.memberCode.displayMemberCode,
+                            color: Colors.white,
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ],
                       ),
                     ),
@@ -118,10 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _onRefresh() async {
     await PermissionHelper.checkAndRequestLocation();
 
-    // if (await PermissionHelper.checkAndRequestNotification()) {
-    //   await NotificationService.show(id: 0, title: "EzyMember", body: "2 vouchers will be expired by today.");
-    // }
-
     _timelineController.reset();
     _timelineController.loadTimelines(memberCode: _hive.isSignIn ? _hive.memberProfile.value!.memberCode : null);
 
@@ -163,30 +164,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  Widget _buildDesktop() => CustomMenu(
-    title: Globalization.home.tr,
-    child: ListView(
-      controller: _scrollController,
-      shrinkWrap: true,
-      padding: EdgeInsets.all(16.dp),
-      children: <Widget>[
-        if (_hive.isSignIn)
-          Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: ResponsiveHelper.tabletLarge),
-              child: _buildVouchers(),
-            ),
-          ),
-        Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: ResponsiveHelper.tabletLarge),
-            child: _buildTimeline(),
-          ),
-        ),
-      ],
-    ),
-  );
 
   Widget _buildMobile() => Obx(
     () => CustomScrollView(
@@ -307,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 label: Globalization.findShop.tr,
                 onTap: () => Get.toNamed(AppRoutes.companyList),
               ),
-              if (_hive.isSignIn) CustomImageTextButton(assetName: "assets/icons/scan.png", label: Globalization.scan.tr, onTap: _showMemberCode),
+              if (_hive.isSignIn) CustomImageTextButton(assetName: "assets/icons/scan.png", label: Globalization.myCode.tr, onTap: _showMemberCode),
             ],
           ),
         ],

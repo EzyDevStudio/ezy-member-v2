@@ -1,3 +1,4 @@
+import 'package:ezymember/constants/app_constants.dart';
 import 'package:ezymember/constants/app_routes.dart';
 import 'package:ezymember/constants/app_strings.dart';
 import 'package:ezymember/controllers/member_hive_controller.dart';
@@ -32,27 +33,38 @@ class ProfileDetailScreen extends StatefulWidget {
 class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTickerProviderStateMixin {
   final _hive = Get.find<MemberHiveController>();
   final _profileController = Get.put(ProfileController(), tag: "profileDetail");
+  final List<String> _schemeType = ["NRIC", "PASSPORT", "ARMY"];
 
   late ProfileDetailControllers _memberControllers;
   late ProfileDetailControllers _workingControllers;
   late TabController _tabController;
 
+  List<PostcodeDetail> _postcodes = [];
   PhoneDetail _phoneMember = PhoneDetail();
   PhoneDetail _phoneWorking = PhoneDetail();
   MemberProfileModel _memberProfile = MemberProfileModel.empty();
   WorkingProfileModel _workingProfile = WorkingProfileModel.empty();
 
   String _selectedGender = "";
+  String _selectedSchemePersonal = "";
+  String _selectedSchemeWorking = "";
 
   @override
   void initState() {
     super.initState();
+
+    _loadJson();
 
     _memberControllers = ProfileDetailControllers(_memberProfile);
     _workingControllers = ProfileDetailControllers(_workingProfile);
     _tabController = TabController(length: ProfileType.values.length, vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _fetchProfile());
+  }
+
+  void _loadJson() async {
+    _postcodes = await PostcodeDetail.loadAll();
+    setState(() {});
   }
 
   void _fetchProfile() async {
@@ -69,6 +81,8 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       if (_memberProfile.gender.isNotEmpty) _selectedGender = _memberProfile.gender;
 
       _memberControllers[fieldGender].text = AppStrings().genders[_selectedGender] ?? "";
+      _selectedSchemePersonal = _schemeType.firstWhere((e) => e == _memberProfile.registrationSchemeID, orElse: () => _schemeType.first);
+      _memberControllers[fieldRegistrationSchemeID].text = _selectedSchemePersonal;
       setState(() {});
     }
 
@@ -77,6 +91,10 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       _workingControllers = ProfileDetailControllers(_workingProfile);
 
       await _phoneWorking.update(_workingProfile.countryCode);
+
+      _selectedSchemeWorking = _schemeType.firstWhere((e) => e == _workingProfile.registrationSchemeID, orElse: () => _schemeType.first);
+      _workingControllers[fieldRegistrationSchemeID].text = _selectedSchemeWorking;
+      setState(() {});
     }
   }
 
@@ -125,9 +143,10 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       city: _memberControllers[fieldCity].text.trim(),
       state: _memberControllers[fieldState].text.trim(),
       country: _memberControllers[fieldCountry].text.trim(),
+      registrationSchemeID: _memberControllers[fieldRegistrationSchemeID].text.trim(),
+      registrationSchemeNo: _memberControllers[fieldRegistrationSchemeNo].text.trim(),
       tin: _memberControllers[fieldTIN].text.trim(),
       sstRegistrationNo: _memberControllers[fieldSSTRegistrationNo].text.trim(),
-      ttxRegistrationNo: _memberControllers[fieldTTXRegistrationNo].text.trim(),
       name: _memberControllers[fieldName].text.trim(),
       gender: _selectedGender,
       dob: _memberControllers[fieldDOB].text.trim(),
@@ -158,6 +177,10 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
       city: _workingControllers[fieldCity].text.trim(),
       state: _workingControllers[fieldState].text.trim(),
       country: _workingControllers[fieldCountry].text.trim(),
+      registrationSchemeID: _workingControllers[fieldRegistrationSchemeID].text.trim(),
+      registrationSchemeNo: _workingControllers[fieldRegistrationSchemeNo].text.trim(),
+      tin: _workingControllers[fieldTIN].text.trim(),
+      sstRegistrationNo: _workingControllers[fieldSSTRegistrationNo].text.trim(),
       name: _workingControllers[fieldName].text.trim(),
       email: _workingControllers[fieldEmail].text.trim(),
     );
@@ -313,14 +336,14 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               Row(
                 spacing: 32.dp,
                 children: <Widget>[
-                  Expanded(child: _buildPostCodeField(_memberControllers[fieldPostcode], _memberControllers, Globalization.postcode.tr)),
-                  Expanded(child: _buildPostCodeField(_memberControllers[fieldCity], _memberControllers, Globalization.city.tr)),
+                  Expanded(child: _buildPostcodeAutocomplete(_memberControllers[fieldPostcode], _memberControllers, Globalization.postcode.tr)),
+                  Expanded(child: _buildPostcodeAutocomplete(_memberControllers[fieldCity], _memberControllers, Globalization.city.tr)),
                 ],
               ),
               Row(
                 spacing: 32.dp,
                 children: <Widget>[
-                  Expanded(child: _buildPostCodeField(_memberControllers[fieldState], _memberControllers, Globalization.state.tr)),
+                  Expanded(child: _buildPostcodeAutocomplete(_memberControllers[fieldState], _memberControllers, Globalization.state.tr)),
                   Expanded(
                     child: CustomUnderlineTextField(
                       controller: _memberControllers[fieldCountry],
@@ -346,11 +369,12 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             ],
           ),
           CustomSectionCard(
-            title: Globalization.registrationInformation.tr,
+            title: Globalization.eInvoice.tr,
             children: <Widget>[
+              _buildUnderlineDropdown(_memberControllers[fieldRegistrationSchemeID], _selectedSchemePersonal),
+              CustomUnderlineTextField(controller: _memberControllers[fieldRegistrationSchemeNo], label: Globalization.registrationSchemeNo.tr),
               CustomUnderlineTextField(controller: _memberControllers[fieldTIN], label: Globalization.tin.tr),
               CustomUnderlineTextField(controller: _memberControllers[fieldSSTRegistrationNo], label: Globalization.sstRegistration.tr),
-              CustomUnderlineTextField(controller: _memberControllers[fieldTTXRegistrationNo], label: Globalization.ttxRegistration.tr),
             ],
           ),
           const SizedBox(),
@@ -363,31 +387,76 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     ],
   );
 
-  Widget _buildPostCodeField(TextEditingController controller, ProfileDetailControllers profile, String label, {bool isRequired = false}) =>
-      CustomUnderlineTextField(
-        controller: controller,
-        isRequired: isRequired,
-        label: label,
-        onTap: () async {
-          PostcodeDetail? selectedPostcode = await CustomPickerDialog.show<PostcodeDetail>(
-            context,
-            loadItems: PostcodeDetail.loadAll,
-            toCompare: (item) => item.toCompare(),
-            itemTileBuilder: (context, item) => ListTile(
-              contentPadding: EdgeInsets.zero,
-              subtitle: CustomText(item.stateName, color: Colors.black54, fontSize: 14.0),
-              title: CustomText(item.city, fontSize: 16.0),
-              trailing: CustomText(item.postcode, fontSize: 14.0),
-            ),
-          );
+  Widget _buildPostcodeAutocomplete(TextEditingController controller, ProfileDetailControllers profile, String label) => Autocomplete<PostcodeDetail>(
+    optionsBuilder: (TextEditingValue textEditingValue) {
+      if (textEditingValue.text.isEmpty) return const Iterable<PostcodeDetail>.empty();
 
-          if (selectedPostcode != null) {
-            profile[fieldPostcode].text = selectedPostcode.postcode;
-            profile[fieldCity].text = selectedPostcode.city;
-            profile[fieldState].text = selectedPostcode.stateName;
-          }
-        },
+      final query = textEditingValue.text.toLowerCase();
+
+      return _postcodes
+          .where((item) => item.postcode.contains(query) || item.city.toLowerCase().contains(query) || item.stateName.toLowerCase().contains(query))
+          .take(20);
+    },
+    displayStringForOption: (option) => "${option.postcode} - ${option.city}",
+    onSelected: (PostcodeDetail selected) => setState(() {
+      profile[fieldPostcode].text = selected.postcode;
+      profile[fieldCity].text = selected.city;
+      profile[fieldState].text = selected.stateName;
+    }),
+    fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
+      textEditingController.text = controller.text;
+
+      return CustomUnderlineTextField(
+        controller: textEditingController,
+        focusNode: focusNode,
+        label: label,
+        onChanged: (value) => controller.text = value,
+        onSubmitted: (value) => controller.text = value,
       );
+    },
+    optionsViewBuilder: (context, onSelected, options) => Align(
+      alignment: Alignment.topLeft,
+      child: Material(
+        elevation: 4.0,
+        child: SizedBox(
+          height: 500.0,
+          child: ListView.builder(
+            itemCount: options.length,
+            itemBuilder: (context, index) {
+              final item = options.elementAt(index);
+
+              return ListTile(title: Text("${item.postcode} (${item.city})"), subtitle: Text(item.stateName), onTap: () => onSelected(item));
+            },
+          ),
+        ),
+      ),
+    ),
+  );
+
+  Widget _buildUnderlineDropdown(TextEditingController controller, String initialSelection) => DropdownMenu<String>(
+    controller: controller,
+    width: double.infinity,
+    dropdownMenuEntries: _schemeType.map<DropdownMenuEntry<String>>((String value) => DropdownMenuEntry<String>(value: value, label: value)).toList(),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: false,
+      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87.withValues(alpha: 0.05))),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: kBorderWidth),
+      ),
+    ),
+    onSelected: (String? value) => setState(() {
+      if (value != null) initialSelection = value;
+    }),
+    label: CustomText(
+      Globalization.registrationSchemeID.tr,
+      color: Theme.of(context).colorScheme.primary,
+      fontSize: 16.0,
+      fontWeight: FontWeight.bold,
+    ),
+    selectedTrailingIcon: Icon(Icons.keyboard_arrow_up_rounded, color: Theme.of(context).colorScheme.primary),
+    trailingIcon: Icon(Icons.keyboard_arrow_down_rounded, color: Theme.of(context).colorScheme.primary),
+    initialSelection: initialSelection,
+  );
 
   Widget _buildWorkingProfile() => ListView(
     children: <Widget>[
@@ -424,14 +493,14 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               Row(
                 spacing: 32.dp,
                 children: <Widget>[
-                  Expanded(child: _buildPostCodeField(_workingControllers[fieldPostcode], _workingControllers, Globalization.postcode.tr)),
-                  Expanded(child: _buildPostCodeField(_workingControllers[fieldCity], _workingControllers, Globalization.city.tr)),
+                  Expanded(child: _buildPostcodeAutocomplete(_workingControllers[fieldPostcode], _workingControllers, Globalization.postcode.tr)),
+                  Expanded(child: _buildPostcodeAutocomplete(_workingControllers[fieldCity], _workingControllers, Globalization.city.tr)),
                 ],
               ),
               Row(
                 spacing: 32.dp,
                 children: <Widget>[
-                  Expanded(child: _buildPostCodeField(_workingControllers[fieldState], _workingControllers, Globalization.state.tr)),
+                  Expanded(child: _buildPostcodeAutocomplete(_workingControllers[fieldState], _workingControllers, Globalization.state.tr)),
                   Expanded(
                     child: CustomUnderlineTextField(
                       controller: _workingControllers[fieldCountry],
@@ -454,6 +523,15 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
                   ),
                 ],
               ),
+            ],
+          ),
+          CustomSectionCard(
+            title: Globalization.eInvoice.tr,
+            children: <Widget>[
+              _buildUnderlineDropdown(_workingControllers[fieldRegistrationSchemeID], _selectedSchemeWorking),
+              CustomUnderlineTextField(controller: _workingControllers[fieldRegistrationSchemeNo], label: Globalization.registrationSchemeNo.tr),
+              CustomUnderlineTextField(controller: _workingControllers[fieldTIN], label: Globalization.tin.tr),
+              CustomUnderlineTextField(controller: _workingControllers[fieldSSTRegistrationNo], label: Globalization.sstRegistration.tr),
             ],
           ),
           const SizedBox(),

@@ -7,7 +7,6 @@ import 'package:ezymember/language/globalization.dart';
 import 'package:ezymember/models/category_model.dart';
 import 'package:ezymember/models/company_model.dart';
 import 'package:ezymember/widgets/custom_card.dart';
-import 'package:ezymember/widgets/custom_menu.dart';
 import 'package:ezymember/widgets/custom_text.dart';
 import 'package:ezymember/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -64,16 +63,6 @@ class _CompanyListScreenState extends State<CompanyListScreen> {
       body: _buildMobile(),
     );
   }
-
-  Widget _buildDesktop() => CustomMenu(
-    title: Globalization.findShop.tr,
-    child: Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: ResponsiveHelper.mobileBreakpoint),
-        child: RefreshIndicator(onRefresh: _onRefresh, child: _buildContent()),
-      ),
-    ),
-  );
 
   Widget _buildMobile() => Center(
     child: ConstrainedBox(
@@ -188,14 +177,36 @@ class _CompanyListScreenState extends State<CompanyListScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
                   child: CustomText(category, fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
-                for (var company in grouped[category]!)
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
-                    child: GestureDetector(
-                      onTap: () => Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": company.companyID}),
-                      child: CustomShopCard(company: company),
-                    ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(kBorderRadiusM),
+                    color: Colors.white,
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                        blurRadius: kBlurRadius,
+                        offset: Offset(kOffsetX, kOffsetY),
+                      ),
+                    ],
                   ),
+                  margin: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 8.dp),
+                  padding: EdgeInsets.all(12.dp),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    itemCount: grouped[category]!.length,
+                    physics: NeverScrollableScrollPhysics(),
+                    separatorBuilder: (_, _) => Divider(color: Theme.of(context).colorScheme.surfaceContainerLow, height: 16.dp),
+                    itemBuilder: (context, index) {
+                      final company = grouped[category]![index];
+
+                      return InkWell(
+                        onTap: () => Get.toNamed(AppRoutes.companyDetail, arguments: {"company_id": company.companyID}),
+                        child: CustomShopCard(company: company),
+                      );
+                    },
+                  ),
+                ),
               ],
             ],
           );
