@@ -33,11 +33,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     if (!_isFieldValid(false)) return;
 
+    String contactNumber = "";
+
+    if (_phoneController.text.trim().isNotEmpty) contactNumber = int.parse(_phoneController.text.trim()).toString();
+
     final Map<String, dynamic> data = MemberProfileModel.toJsonSignUp(
       _usernameController.text.trim(),
       _emailController.text.trim(),
       _phone.dialCode,
-      _phoneController.text.trim(),
+      contactNumber,
     );
 
     _authController.signUp(data);
@@ -119,12 +123,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 CustomOutlinedTextField(
                   controller: _usernameController,
                   icon: Icons.account_circle_rounded,
+                  inputFormatters: kFormatterName,
                   type: OutlinedType.text,
                   label: Globalization.username.tr,
                 ),
                 CustomOutlinedTextField(
                   controller: _emailController,
                   icon: Icons.email_rounded,
+                  inputFormatters: kFormatterEmail,
                   type: OutlinedType.text,
                   label: Globalization.email.tr,
                   keyboardType: TextInputType.emailAddress,

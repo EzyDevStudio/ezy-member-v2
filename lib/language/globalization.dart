@@ -194,7 +194,8 @@ class Globalization {
   static const String msgSignUp =
       "Welcome to ${AppStrings.appName}. Create an account to get started, explore all features, manage your membership, and enjoy exclusive benefits tailored just for you.";
   static const String msgSignUpProcessing = "Please wait while we create your account.";
-  static const String msgSignUpSuccess = "Your account has been successfully created. Please sign in to continue.";
+  static const String msgSignUpSuccess =
+      "Your account has been successfully created. Please check your email for your temporary password and sign in to continue.";
   static const String msgSystemError = "System under maintenance. Please try again later.";
   static const String msgTokenExpired = "Your account was signed in on another device. Please sign in again.";
   static const String msgTokenInvalid = "Oops! Something went wrong. Please restart the app and try again.";

@@ -124,6 +124,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   CustomOutlinedTextField(
                     controller: _emailController,
                     icon: Icons.email_rounded,
+                    inputFormatters: kFormatterEmail,
                     type: OutlinedType.text,
                     label: Globalization.email.tr,
                     keyboardType: TextInputType.emailAddress,

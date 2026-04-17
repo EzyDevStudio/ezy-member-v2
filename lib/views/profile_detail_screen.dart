@@ -18,6 +18,7 @@ import 'package:ezymember/widgets/custom_modal.dart';
 import 'package:ezymember/widgets/custom_text.dart';
 import 'package:ezymember/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -122,7 +123,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   }
 
   void _updateMemberProfile() async {
-    FocusScope.of(context).unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
 
     if (_memberControllers[fieldContactNumber].text.trim().isEmpty) {
       MessageHelper.error(message: Globalization.msgRequired.trParams({"label": Globalization.phone.tr}));
@@ -157,7 +158,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   }
 
   void _updateWorkingProfile() async {
-    FocusScope.of(context).unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
 
     String contactNumber = "";
 
@@ -283,7 +284,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
           CustomSectionCard(
             title: Globalization.basicInformation.tr,
             children: <Widget>[
-              CustomUnderlineTextField(controller: _memberControllers[fieldName], label: Globalization.name.tr),
+              CustomUnderlineTextField(controller: _memberControllers[fieldName], inputFormatters: kFormatterName, label: Globalization.name.tr),
               CustomUnderlineTextField(enabled: false, controller: _memberControllers[fieldEmail], label: Globalization.email.tr),
               CustomUnderlineTextField(
                 controller: _memberControllers[fieldContactNumber],
@@ -329,10 +330,26 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
           CustomSectionCard(
             title: Globalization.address.tr,
             children: <Widget>[
-              CustomUnderlineTextField(controller: _memberControllers[fieldAddress1], label: "${Globalization.addressLine.tr} 1"),
-              CustomUnderlineTextField(controller: _memberControllers[fieldAddress2], label: "${Globalization.addressLine.tr} 2"),
-              CustomUnderlineTextField(controller: _memberControllers[fieldAddress3], label: "${Globalization.addressLine.tr} 3"),
-              CustomUnderlineTextField(controller: _memberControllers[fieldAddress4], label: "${Globalization.addressLine.tr} 4"),
+              CustomUnderlineTextField(
+                controller: _memberControllers[fieldAddress1],
+                inputFormatters: kFormatterAddress,
+                label: "${Globalization.addressLine.tr} 1",
+              ),
+              CustomUnderlineTextField(
+                controller: _memberControllers[fieldAddress2],
+                inputFormatters: kFormatterAddress,
+                label: "${Globalization.addressLine.tr} 2",
+              ),
+              CustomUnderlineTextField(
+                controller: _memberControllers[fieldAddress3],
+                inputFormatters: kFormatterAddress,
+                label: "${Globalization.addressLine.tr} 3",
+              ),
+              CustomUnderlineTextField(
+                controller: _memberControllers[fieldAddress4],
+                inputFormatters: kFormatterAddress,
+                label: "${Globalization.addressLine.tr} 4",
+              ),
               Row(
                 spacing: 32.dp,
                 children: <Widget>[
@@ -372,9 +389,21 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             title: Globalization.eInvoice.tr,
             children: <Widget>[
               _buildUnderlineDropdown(_memberControllers[fieldRegistrationSchemeID], _selectedSchemePersonal),
-              CustomUnderlineTextField(controller: _memberControllers[fieldRegistrationSchemeNo], label: Globalization.registrationSchemeNo.tr),
-              CustomUnderlineTextField(controller: _memberControllers[fieldTIN], label: Globalization.tin.tr),
-              CustomUnderlineTextField(controller: _memberControllers[fieldSSTRegistrationNo], label: Globalization.sstRegistration.tr),
+              CustomUnderlineTextField(
+                controller: _memberControllers[fieldRegistrationSchemeNo],
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[A-Z0-9]")), LengthLimitingTextInputFormatter(20)],
+                label: Globalization.registrationSchemeNo.tr,
+              ),
+              CustomUnderlineTextField(
+                controller: _memberControllers[fieldTIN],
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[A-Z0-9]")), LengthLimitingTextInputFormatter(20)],
+                label: Globalization.tin.tr,
+              ),
+              CustomUnderlineTextField(
+                controller: _memberControllers[fieldSSTRegistrationNo],
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[A-Z0-9]")), LengthLimitingTextInputFormatter(20)],
+                label: Globalization.sstRegistration.tr,
+              ),
             ],
           ),
           const SizedBox(),
@@ -467,9 +496,10 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
           CustomSectionCard(
             title: Globalization.companyInformation.tr,
             children: <Widget>[
-              CustomUnderlineTextField(controller: _workingControllers[fieldName], label: Globalization.name.tr),
+              CustomUnderlineTextField(controller: _workingControllers[fieldName], inputFormatters: kFormatterName, label: Globalization.name.tr),
               CustomUnderlineTextField(
                 controller: _workingControllers[fieldEmail],
+                inputFormatters: kFormatterEmail,
                 label: Globalization.email.tr,
                 keyboardType: TextInputType.emailAddress,
               ),
@@ -486,10 +516,26 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
           CustomSectionCard(
             title: Globalization.address.tr,
             children: <Widget>[
-              CustomUnderlineTextField(controller: _workingControllers[fieldAddress1], label: "${Globalization.addressLine.tr} 1"),
-              CustomUnderlineTextField(controller: _workingControllers[fieldAddress2], label: "${Globalization.addressLine.tr} 2"),
-              CustomUnderlineTextField(controller: _workingControllers[fieldAddress3], label: "${Globalization.addressLine.tr} 3"),
-              CustomUnderlineTextField(controller: _workingControllers[fieldAddress4], label: "${Globalization.addressLine.tr} 4"),
+              CustomUnderlineTextField(
+                controller: _workingControllers[fieldAddress1],
+                inputFormatters: kFormatterAddress,
+                label: "${Globalization.addressLine.tr} 1",
+              ),
+              CustomUnderlineTextField(
+                controller: _workingControllers[fieldAddress2],
+                inputFormatters: kFormatterAddress,
+                label: "${Globalization.addressLine.tr} 2",
+              ),
+              CustomUnderlineTextField(
+                controller: _workingControllers[fieldAddress3],
+                inputFormatters: kFormatterAddress,
+                label: "${Globalization.addressLine.tr} 3",
+              ),
+              CustomUnderlineTextField(
+                controller: _workingControllers[fieldAddress4],
+                inputFormatters: kFormatterAddress,
+                label: "${Globalization.addressLine.tr} 4",
+              ),
               Row(
                 spacing: 32.dp,
                 children: <Widget>[
@@ -529,9 +575,21 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
             title: Globalization.eInvoice.tr,
             children: <Widget>[
               _buildUnderlineDropdown(_workingControllers[fieldRegistrationSchemeID], _selectedSchemeWorking),
-              CustomUnderlineTextField(controller: _workingControllers[fieldRegistrationSchemeNo], label: Globalization.registrationSchemeNo.tr),
-              CustomUnderlineTextField(controller: _workingControllers[fieldTIN], label: Globalization.tin.tr),
-              CustomUnderlineTextField(controller: _workingControllers[fieldSSTRegistrationNo], label: Globalization.sstRegistration.tr),
+              CustomUnderlineTextField(
+                controller: _workingControllers[fieldRegistrationSchemeNo],
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[A-Z0-9]")), LengthLimitingTextInputFormatter(20)],
+                label: Globalization.registrationSchemeNo.tr,
+              ),
+              CustomUnderlineTextField(
+                controller: _workingControllers[fieldTIN],
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[A-Z0-9]")), LengthLimitingTextInputFormatter(20)],
+                label: Globalization.tin.tr,
+              ),
+              CustomUnderlineTextField(
+                controller: _workingControllers[fieldSSTRegistrationNo],
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[A-Z0-9]")), LengthLimitingTextInputFormatter(20)],
+                label: Globalization.sstRegistration.tr,
+              ),
             ],
           ),
           const SizedBox(),

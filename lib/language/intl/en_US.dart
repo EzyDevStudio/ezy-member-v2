@@ -186,7 +186,8 @@ class EnUs {
     Globalization.msgSignUp:
         "Welcome to ${AppStrings.appName}. Create an account to get started, explore all features, manage your membership, and enjoy exclusive benefits tailored just for you.",
     Globalization.msgSignUpProcessing: "Please wait while we create your account.",
-    Globalization.msgSignUpSuccess: "Your account has been successfully created. Please sign in to continue.",
+    Globalization.msgSignUpSuccess:
+        "Your account has been successfully created. Please check your email for your temporary password and sign in to continue.",
     Globalization.msgSystemError: "System under maintenance. Please try again later.",
     Globalization.msgTokenExpired: "Your account was signed in on another device. Please sign in again.",
     Globalization.msgTokenInvalid: "Oops! Something went wrong. Please restart the app and try again.",

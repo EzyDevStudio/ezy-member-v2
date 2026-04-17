@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 // Aspect Ratio
 const double kBarcodeRatio = 4 / 1;
 const double kCardRatio = 1.5857;
@@ -21,6 +23,21 @@ const double kElevation = 4.0;
 
 // Image
 const double kSettingImage = 50.0;
+
+// Input Formatter
+final List<TextInputFormatter> kFormatterAddress = [LengthLimitingTextInputFormatter(60)];
+final List<TextInputFormatter> kFormatterEmail = [
+  FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9@._-]")),
+  LengthLimitingTextInputFormatter(191),
+];
+final List<TextInputFormatter> kFormatterName = [
+  FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Zà-ÿÀ-ß\s'-]")),
+  LengthLimitingTextInputFormatter(100),
+];
+final List<TextInputFormatter> kFormatterPostcode = [
+  FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9\s-]")),
+  LengthLimitingTextInputFormatter(10),
+];
 
 // Menu Side Bar
 const double kMenuWidth = 300.0;

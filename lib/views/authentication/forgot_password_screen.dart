@@ -85,6 +85,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 CustomOutlinedTextField(
                   controller: _emailController,
                   icon: Icons.lock_rounded,
+                  inputFormatters: kFormatterEmail,
                   type: OutlinedType.text,
                   label: Globalization.email.tr,
                   keyboardType: TextInputType.emailAddress,

@@ -15,6 +15,7 @@ enum UnderlineType { text, phone }
 class CustomOutlinedTextField extends StatefulWidget {
   final TextEditingController controller;
   final IconData? icon;
+  final List<TextInputFormatter>? inputFormatters;
   final OutlinedType type;
   final PhoneDetail? phone;
   final String label;
@@ -25,6 +26,7 @@ class CustomOutlinedTextField extends StatefulWidget {
     super.key,
     required this.controller,
     this.icon,
+    this.inputFormatters,
     required this.type,
     this.phone,
     required this.label,
@@ -94,6 +96,7 @@ class _CustomOutlinedTextFieldState extends State<CustomOutlinedTextField> {
               icon: Icon(_isObscure ? Icons.visibility_rounded : Icons.visibility_off_rounded),
             ),
     ),
+    inputFormatters: widget.inputFormatters,
     textInputAction: TextInputAction.next,
     keyboardType: widget.keyboardType,
   );
@@ -205,6 +208,7 @@ class CustomUnderlineTextField extends StatefulWidget {
   final TextEditingController? controller, typeController, valueController;
   final FocusNode? focusNode;
   final bool enabled, isRequired;
+  final List<TextInputFormatter>? inputFormatters;
   final PhoneDetail? phone;
   final String label;
   final UnderlineType? type;
@@ -221,6 +225,7 @@ class CustomUnderlineTextField extends StatefulWidget {
     this.focusNode,
     this.enabled = true,
     this.isRequired = false,
+    this.inputFormatters,
     this.phone,
     required this.label,
     this.type = UnderlineType.text,
@@ -303,6 +308,7 @@ class _CustomUnderlineTextFieldState extends State<CustomUnderlineTextField> {
       focusedBorder: _focusedBorder(context),
       hint: CustomText(Globalization.msgHintText.trParams({"label": widget.label.toLowerCase()}), color: Colors.black38, fontSize: 16.0),
     ),
+    inputFormatters: widget.inputFormatters,
     textInputAction: TextInputAction.next,
     keyboardType: widget.keyboardType,
     onTap: widget.onTap,

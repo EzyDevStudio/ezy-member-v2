@@ -181,7 +181,7 @@ class ZhCn {
     Globalization.msgSignOutConfirmation: "确定要退出登录吗？您随时可以再次登录。",
     Globalization.msgSignUp: "欢迎来到 ${AppStrings.appName}。创建账户即可开始使用，探索所有功能，轻松管理您的会员资格，并享受专为您打造的专属优惠与福利。",
     Globalization.msgSignUpProcessing: "正在为您创建账号，请稍候。",
-    Globalization.msgSignUpSuccess: "您的账号已成功创建，请登录以继续。",
+    Globalization.msgSignUpSuccess: "您的账户已成功创建。请检查您的电子邮件以获取临时密码，并登录以继续。",
     Globalization.msgSystemError: "系统维护中，请稍后再试。",
     Globalization.msgTokenExpired: "您的账号已在另一台设备登录，请重新登录。",
     Globalization.msgTokenInvalid: "哎呀！发生了一些问题，请重新启动应用后再试。",

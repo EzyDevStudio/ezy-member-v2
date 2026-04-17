@@ -187,7 +187,8 @@ class MsMy {
     Globalization.msgSignUp:
         "Selamat kembali ke ${AppStrings.appName}. Cipta akaun untuk bermula, terokai semua ciri, uruskan keahlian anda, dan nikmati manfaat eksklusif yang disesuaikan khusus untuk anda.",
     Globalization.msgSignUpProcessing: "Sila tunggu sementara kami mencipta akaun anda.",
-    Globalization.msgSignUpSuccess: "Akaun anda telah berjaya dicipta. Sila log masuk untuk meneruskan.",
+    Globalization.msgSignUpSuccess:
+        "Akaun anda telah berjaya dicipta. Sila semak e-mel anda untuk kata laluan sementara dan log masuk untuk meneruskan.",
     Globalization.msgSystemError: "Sistem sedang diselenggara. Sila cuba sebentar lagi.",
     Globalization.msgTokenExpired: "Akaun anda telah dilog masuk pada peranti lain. Sila log masuk sekali lagi.",
     Globalization.msgTokenInvalid: "Alamak! Ada sesuatu yang tidak kena. Sila mulakan semula aplikasi dan cuba lagi.",

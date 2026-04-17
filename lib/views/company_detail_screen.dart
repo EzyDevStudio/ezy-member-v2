@@ -75,7 +75,7 @@ class _CompanyDetailScreenState extends State<CompanyDetailScreen> {
 
   void _isExpired(MemberModel member, String page, Map<String, dynamic> arguments) {
     if (member.memberCard.expiredDate.isExpiredMsg) return;
-    arguments.addAll({"company_id": _company.companyID});
+    arguments.addAll({"company_id": _companyID});
     Get.toNamed(page, arguments: arguments);
   }
 

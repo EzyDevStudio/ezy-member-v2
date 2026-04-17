@@ -41,7 +41,9 @@ class CustomMemberCard extends StatelessWidget {
                       spacing: 8.dp,
                       children: <Widget>[
                         if (member.memberCard.isFavorite) Icon(Icons.favorite_rounded, color: Colors.red),
-                        CustomText(member.company.companyName, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                        Flexible(
+                          child: CustomText(member.company.companyName, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                     const Spacer(),
