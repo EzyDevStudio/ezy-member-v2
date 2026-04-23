@@ -34,7 +34,7 @@ class ProfileDetailScreen extends StatefulWidget {
 class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTickerProviderStateMixin {
   final _hive = Get.find<MemberHiveController>();
   final _profileController = Get.put(ProfileController(), tag: "profileDetail");
-  final List<String> _schemeType = ["NRIC", "PASSPORT", "ARMY"];
+  final List<String> _schemeType = ["BRN", "NRIC", "PASSPORT", "ARMY"];
 
   late ProfileDetailControllers _memberControllers;
   late ProfileDetailControllers _workingControllers;

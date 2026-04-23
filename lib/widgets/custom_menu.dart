@@ -78,7 +78,7 @@ class _CustomMenuState extends State<CustomMenu> {
                               ),
                               if (_hive.isSignIn)
                                 CustomText(
-                                  _hive.memberProfile.value!.memberCode.displayMemberCode,
+                                  _hive.memberProfile.value!.memberCode,
                                   color: Colors.white,
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.bold,

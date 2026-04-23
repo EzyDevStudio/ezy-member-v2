@@ -1,5 +1,4 @@
 import 'package:ezymember/constants/app_constants.dart';
-import 'package:ezymember/constants/app_routes.dart';
 import 'package:ezymember/controllers/member_hive_controller.dart';
 import 'package:ezymember/controllers/profile_controller.dart';
 import 'package:ezymember/helpers/message_helper.dart';
@@ -97,7 +96,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   PreferredSizeWidget _buildAppBar() => AppBar(
     backgroundColor: Theme.of(context).colorScheme.primary,
     leading: IconButton(
-      onPressed: () => AppRoutes.back(destination: AppRoutes.profileDetail),
+      onPressed: () => Get.back(),
       icon: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
     ),
     title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),

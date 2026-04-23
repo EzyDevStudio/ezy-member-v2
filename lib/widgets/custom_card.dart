@@ -103,7 +103,7 @@ class CustomProfileCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CustomText(name, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
-                    CustomText(memberCode.displayMemberCode, color: Colors.white, fontSize: 18.0),
+                    CustomText(memberCode, color: Colors.white, fontSize: 18.0),
                   ],
                 ),
               ),

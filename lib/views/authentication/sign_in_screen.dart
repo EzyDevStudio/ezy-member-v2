@@ -82,17 +82,19 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     rsp.init(context);
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: _buildAppBar(),
-      body: CustomScrollView(slivers: <Widget>[_buildContent()]),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: _buildAppBar(),
+        body: CustomScrollView(slivers: <Widget>[_buildContent()]),
+      ),
     );
   }
 
   PreferredSizeWidget _buildAppBar() => AppBar(
     backgroundColor: Theme.of(context).colorScheme.primary,
     leading: IconButton(
-      onPressed: () => AppRoutes.backAuth(),
+      onPressed: () => Get.back(),
       icon: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
     ),
     title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),

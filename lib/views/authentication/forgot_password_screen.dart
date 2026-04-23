@@ -1,5 +1,4 @@
 import 'package:ezymember/constants/app_constants.dart';
-import 'package:ezymember/constants/app_routes.dart';
 import 'package:ezymember/controllers/profile_controller.dart';
 import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
@@ -56,7 +55,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   PreferredSizeWidget _buildAppBar() => AppBar(
     backgroundColor: Theme.of(context).colorScheme.primary,
     leading: IconButton(
-      onPressed: () => AppRoutes.back(destination: AppRoutes.signIn),
+      onPressed: () => Get.back(),
       icon: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
     ),
     title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),
@@ -96,7 +95,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   alignment: Alignment.center,
                   child: TextButton(
                     style: TextButton.styleFrom(tapTargetSize: MaterialTapTargetSize.shrinkWrap, minimumSize: Size.zero),
-                    onPressed: () => AppRoutes.back(destination: AppRoutes.signIn),
+                    onPressed: () => Get.back(),
                     child: CustomText(
                       Globalization.backToSignIn.tr,
                       color: Theme.of(context).colorScheme.primary,
