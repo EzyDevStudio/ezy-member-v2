@@ -92,7 +92,7 @@ class _SignInScreenState extends State<SignInScreen> {
   PreferredSizeWidget _buildAppBar() => AppBar(
     backgroundColor: Theme.of(context).colorScheme.primary,
     leading: IconButton(
-      onPressed: () => AppRoutes.backAuth(),
+      onPressed: () => Get.back(),
       icon: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
     ),
     title: Image.asset("assets/images/app_logo.png", height: kToolbarHeight * 0.5),

@@ -43,7 +43,7 @@ class CustomVoucher extends StatelessWidget {
         curveRadius: kBorderRadiusS * 2,
         height: isCollectable ? rsp.voucherHeight() : 150.0,
         width: isCollectable ? rsp.voucherWidth() : null,
-        shadow: Shadow(color: shadowColor!, blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
+        shadow: Shadow(color: Colors.grey.withValues(alpha: 0.4), blurRadius: kBlurRadius, offset: Offset(kOffsetX, kOffsetY)),
         firstChild: _buildFirstChild(context),
         secondChild: _buildSecondChild(context),
       ),

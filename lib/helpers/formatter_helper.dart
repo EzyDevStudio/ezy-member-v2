@@ -60,10 +60,3 @@ extension TimestampFormatting on int {
   String get tsToStr => FormatterHelper._timestampToString(this);
   String get tsToStrDateTime => FormatterHelper._timestampToString(this, format: FormatterHelper.formatDateTime);
 }
-
-extension MemberCodeFormatting on String {
-  String get displayMemberCode {
-    if (isEmpty) return "";
-    return "${substring(0, 3)}-${substring(3, 8)}-${substring(8, 13)}-${substring(13, 16)}";
-  }
-}

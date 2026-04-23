@@ -8,7 +8,6 @@ import 'package:ezymember/controllers/member_hive_controller.dart';
 import 'package:ezymember/controllers/timeline_controller.dart';
 import 'package:ezymember/controllers/voucher_controller.dart';
 import 'package:ezymember/helpers/code_generator_helper.dart';
-import 'package:ezymember/helpers/formatter_helper.dart';
 import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/helpers/permission_helper.dart';
@@ -72,12 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: <Widget>[
                           CustomAvatarImage(size: kProfileImgSizeM, cacheImage: _hive.image),
                           CustomText(_hive.memberProfile.value!.name, color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
-                          CustomText(
-                            _hive.memberProfile.value!.memberCode.displayMemberCode,
-                            color: Colors.white,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          CustomText(_hive.memberProfile.value!.memberCode, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
                         ],
                       ),
                     ),
@@ -200,12 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontWeight: FontWeight.bold,
                 ),
                 if (_hive.isSignIn)
-                  CustomText(
-                    _hive.memberProfile.value!.memberCode.displayMemberCode,
-                    color: Colors.white,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  CustomText(_hive.memberProfile.value!.memberCode, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
               ],
             ),
           ),
@@ -244,57 +233,61 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildQuickAccess() => Obx(
     () => SliverToBoxAdapter(
-      child: Column(
-        children: <Widget>[
-          GridView(
-            shrinkWrap: true,
-            padding: EdgeInsets.symmetric(horizontal: 16.dp, vertical: 16.dp),
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisSpacing: 16.dp,
-              mainAxisExtent: rsp.quickHeight(),
-              mainAxisSpacing: 16.dp,
-              crossAxisCount: rsp.quickCount(),
-            ),
-            children: <Widget>[
-              if (_hive.isSignIn)
-                CustomImageTextButton(
-                  isCountVisible: true,
-                  count: _voucherController.redeemedCount.value,
-                  assetName: "assets/icons/my_vouchers.png",
-                  label: Globalization.myVouchers.tr,
-                  onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
-                ),
-              if (_hive.isSignIn)
-                CustomImageTextButton(
-                  isCountVisible: true,
-                  count: _voucherController.memberCount.value,
-                  assetName: "assets/icons/my_members.png",
-                  label: Globalization.myCards.tr,
-                  onTap: () => Get.toNamed(AppRoutes.memberList),
-                ),
-              if (_hive.isSignIn)
-                CustomImageTextButton(
-                  assetName: "assets/icons/invoice.png",
-                  label: Globalization.eInvoice.tr,
-                  onTap: () => Get.toNamed(AppRoutes.invoice),
-                ),
-              CustomImageTextButton(
-                assetName: "assets/icons/find_shops.png",
-                label: Globalization.findShop.tr,
-                onTap: () => Get.toNamed(AppRoutes.companyList),
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          children: <Widget>[
+            GridView(
+              shrinkWrap: true,
+              padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 8.dp),
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisSpacing: 16.dp,
+                mainAxisExtent: rsp.quickHeight(),
+                mainAxisSpacing: 16.dp,
+                crossAxisCount: 4,
               ),
-              if (_hive.isSignIn) CustomImageTextButton(assetName: "assets/icons/scan.png", label: Globalization.myCode.tr, onTap: _showMemberCode),
-            ],
-          ),
-        ],
+              children: <Widget>[
+                // if (_hive.isSignIn)
+                //   CustomImageTextButton(
+                //     isCountVisible: true,
+                //     count: _voucherController.redeemedCount.value,
+                //     assetName: "assets/icons/my_vouchers.png",
+                //     label: Globalization.myVouchers.tr,
+                //     onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
+                //   ),
+                if (_hive.isSignIn)
+                  CustomImageTextButton(
+                    isCountVisible: true,
+                    count: _voucherController.memberCount.value,
+                    assetName: "assets/icons/my_members.png",
+                    label: Globalization.myCards.tr,
+                    onTap: () => Get.toNamed(AppRoutes.memberList),
+                  ),
+                if (_hive.isSignIn)
+                  CustomImageTextButton(
+                    assetName: "assets/icons/invoice.png",
+                    label: Globalization.eInvoice.tr,
+                    onTap: () => Get.toNamed(AppRoutes.invoice),
+                  ),
+                CustomImageTextButton(
+                  assetName: "assets/icons/find_shops.png",
+                  label: Globalization.findShop.tr,
+                  onTap: () => Get.toNamed(AppRoutes.companyList),
+                ),
+                if (_hive.isSignIn) CustomImageTextButton(assetName: "assets/icons/scan.png", label: Globalization.myCode.tr, onTap: _showMemberCode),
+              ],
+            ),
+          ],
+        ),
       ),
     ),
   );
 
   Widget _buildVouchers() => Obx(() {
     if (_voucherController.vouchers.isEmpty) {
-      return Divider(color: Colors.grey.withValues(alpha: 0.7), thickness: 5.dp);
+      // return Divider(color: Colors.grey.withValues(alpha: 0.7), thickness: 5.dp);
+      return SizedBox(height: 5.dp,);
     }
 
     final vouchers = _voucherController.vouchers;
@@ -303,32 +296,31 @@ class _HomeScreenState extends State<HomeScreen> {
       borderRadius: BorderRadius.zero,
       child: Column(
         children: <Widget>[
+          // Container(
+          //   decoration: BoxDecoration(
+          //     boxShadow: <BoxShadow>[
+          //       BoxShadow(color: Colors.black12, blurRadius: 2.0, spreadRadius: 6.0),
+          //       BoxShadow(color: Colors.black12, blurRadius: 5.0, spreadRadius: 12.0),
+          //     ],
+          //   ),
+          // ),
           Container(
-            decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[
-                BoxShadow(color: Colors.black38, blurRadius: 2.0, spreadRadius: 6.0),
-                BoxShadow(color: Colors.black38, blurRadius: 5.0, spreadRadius: 12.0),
-              ],
-            ),
-          ),
-          Container(
-            color: Colors.grey.withValues(alpha: 0.5),
-            padding: EdgeInsets.symmetric(vertical: 8.dp),
+            color: Theme.of(context).colorScheme.surface,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.all(16.dp),
+                  padding: EdgeInsets.fromLTRB(16.dp, 8.dp, 16.dp, 8.dp),
                   child: CustomText(Globalization.vouchers.tr, fontSize: 16.0, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(
-                  height: rsp.voucherHeight() + 8.dp,
+                  height: rsp.voucherHeight(),
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: vouchers.length,
                     separatorBuilder: (_, _) => SizedBox(width: 16.dp),
                     itemBuilder: (context, index) => Padding(
-                      padding: EdgeInsets.only(bottom: 24.dp, left: index == 0 ? 16.dp : 0.0, right: index == vouchers.length - 1 ? 16.dp : 0.0),
+                      padding: EdgeInsets.only(bottom: 16.dp, left: index == 0 ? 16.dp : 0.0, right: index == vouchers.length - 1 ? 16.dp : 0.0),
                       child: CustomVoucher(
                         shadowColor: Colors.black54,
                         voucher: vouchers[index],
@@ -346,14 +338,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[
-                BoxShadow(color: Colors.black12, blurRadius: 2.0, spreadRadius: 6.0),
-                BoxShadow(color: Colors.black26, blurRadius: 5.0, spreadRadius: 12.0),
-              ],
-            ),
-          ),
+          // Container(
+          //   decoration: BoxDecoration(
+          //     boxShadow: <BoxShadow>[
+          //       BoxShadow(color: Colors.black12, blurRadius: 2.0, spreadRadius: 6.0),
+          //       BoxShadow(color: Colors.black12, blurRadius: 5.0, spreadRadius: 12.0),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
@@ -373,13 +365,13 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: EdgeInsets.zero,
       itemCount: timelines.length,
       physics: NeverScrollableScrollPhysics(),
-      separatorBuilder: (context, index) => Divider(color: Colors.grey.withValues(alpha: 0.7), thickness: 5.dp),
+      separatorBuilder: (context, index) => SizedBox(height: 5.dp),
       itemBuilder: (context, index) {
         if (index == timelines.length - 1 && _timelineController.hasMore && !_timelineController.isLoading.value) {
           _timelineController.loadTimelines(isLoadMore: true);
         }
 
-        return CustomTimeline(timeline: timelines[index], isNavigateCompany: true, isNavigateTimeline: true);
+        return Container(color: Colors.white, child: CustomTimeline(timeline: timelines[index], isNavigateCompany: true, isNavigateTimeline: true));
       },
     );
   });
