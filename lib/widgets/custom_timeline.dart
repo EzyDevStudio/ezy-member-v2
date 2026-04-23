@@ -28,7 +28,7 @@ class CustomTimeline extends StatelessWidget {
       spacing: 8.dp,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.dp),
+          padding: EdgeInsets.symmetric(horizontal: 10.dp),
           child: Row(
             spacing: 8.dp,
             children: <Widget>[
@@ -53,12 +53,6 @@ class CustomTimeline extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.dp),
-          child: isShowMore
-              ? CustomReadMore(text: timeline.timelineCaption, style: const TextStyle(fontSize: 16.0))
-              : CustomText(timeline.timelineCaption, fontSize: 16.0, maxLines: null),
-        ),
         GestureDetector(
           onTap: () => isDetail ? null : (isNavigateTimeline ? Get.toNamed(AppRoutes.timelineDetail, arguments: {"timeline": timeline}) : null),
           child: Image.network(
@@ -74,6 +68,12 @@ class CustomTimeline extends StatelessWidget {
               ),
             ),
           ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.dp),
+          child: isShowMore
+              ? CustomReadMore(text: timeline.timelineCaption, style: const TextStyle(fontSize: 16.0))
+              : CustomText(timeline.timelineCaption, fontSize: 16.0, maxLines: null),
         ),
       ],
     ),

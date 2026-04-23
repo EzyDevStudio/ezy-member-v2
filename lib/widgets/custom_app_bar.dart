@@ -31,6 +31,9 @@ class CustomAppBar extends StatelessWidget {
     floating: true,
     pinned: true,
     snap: false,
+
+    expandedHeight: kProfileImgSizeM,   // 👈 give space for image
+    collapsedHeight: kProfileImgSizeM,
     actions: actions,
     bottom: PreferredSize(
       preferredSize: Size.fromHeight(kProfileImgSizeM + 32.dp),

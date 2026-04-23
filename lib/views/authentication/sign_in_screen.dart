@@ -82,10 +82,12 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     rsp.init(context);
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: _buildAppBar(),
-      body: CustomScrollView(slivers: <Widget>[_buildContent()]),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: _buildAppBar(),
+        body: CustomScrollView(slivers: <Widget>[_buildContent()]),
+      ),
     );
   }
 
