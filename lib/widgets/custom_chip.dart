@@ -47,6 +47,7 @@ class CustomChoiceChip<T> extends StatelessWidget {
 class CustomLabelChip extends StatelessWidget {
   final Color? backgroundColor, foregroundColor;
   final double? chipRadius, foregroundSize;
+  final EdgeInsetsGeometry? padding;
   final IconData? icon;
   final String label;
 
@@ -56,6 +57,7 @@ class CustomLabelChip extends StatelessWidget {
     this.foregroundColor = Colors.white,
     this.chipRadius = kBorderRadiusXS,
     this.foregroundSize = 14.0,
+    this.padding,
     this.icon,
     required this.label,
   });
@@ -63,7 +65,7 @@ class CustomLabelChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(chipRadius!), color: backgroundColor),
-    padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 4.dp),
+    padding: padding ?? EdgeInsets.symmetric(horizontal: 8.dp, vertical: 4.dp),
     child: Row(
       mainAxisSize: MainAxisSize.min,
       spacing: 4.dp,

@@ -64,10 +64,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget _buildContent() => SliverFillRemaining(
     hasScrollBody: false,
     child: Padding(
-      padding: EdgeInsets.all(24.dp),
+      padding: EdgeInsets.all(25.dp),
       child: Wrap(
-        runSpacing: 24.dp,
-        spacing: 24.dp,
+        runSpacing: 25.dp,
+        spacing: 25.dp,
         alignment: WrapAlignment.spaceEvenly,
         crossAxisAlignment: WrapCrossAlignment.center,
         runAlignment: WrapAlignment.center,
@@ -77,7 +77,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             constraints: BoxConstraints(maxWidth: rsp.welcomeSize() + 100.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 16.dp,
+              spacing: 15.dp,
               children: <Widget>[
                 CustomText(Globalization.resetPassword.tr, color: Theme.of(context).colorScheme.primary, fontSize: 18.0, fontWeight: FontWeight.w700),
                 CustomText(Globalization.msgResetPassword.tr, fontSize: 14.0, maxLines: null),

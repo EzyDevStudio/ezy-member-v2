@@ -13,7 +13,7 @@ class BranchController extends GetxController {
     isLoading.value = true;
 
     final response = await _api.get(
-      baseUrl: "${AppStrings.serverEzyPos}/${AppStrings.serverDirectory}",
+      baseUrl: AppStrings.serverEzyPos,
       endPoint: "get-branch-list",
       module: "BranchController - loadBranches",
       data: {"company_id": companyID},

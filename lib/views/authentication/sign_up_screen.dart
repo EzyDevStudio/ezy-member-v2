@@ -84,12 +84,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     rsp.init(context);
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: _buildAppBar(),
-        body: CustomScrollView(slivers: <Widget>[_buildContent()]),
-      ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: _buildAppBar(),
+      body: CustomScrollView(slivers: <Widget>[_buildContent()]),
     );
   }
 
@@ -105,10 +103,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildContent() => SliverFillRemaining(
     hasScrollBody: false,
     child: Padding(
-      padding: EdgeInsets.all(24.dp),
+      padding: EdgeInsets.all(25.dp),
       child: Wrap(
-        runSpacing: 24.dp,
-        spacing: 24.dp,
+        runSpacing: 25.dp,
+        spacing: 25.dp,
         alignment: WrapAlignment.spaceEvenly,
         crossAxisAlignment: WrapCrossAlignment.center,
         runAlignment: WrapAlignment.center,
@@ -118,7 +116,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             constraints: BoxConstraints(maxWidth: rsp.welcomeSize() + 100.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 16.dp,
+              spacing: 15.dp,
               children: <Widget>[
                 CustomText(Globalization.signUp.tr, color: Theme.of(context).colorScheme.primary, fontSize: 18.0, fontWeight: FontWeight.w700),
                 CustomText(Globalization.msgSignUp.tr, fontSize: 14.0, maxLines: null),

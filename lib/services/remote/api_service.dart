@@ -8,12 +8,13 @@ import 'package:image_picker/image_picker.dart';
 
 class ApiService {
   final Dio _dio = Dio();
-  final String _baseUrl = "${AppStrings.serverUrl}/${AppStrings.serverDirectory}";
+  final String _baseUrl = AppStrings.serverUrl;
+  final String _directory = AppStrings.serverDirectory;
 
   static const String keyStatusCode = "status_code";
 
   Future<Response?> get<T>({String? baseUrl, required String endPoint, required String module, Map<String, dynamic>? data}) async {
-    final url = "${baseUrl ?? _baseUrl}/$endPoint";
+    final url = "${baseUrl ?? _baseUrl}/$_directory/$endPoint";
 
     try {
       final response = await _dio.get(
@@ -34,8 +35,14 @@ class ApiService {
     }
   }
 
-  Future<Response?> post<T>({required String endPoint, required String module, Map<String, dynamic>? data, String? memberToken}) async {
-    final url = "$_baseUrl/$endPoint";
+  Future<Response?> post<T>({
+    String? baseUrl,
+    required String endPoint,
+    required String module,
+    Map<String, dynamic>? data,
+    String? memberToken,
+  }) async {
+    final url = "${baseUrl ?? _baseUrl}/$_directory/$endPoint";
 
     try {
       final response = await _dio.post(
@@ -63,7 +70,7 @@ class ApiService {
     required String memberToken,
     required String module,
   }) async {
-    final url = "$_baseUrl/$endPoint";
+    final url = "$_baseUrl/$_directory/$endPoint";
 
     try {
       String fileName = file.name;

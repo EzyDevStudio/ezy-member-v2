@@ -1,5 +1,9 @@
 import 'package:flutter/services.dart';
 
+// App Bar
+const double appBarHeight = 300.0;
+const double serviceHeight = 80.0;
+
 // Aspect Ratio
 const double kBarcodeRatio = 4 / 1;
 const double kCardRatio = 1.5857;
@@ -39,10 +43,6 @@ final List<TextInputFormatter> kFormatterPostcode = [
   LengthLimitingTextInputFormatter(10),
 ];
 
-// Menu Side Bar
-const double kMenuWidth = 300.0;
-const double kMenuIconSize = 40.0;
-
 // Offset
 const double kBackToTop = 150.0;
 
@@ -53,6 +53,5 @@ const int kPhoneLength = 15;
 const double kPositionEmpty = 0.0;
 
 // Profile
-const double kProfileImgSizeS = 60.0;
 const double kProfileImgSizeM = 80.0;
 const double kProfileImgSizeL = 100.0;

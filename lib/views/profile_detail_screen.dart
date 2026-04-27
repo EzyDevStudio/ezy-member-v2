@@ -14,6 +14,7 @@ import 'package:ezymember/models/profile_model.dart';
 import 'package:ezymember/services/local/connection_service.dart';
 import 'package:ezymember/widgets/custom_button.dart';
 import 'package:ezymember/widgets/custom_card.dart';
+import 'package:ezymember/widgets/custom_dropdown.dart';
 import 'package:ezymember/widgets/custom_modal.dart';
 import 'package:ezymember/widgets/custom_text.dart';
 import 'package:ezymember/widgets/custom_text_field.dart';
@@ -41,6 +42,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
   late TabController _tabController;
 
   List<PostcodeDetail> _postcodes = [];
+  List<String> _stateList = [];
   PhoneDetail _phoneMember = PhoneDetail();
   PhoneDetail _phoneWorking = PhoneDetail();
   MemberProfileModel _memberProfile = MemberProfileModel.empty();
@@ -65,7 +67,8 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
 
   void _loadJson() async {
     _postcodes = await PostcodeDetail.loadAll();
-    setState(() {});
+
+    setState(() => _stateList = _postcodes.map((p) => p.stateName).toSet().toList()..sort((a, b) => a.compareTo(b)));
   }
 
   void _fetchProfile() async {
@@ -353,14 +356,37 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               Row(
                 spacing: 32.dp,
                 children: <Widget>[
-                  Expanded(child: _buildPostcodeAutocomplete(_memberControllers[fieldPostcode], _memberControllers, Globalization.postcode.tr)),
-                  Expanded(child: _buildPostcodeAutocomplete(_memberControllers[fieldCity], _memberControllers, Globalization.city.tr)),
+                  Expanded(
+                    child: _buildPostcodeAutocomplete(
+                      _memberControllers[fieldPostcode],
+                      _memberControllers,
+                      Globalization.postcode.tr,
+                      (query) => _postcodes.where((item) => item.postcode.toLowerCase().contains(query.toLowerCase())).toList(),
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildPostcodeAutocomplete(
+                      _memberControllers[fieldCity],
+                      _memberControllers,
+                      Globalization.city.tr,
+                      (query) => _postcodes.where((item) => item.city.toLowerCase().contains(query.toLowerCase())).toList(),
+                    ),
+                  ),
                 ],
               ),
               Row(
                 spacing: 32.dp,
                 children: <Widget>[
-                  Expanded(child: _buildPostcodeAutocomplete(_memberControllers[fieldState], _memberControllers, Globalization.state.tr)),
+                  Expanded(
+                    child: CustomDropdown<String>(
+                      controller: _memberControllers[fieldState],
+                      items: _stateList,
+                      filter: (query) => _stateList.where((item) => item.toLowerCase().contains(query.toLowerCase())).toList(),
+                      hintText: Globalization.state.tr,
+                      displayString: (item) => item,
+                      onSelected: (value) => _memberControllers[fieldState].text = value,
+                    ),
+                  ),
                   Expanded(
                     child: CustomUnderlineTextField(
                       controller: _memberControllers[fieldCountry],
@@ -416,50 +442,22 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
     ],
   );
 
-  Widget _buildPostcodeAutocomplete(TextEditingController controller, ProfileDetailControllers profile, String label) => Autocomplete<PostcodeDetail>(
-    optionsBuilder: (TextEditingValue textEditingValue) {
-      if (textEditingValue.text.isEmpty) return const Iterable<PostcodeDetail>.empty();
-
-      final query = textEditingValue.text.toLowerCase();
-
-      return _postcodes
-          .where((item) => item.postcode.contains(query) || item.city.toLowerCase().contains(query) || item.stateName.toLowerCase().contains(query))
-          .take(20);
-    },
-    displayStringForOption: (option) => "${option.postcode} - ${option.city}",
-    onSelected: (PostcodeDetail selected) => setState(() {
+  Widget _buildPostcodeAutocomplete(
+    TextEditingController controller,
+    ProfileDetailControllers profile,
+    String label,
+    List<PostcodeDetail> Function(String query) filter,
+  ) => CustomDropdown<PostcodeDetail>(
+    controller: controller,
+    items: _postcodes,
+    filter: filter,
+    hintText: label,
+    displayString: (item) => "${item.postcode} - ${item.city}",
+    onSelected: (selected) => setState(() {
       profile[fieldPostcode].text = selected.postcode;
       profile[fieldCity].text = selected.city;
       profile[fieldState].text = selected.stateName;
     }),
-    fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
-      textEditingController.text = controller.text;
-
-      return CustomUnderlineTextField(
-        controller: textEditingController,
-        focusNode: focusNode,
-        label: label,
-        onChanged: (value) => controller.text = value,
-        onSubmitted: (value) => controller.text = value,
-      );
-    },
-    optionsViewBuilder: (context, onSelected, options) => Align(
-      alignment: Alignment.topLeft,
-      child: Material(
-        elevation: 4.0,
-        child: SizedBox(
-          height: 500.0,
-          child: ListView.builder(
-            itemCount: options.length,
-            itemBuilder: (context, index) {
-              final item = options.elementAt(index);
-
-              return ListTile(title: Text("${item.postcode} (${item.city})"), subtitle: Text(item.stateName), onTap: () => onSelected(item));
-            },
-          ),
-        ),
-      ),
-    ),
   );
 
   Widget _buildUnderlineDropdown(TextEditingController controller, String initialSelection) => DropdownMenu<String>(
@@ -539,14 +537,37 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with SingleTi
               Row(
                 spacing: 32.dp,
                 children: <Widget>[
-                  Expanded(child: _buildPostcodeAutocomplete(_workingControllers[fieldPostcode], _workingControllers, Globalization.postcode.tr)),
-                  Expanded(child: _buildPostcodeAutocomplete(_workingControllers[fieldCity], _workingControllers, Globalization.city.tr)),
+                  Expanded(
+                    child: _buildPostcodeAutocomplete(
+                      _workingControllers[fieldPostcode],
+                      _workingControllers,
+                      Globalization.postcode.tr,
+                      (query) => _postcodes.where((item) => item.postcode.contains(query.toLowerCase())).toList(),
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildPostcodeAutocomplete(
+                      _workingControllers[fieldCity],
+                      _workingControllers,
+                      Globalization.city.tr,
+                      (query) => _postcodes.where((item) => item.city.contains(query.toLowerCase())).toList(),
+                    ),
+                  ),
                 ],
               ),
               Row(
                 spacing: 32.dp,
                 children: <Widget>[
-                  Expanded(child: _buildPostcodeAutocomplete(_workingControllers[fieldState], _workingControllers, Globalization.state.tr)),
+                  Expanded(
+                    child: CustomDropdown<String>(
+                      controller: _workingControllers[fieldState],
+                      items: _stateList,
+                      filter: (query) => _stateList.where((item) => item.toLowerCase().contains(query.toLowerCase())).toList(),
+                      hintText: Globalization.state.tr,
+                      displayString: (item) => item,
+                      onSelected: (value) => _workingControllers[fieldState].text = value,
+                    ),
+                  ),
                   Expanded(
                     child: CustomUnderlineTextField(
                       controller: _workingControllers[fieldCountry],

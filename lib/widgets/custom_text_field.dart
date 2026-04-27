@@ -178,21 +178,15 @@ class _CustomSearchTextFieldState extends State<CustomSearchTextField> {
         hintText: Globalization.search.tr,
         prefixIcon: widget.controller.text.isEmpty
             ? null
-            : Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.dp),
-                child: IconButton(
-                  onPressed: () {
-                    widget.controller.clear();
-                    widget.onClear?.call();
-                    setState(() {});
-                  },
-                  icon: const Icon(Icons.cancel_rounded),
-                ),
+            : IconButton(
+                onPressed: () {
+                  widget.controller.clear();
+                  widget.onClear?.call();
+                  setState(() {});
+                },
+                icon: const Icon(Icons.cancel_rounded),
               ),
-        suffixIcon: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.dp),
-          child: IconButton(onPressed: () => widget.onSubmit?.call(widget.controller.text.trim()), icon: const Icon(Icons.search_rounded)),
-        ),
+        suffixIcon: IconButton(onPressed: () => widget.onSubmit?.call(widget.controller.text.trim()), icon: const Icon(Icons.search_rounded)),
       ),
       textInputAction: TextInputAction.search,
       onChanged: (value) {

@@ -13,12 +13,13 @@ class CompanyController extends GetxController {
   var isLoading = false.obs;
   var company = CompanyModel.empty().obs;
   var companies = <CompanyModel>[].obs;
+  var codes = <String>[].obs;
 
   Future<void> loadCompany(String companyID) async {
     isLoading.value = true;
 
     final responsePOS = await _api.get(
-      baseUrl: "${AppStrings.serverEzyPos}/${AppStrings.serverDirectory}",
+      baseUrl: AppStrings.serverEzyPos,
       endPoint: "get-company-information/$companyID",
       module: "CompanyController - loadCompany",
     );
@@ -38,16 +39,16 @@ class CompanyController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<void> loadCompanies({bool isLocation = false, String? category, String? search}) async {
+  Future<void> loadCompanies({bool isLocation = false, String? search}) async {
     isLoading.value = true;
 
     final Coordinate? c = isLocation ? await LocationHelper.getCurrentCoordinate() : null;
 
-    final responsePOS = await _api.get(
-      baseUrl: "${AppStrings.serverEzyPos}/${AppStrings.serverDirectory}",
+    final responsePOS = await _api.post(
+      baseUrl: AppStrings.serverEzyPos,
       endPoint: "get-company-list",
       module: "CompanyController - loadCompanies",
-      data: {if (category != null) "business_category": category, if (c != null) "city": c.city, if (search != null) "search": search},
+      data: {if (codes.isNotEmpty) "business_category": codes, if (c != null) "city": c.city, if (search != null) "search": search},
     );
 
     if (responsePOS == null || responsePOS.data["company_list"] == null) {

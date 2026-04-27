@@ -82,12 +82,10 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     rsp.init(context);
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: _buildAppBar(),
-        body: CustomScrollView(slivers: <Widget>[_buildContent()]),
-      ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: _buildAppBar(),
+      body: CustomScrollView(slivers: <Widget>[_buildContent()]),
     );
   }
 
@@ -103,10 +101,10 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget _buildContent() => SliverFillRemaining(
     hasScrollBody: false,
     child: Padding(
-      padding: EdgeInsets.all(24.dp),
+      padding: EdgeInsets.all(25.dp),
       child: Wrap(
-        runSpacing: 24.dp,
-        spacing: 24.dp,
+        runSpacing: 25.dp,
+        spacing: 25.dp,
         alignment: WrapAlignment.spaceEvenly,
         crossAxisAlignment: WrapCrossAlignment.center,
         runAlignment: WrapAlignment.center,
@@ -116,7 +114,7 @@ class _SignInScreenState extends State<SignInScreen> {
             constraints: BoxConstraints(maxWidth: rsp.welcomeSize() + 100.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 8.dp,
+              spacing: 10.dp,
               children: <Widget>[
                 CustomText(Globalization.signIn.tr, color: Theme.of(context).colorScheme.primary, fontSize: 18.0, fontWeight: FontWeight.w700),
                 const SizedBox(),

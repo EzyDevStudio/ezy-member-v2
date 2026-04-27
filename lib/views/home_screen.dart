@@ -12,14 +12,12 @@ import 'package:ezymember/helpers/message_helper.dart';
 import 'package:ezymember/helpers/responsive_helper.dart';
 import 'package:ezymember/helpers/permission_helper.dart';
 import 'package:ezymember/language/globalization.dart';
-import 'package:ezymember/widgets/custom_app_bar.dart';
 import 'package:ezymember/widgets/custom_button.dart';
 import 'package:ezymember/widgets/custom_chip.dart';
 import 'package:ezymember/widgets/custom_fab.dart';
 import 'package:ezymember/widgets/custom_image.dart';
 import 'package:ezymember/widgets/custom_text.dart';
 import 'package:ezymember/widgets/custom_timeline.dart';
-import 'package:ezymember/widgets/custom_voucher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -39,11 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _voucherController = Get.put(VoucherController(), tag: "home");
   final _scrollController = ScrollController();
 
-  // late StreamSubscription<bool> _subscription;
-
   bool _showFab = false;
-  double _appBarHeight = 300.0;
-  double _serviceHeight = 80.0;
 
   void _showMemberCode() => showModalBottomSheet(
     context: context,
@@ -101,19 +95,6 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
 
-    // _subscription = ConnectionService.instance.stream.listen((connected) {
-    //   if (!connected) {
-    //     WidgetsBinding.instance.addPostFrameCallback((_) {
-    //       MessageHelper.show(
-    //         Globalization.msgConnectionOff.tr,
-    //         backgroundColor: Theme.of(context).colorScheme.error,
-    //         duration: Duration(seconds: 10),
-    //         icon: Icons.wifi_off_rounded,
-    //       );
-    //     });
-    //   }
-    // });
-
     WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
   }
 
@@ -138,7 +119,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
-    // _subscription.cancel();
 
     super.dispose();
   }
@@ -156,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        body: RefreshIndicator(onRefresh: _onRefresh, child: _buildMobile()),
+        body: RefreshIndicator(onRefresh: _onRefresh, child: Obx(() => _buildMobile())),
         floatingActionButton: _showFab ? CustomFab(controller: _scrollController) : null,
       ),
     );
@@ -164,12 +144,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMobile() => ListView(
     children: <Widget>[
-      Column(spacing: 10.0, children: <Widget>[_buildAppBar(), _buildVoucherCard(), _buildTimeline()]),
+      Column(spacing: 10.0, children: <Widget>[_buildAppBar(), if (_hive.isSignIn) _buildVoucherCard(), _buildTimeline()]),
     ],
   );
 
   Widget _buildAppBar() => SizedBox(
-    height: _appBarHeight,
+    height: appBarHeight,
     child: Stack(
       children: <Widget>[
         CustomBackgroundImage(backgroundImage: "", cacheImage: _hive.backgroundImage),
@@ -177,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             Expanded(child: SizedBox()),
             SizedBox(
-              height: _serviceHeight,
+              height: serviceHeight,
               child: Column(
                 children: <Widget>[
                   Expanded(child: SizedBox()),
@@ -264,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(
-              height: _serviceHeight,
+              height: serviceHeight,
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 20.dp),
                 decoration: BoxDecoration(
@@ -278,21 +258,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisSpacing: 10.dp,
-                    mainAxisExtent: _serviceHeight - (5.dp * 2),
+                    mainAxisExtent: serviceHeight - (5.dp * 2),
                     mainAxisSpacing: 10.dp,
-                    crossAxisCount: 4,
+                    crossAxisCount: _hive.isSignIn ? 4 : 1,
                   ),
                   children: <Widget>[
                     if (_hive.isSignIn) ...[
-                      _buildServiceButton(
-                        "assets/icons/my_vouchers.png",
-                        Globalization.myVouchers.tr,
-                        () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
+                      CustomMenuButton(
+                        assetName: "assets/icons/my_vouchers.png",
+                        label: Globalization.myVouchers.tr,
+                        onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
                       ),
-                      _buildServiceButton("assets/icons/my_members.png", Globalization.myCards.tr, () => Get.toNamed(AppRoutes.memberList)),
-                      _buildServiceButton("assets/icons/invoice.png", Globalization.eInvoice.tr, () => Get.toNamed(AppRoutes.invoice)),
+                      CustomMenuButton(
+                        assetName: "assets/icons/my_members.png",
+                        label: Globalization.myCards.tr,
+                        onTap: () => Get.toNamed(AppRoutes.memberList),
+                      ),
+                      CustomMenuButton(
+                        assetName: "assets/icons/invoice.png",
+                        label: Globalization.eInvoice.tr,
+                        onTap: () => Get.toNamed(AppRoutes.invoice),
+                      ),
                     ],
-                    _buildServiceButton("assets/icons/find_shops.png", "Business Nearby", () => Get.toNamed(AppRoutes.companyList)),
+                    CustomMenuButton(
+                      assetName: "assets/icons/find_shops.png",
+                      label: "Business Nearby",
+                      onTap: () => Get.toNamed(AppRoutes.companyList),
+                    ),
                     // CustomImageTextButton(
                     //   isCountVisible: true,
                     //   count: _voucherController.redeemedCount.value,
@@ -329,23 +321,12 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 
-  Widget _buildServiceButton(String assetName, String label, VoidCallback onTap) => InkWell(
-    onTap: onTap,
-    child: Column(
-      spacing: 5.0,
-      children: <Widget>[
-        Expanded(child: Image.asset(assetName, scale: kSquareRatio)),
-        CustomText(label, fontSize: 12.0),
-      ],
-    ),
-  );
-
   Widget _buildVoucherCard() => Container(
     height: 150.0,
     margin: EdgeInsets.symmetric(horizontal: 20.dp),
     padding: EdgeInsets.symmetric(horizontal: 10.dp, vertical: 5.dp),
     decoration: BoxDecoration(
-      color: Color(0xFFFAD117),
+      color: Colors.white,
       borderRadius: BorderRadius.circular(10.dp),
       boxShadow: <BoxShadow>[BoxShadow(color: Color(0x0D000000), blurRadius: 10.0, offset: Offset(0.0, 0.4))],
     ),
@@ -357,8 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               CustomText("There are vouchers for you", fontSize: 24.0, maxLines: null, fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
-              CustomLabelChip(backgroundColor: Colors.white.withValues(alpha: 0.6), foregroundColor: Colors.black, label: "COLLECT >>"),
-              // CustomText("COLLECT >>", fontSize: 16.0, maxLines: null),
+              CustomLabelChip(backgroundColor: Colors.orange.withValues(alpha: 0.2), foregroundColor: Colors.black, label: "COLLECT >>"),
             ],
           ),
         ),
@@ -367,198 +347,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 
-  // Widget _buildMobile() => Obx(
-  //   () => CustomScrollView(
-  //     controller: _scrollController,
-  //     physics: const AlwaysScrollableScrollPhysics(),
-  //     slivers: <Widget>[
-  //       _buildAppBar(),
-  //       _buildQuickAccess(),
-  //       SliverToBoxAdapter(child: _buildVouchers()),
-  //       SliverToBoxAdapter(child: _buildTimeline()),
-  //     ],
-  //   ),
-  // );
-  //
-  // Widget _buildAppBar() => CustomAppBar(
-  //   isLeading: false,
-  //   cacheAvatar: _hive.image,
-  //   cacheBackground: _hive.backgroundImage,
-  //   actions: _buildAppBarAction(),
-  //   onTap: () => Get.toNamed(_hive.isSignIn ? AppRoutes.profileDetail : AppRoutes.signIn),
-  //   child: Expanded(
-  //     child: Row(
-  //       spacing: 16.dp,
-  //       children: <Widget>[
-  //         Expanded(
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             mainAxisAlignment: MainAxisAlignment.center,
-  //             children: <Widget>[
-  //               CustomText(
-  //                 _hive.isSignIn ? _hive.memberProfile.value!.name : Globalization.guest.tr,
-  //                 color: Colors.white,
-  //                 fontSize: 24.0,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //               if (_hive.isSignIn)
-  //                 CustomText(_hive.memberProfile.value!.memberCode, color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
-  //             ],
-  //           ),
-  //         ),
-  //         Obx(() {
-  //           int totalCount = _voucherController.redeemableCount.value + _voucherController.todayCount.value;
-  //
-  //           if (!_hive.isSignIn || totalCount <= 0) return SizedBox.shrink();
-  //
-  //           return IconButton(
-  //             onPressed: () => Get.toNamed(AppRoutes.notification),
-  //             icon: Badge.count(
-  //               count: totalCount,
-  //               child: Icon(Icons.notifications_rounded, color: Colors.white, size: 40.0),
-  //             ),
-  //           );
-  //         }),
-  //       ],
-  //     ),
-  //   ),
-  // );
-  //
-  // List<Widget> _buildAppBarAction() => [
-  //   PopupMenuButton<Locale>(
-  //     onSelected: (locale) => _settingsController.changeLanguage(locale),
-  //     itemBuilder: (context) => Globalization.languages.entries
-  //         .map((entry) => PopupMenuItem<Locale>(value: entry.value, child: CustomText(entry.key, fontSize: 14.0)))
-  //         .toList(),
-  //     icon: Icon(Icons.language_rounded, color: Colors.white),
-  //   ),
-  //   if (_hive.isSignIn)
-  //     IconButton(
-  //       onPressed: _signOut,
-  //       icon: Icon(Icons.logout_rounded, color: Colors.white),
-  //     ),
-  // ];
-  //
-  // Widget _buildQuickAccess() => Obx(
-  //   () => SliverToBoxAdapter(
-  //     child: Container(
-  //       color: Colors.white,
-  //       child: Column(
-  //         children: <Widget>[
-  //           GridView(
-  //             shrinkWrap: true,
-  //             padding: EdgeInsets.symmetric(horizontal: 8.dp, vertical: 8.dp),
-  //             physics: const NeverScrollableScrollPhysics(),
-  //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //               crossAxisSpacing: 16.dp,
-  //               mainAxisExtent: rsp.quickHeight(),
-  //               mainAxisSpacing: 16.dp,
-  //               crossAxisCount: 4,
-  //             ),
-  //             children: <Widget>[
-  //               // if (_hive.isSignIn)
-  //               //   CustomImageTextButton(
-  //               //     isCountVisible: true,
-  //               //     count: _voucherController.redeemedCount.value,
-  //               //     assetName: "assets/icons/my_vouchers.png",
-  //               //     label: Globalization.myVouchers.tr,
-  //               //     onTap: () => Get.toNamed(AppRoutes.voucherList, arguments: {"check_start": 0}),
-  //               //   ),
-  //               if (_hive.isSignIn)
-  //                 CustomImageTextButton(
-  //                   isCountVisible: true,
-  //                   count: _voucherController.memberCount.value,
-  //                   assetName: "assets/icons/my_members.png",
-  //                   label: Globalization.myCards.tr,
-  //                   onTap: () => Get.toNamed(AppRoutes.memberList),
-  //                 ),
-  //               if (_hive.isSignIn)
-  //                 CustomImageTextButton(
-  //                   assetName: "assets/icons/invoice.png",
-  //                   label: Globalization.eInvoice.tr,
-  //                   onTap: () => Get.toNamed(AppRoutes.invoice),
-  //                 ),
-  //               CustomImageTextButton(
-  //                 assetName: "assets/icons/find_shops.png",
-  //                 label: Globalization.findShop.tr,
-  //                 onTap: () => Get.toNamed(AppRoutes.companyList),
-  //               ),
-  //               if (_hive.isSignIn) CustomImageTextButton(assetName: "assets/icons/scan.png", label: Globalization.myCode.tr, onTap: _showMemberCode),
-  //             ],
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   ),
-  // );
-  //
-  // Widget _buildVouchers() => Obx(() {
-  //   if (_voucherController.vouchers.isEmpty) {
-  //     // return Divider(color: Colors.grey.withValues(alpha: 0.7), thickness: 5.dp);
-  //     return SizedBox(height: 5.dp,);
-  //   }
-  //
-  //   final vouchers = _voucherController.vouchers;
-  //
-  //   return ClipRRect(
-  //     borderRadius: BorderRadius.zero,
-  //     child: Column(
-  //       children: <Widget>[
-  //         // Container(
-  //         //   decoration: BoxDecoration(
-  //         //     boxShadow: <BoxShadow>[
-  //         //       BoxShadow(color: Colors.black12, blurRadius: 2.0, spreadRadius: 6.0),
-  //         //       BoxShadow(color: Colors.black12, blurRadius: 5.0, spreadRadius: 12.0),
-  //         //     ],
-  //         //   ),
-  //         // ),
-  //         Container(
-  //           color: Theme.of(context).colorScheme.surface,
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: <Widget>[
-  //               Padding(
-  //                 padding: EdgeInsets.fromLTRB(16.dp, 8.dp, 16.dp, 8.dp),
-  //                 child: CustomText(Globalization.vouchers.tr, fontSize: 16.0, fontWeight: FontWeight.w600),
-  //               ),
-  //               SizedBox(
-  //                 height: rsp.voucherHeight(),
-  //                 child: ListView.separated(
-  //                   scrollDirection: Axis.horizontal,
-  //                   itemCount: vouchers.length,
-  //                   separatorBuilder: (_, _) => SizedBox(width: 16.dp),
-  //                   itemBuilder: (context, index) => Padding(
-  //                     padding: EdgeInsets.only(bottom: 16.dp, left: index == 0 ? 16.dp : 0.0, right: index == vouchers.length - 1 ? 16.dp : 0.0),
-  //                     child: CustomVoucher(
-  //                       shadowColor: Colors.black54,
-  //                       voucher: vouchers[index],
-  //                       type: VoucherType.collectable,
-  //                       onTapCollect: () async => _voucherController.collectVoucher(
-  //                         vouchers[index].batchCode,
-  //                         vouchers[index].companyID,
-  //                         _hive.memberProfile.value!.memberCode,
-  //                         _hive.memberProfile.value!.token,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //         // Container(
-  //         //   decoration: BoxDecoration(
-  //         //     boxShadow: <BoxShadow>[
-  //         //       BoxShadow(color: Colors.black12, blurRadius: 2.0, spreadRadius: 6.0),
-  //         //       BoxShadow(color: Colors.black12, blurRadius: 5.0, spreadRadius: 12.0),
-  //         //     ],
-  //         //   ),
-  //         // ),
-  //       ],
-  //     ),
-  //   );
-  // });
-  //
   Widget _buildTimeline() => Obx(() {
     if (_timelineController.isLoading.value) {
       return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary));
@@ -579,10 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _timelineController.loadTimelines(isLoadMore: true);
         }
 
-        return Container(
-          color: Colors.white,
-          child: CustomTimeline(timeline: timelines[index], isNavigateCompany: true, isNavigateTimeline: true),
-        );
+        return CustomTimeline(timeline: timelines[index], isNavigateCompany: true, isNavigateTimeline: true);
       },
     );
   });

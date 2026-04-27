@@ -20,6 +20,8 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 // Use parameters instead of arguments because it pass data in URL
+// 5 km but company no coordinate
+// Gradient color for guest in home page
 
 @pragma('vm:entry-point')
 Future<void> _fcmBackgroundHandler(RemoteMessage message) async {
@@ -51,7 +53,8 @@ void main() async {
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
         ResponsiveHelper().init(context);
-        return child!;
+
+        return SafeArea(bottom: true, top: true, child: child!);
       },
       title: AppStrings.appName,
       theme: AppThemes().lightTheme,

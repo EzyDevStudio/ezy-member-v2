@@ -21,6 +21,7 @@ class Globalization {
   static const String backToSignIn = "Back to SIGN IN";
   static const String basicInformation = "Basic Information";
   static const String branches = "Branches";
+  static const String businessCategories = "Business Categories";
   static const String camera = "Camera";
   static const String categories = "Categories";
   static const String changeImage = "Change Image";
@@ -52,7 +53,7 @@ class Globalization {
   static const String expired = "Expired";
   static const String expires = "Expires";
   static const String female = "Female";
-  static const String filter = "Filter";
+  static const String filterOptions = "Filter Options";
   static const String findShop = "Find Shop";
   static const String forgotPassword = "Forgot Password?";
   static const String gallery = "Gallery";
@@ -143,6 +144,8 @@ class Globalization {
   static const String msgAccountNotExists = "Don't have an account? ";
   static const String msgChangePassword =
       "You can change your password anytime. Please ensure your new password meets the minimum strength requirements.\nNote: Your new password will NOT be sent via email, so please remember it carefully.";
+  static const String msgCompanyList = "Welcome to Business Nearby\nDiscover nearby business partners.";
+  static const String msgCompanyListCard = "Locate Business Partner Nearby";
   static const String msgConfirmation = "Are you sure?";
   static const String msgConnectionOff = "You are currently offline.";
   static const String msgContinueGuest = "I’m just exploring, try the app freely and sign up later.";

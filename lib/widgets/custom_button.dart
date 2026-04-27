@@ -113,3 +113,74 @@ class CustomImageButton extends StatelessWidget {
     ),
   );
 }
+
+class CustomMenuButton extends StatelessWidget {
+  final String assetName, label;
+  final VoidCallback onTap;
+
+  const CustomMenuButton({super.key, required this.assetName, required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+    borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusS)),
+    onTap: onTap,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      spacing: 5.0,
+      children: <Widget>[
+        Expanded(child: Image.asset(assetName, scale: kSquareRatio)),
+        CustomText(label, fontSize: 12.0),
+      ],
+    ),
+  );
+}
+
+class CustomToggleButton extends StatelessWidget {
+  final bool isToggled;
+  final String assetName, label;
+  final VoidCallback onTap;
+
+  const CustomToggleButton({super.key, this.isToggled = false, required this.assetName, required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+    borderRadius: BorderRadius.all(Radius.circular(kBorderRadiusS)),
+    onTap: onTap,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      spacing: 5.0,
+      children: <Widget>[
+        Stack(
+          clipBehavior: Clip.none,
+          children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: isToggled ? Colors.green : Colors.grey.withValues(alpha: 0.3), width: 2.0),
+                shape: BoxShape.circle,
+              ),
+              height: 70.0,
+              width: 70.0,
+              padding: EdgeInsets.all(10.dp),
+              child: Image.asset(assetName, scale: kSquareRatio),
+            ),
+            if (isToggled)
+              Positioned(
+                right: 0.0,
+                top: 0.0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 1.5),
+                    shape: BoxShape.circle,
+                    color: Colors.green,
+                  ),
+                  padding: EdgeInsets.all(2.dp),
+                  child: const Icon(Icons.check_rounded, color: Colors.white, size: 14.0),
+                ),
+              ),
+          ],
+        ),
+        CustomText(label, fontSize: 12.0, maxLines: 2, textAlign: TextAlign.center),
+      ],
+    ),
+  );
+}

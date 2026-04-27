@@ -3,8 +3,9 @@ import 'package:ezymember/views/authentication/change_password_screen.dart';
 import 'package:ezymember/views/authentication/forgot_password_screen.dart';
 import 'package:ezymember/views/authentication/sign_in_screen.dart';
 import 'package:ezymember/views/authentication/sign_up_screen.dart';
+import 'package:ezymember/views/company/category_list_screen.dart';
+import 'package:ezymember/views/company/company_list_screen.dart';
 import 'package:ezymember/views/company_detail_screen.dart';
-import 'package:ezymember/views/company_list_screen.dart';
 import 'package:ezymember/views/home_screen.dart';
 import 'package:ezymember/views/invoice_screen.dart';
 import 'package:ezymember/views/timeline_detail_screen.dart';
@@ -25,6 +26,7 @@ class AppRoutes {
   static const forgotPassword = "/authentication/forgot_password";
   static const signIn = "/authentication/sign_in";
   static const signUp = "/authentication/sign_up";
+  static const categoryList = "/category_list";
   static const companyDetail = "/company_detail";
   static const companyList = "/company_list";
   static const home = "/home";
@@ -46,6 +48,7 @@ class AppRoutes {
     GetPage(name: forgotPassword, page: () => ForgotPasswordScreen()),
     GetPage(name: signIn, page: () => SignInScreen()),
     GetPage(name: signUp, page: () => SignUpScreen()),
+    GetPage(name: categoryList, page: () => CategoryListScreen()),
     GetPage(name: companyDetail, page: () => CompanyDetailScreen()),
     GetPage(name: companyList, page: () => CompanyListScreen()),
     GetPage(name: home, page: () => HomeScreen()),

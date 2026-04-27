@@ -21,7 +21,8 @@ class CustomTimeline extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(BuildContext context) => Container(
+    color: Colors.white,
     padding: EdgeInsets.symmetric(vertical: 16.dp),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
